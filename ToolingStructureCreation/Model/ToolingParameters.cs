@@ -14,6 +14,8 @@ namespace ToolingStructureCreation.Model
         public double DiePlateThickness { get; set; }
         public double LowerPadThickness { get; set; }
         public double LowerShoeThickness { get; set; }
+
+
         public TaggedObject BaseComponent { get; set; }
         public ComponentType BaseComponentType { get; set; }
         public double Clearance { get; set; } = 1.0;

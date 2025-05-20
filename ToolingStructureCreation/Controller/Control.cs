@@ -35,7 +35,7 @@ namespace ToolingStructureCreation.Controller
             }
 
             _wizardForm = new ToolingWizardForm(this, _selectionService);
-            _wizardForm.ShowDialog();
+            _wizardForm.Show();
         }
 
         public void Start(ToolingParameters parameters)

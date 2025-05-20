@@ -29,15 +29,31 @@ namespace ToolingStructureCreation.View
 
             Parameters = new ToolingParameters();
 
-            // Set up event handlers
+            // Initialize event handlers
+            SetupEventHandlers();
+        }
+
+        private void SetupEventHandlers()
+        {
+            // Button click events
             btnSelectPlateSketch.Click += BtnSelectPlateSketch_Click;
             btnSelectShoeSketch.Click += BtnSelectShoeSketch_Click;
             btnCreateToolStructure.Click += BtnCreateToolStructure_Click;
             btnCancel.Click += BtnCancel_Click;
+
+            // Form loading event
+            this.Load += ToolingWizardForm_Load;
+        }
+
+        private void ToolingWizardForm_Load(object sender, EventArgs e)
+        {
+            // Initialize form state
+            UpdateCreateButtonStatus();
         }
 
         private void BtnSelectPlateSketch_Click(object sender, EventArgs e)
         {
+            //System.Diagnostics.Debugger.Launch();
             try
             {
                 var component = _selectionService.SelectComponent(ComponentType.PlateSketch);
@@ -46,6 +62,10 @@ namespace ToolingStructureCreation.View
                     Parameters.BaseComponent = component;
                     Parameters.BaseComponentType = ComponentType.PlateSketch;
                     UpdatePlateSketchStatus(true);
+
+                    // Disable shoe sketch if plate sketch is selected
+                    btnSelectShoeSketch.Enabled = false;
+
                     UpdateCreateButtonStatus();
                 }
             }
@@ -78,13 +98,23 @@ namespace ToolingStructureCreation.View
         {
             if (ValidateInputs())
             {
-                _controller.Start(Parameters);
-                this.Close();
+                try
+                {
+                    _controller.Start(Parameters);
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error creating tooling structure: {ex.Message}", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
         private void BtnCancel_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
