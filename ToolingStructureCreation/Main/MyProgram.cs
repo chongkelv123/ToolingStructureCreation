@@ -9,33 +9,24 @@ namespace ToolingStructureCreation
 {
     public partial class MyProgram
     {
-        private static IUnityContainer ConfigureContainer()
-        {
-            var container = new UnityContainer();
-
-            // Register services with singleton lifetime
-            container.RegisterType<INXSessionProvider, NXService>(new ContainerControlledLifetimeManager());
-
-            // Register IUIService with the same instance as INXSessionProvider
-            container.RegisterFactory<IUIService>(c => c.Resolve<INXSessionProvider>() as IUIService);
-
-            // Register other services
-            container.RegisterType<INXSelectionService, SelectionService>(new ContainerControlledLifetimeManager());
-
-            // Register controller
-            container.RegisterType<IController, Control>();
-
-            return container;
-        }
         public static void Main(string[] args)
         {
             try
             {
-                // Configure container
-                var container = ConfigureContainer();
+                // Create service instances
+                var nxService = new NXService(); // Implements both INXSessionProvider and IUIService
+                var selectionService = new SelectionService(nxService, nxService);
+                var componentFactory = new ToolingComponentFactory(nxService);
+                var toolingProcessor = new ToolingProcessor(nxService, nxService);
 
-                // Resolve controller and initialize
-                var controller = container.Resolve<IController>();
+                // Create controller with dependencies
+                var controller = new Control(
+                    nxService,        // INXSessionProvider
+                    nxService,        // IUIService
+                    selectionService, // ISelectionService
+                    toolingProcessor  // IToolingProcessor
+                );
+
                 controller.Initialize();
             }
             catch (Exception ex)

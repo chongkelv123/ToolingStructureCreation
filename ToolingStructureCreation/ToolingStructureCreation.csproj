@@ -92,6 +92,7 @@
     <Compile Include="Services\NXService.cs" />
     <Compile Include="Services\SelectionService.cs" />
     <Compile Include="Services\ToolingComponentFactory.cs" />
+    <Compile Include="Services\ToolingProcessor.cs" />
     <Compile Include="View\ToolingWizardForm.cs">
       <SubType>Form</SubType>
     </Compile>
