@@ -67,7 +67,7 @@
     <Compile Include="Main\MyProgram.cs" />
     <Compile Include="Main\Unload.cs" />
     <Compile Include="Model\NXDrawing.cs" />
-    <Compile Include="Model\ToolingStructure.cs" />
+    <Compile Include="Model\StationToolingStructure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\Form1.cs">
       <SubType>Form</SubType>

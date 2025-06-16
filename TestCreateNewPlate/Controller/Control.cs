@@ -27,15 +27,8 @@ namespace TestCreateNewPlate.Controller
 
         public void Start()
         {
-            Dictionary<string, double> list = new Dictionary<string, double>();
-            list.Add("LOWER_PAD", 25.0);
-            list.Add("DIE_PLATE", 35.0);
-            list.Add("mat_thk", 1.55);
-            list.Add("STRIPPER_PLATE", 30.0);
-            list.Add("BOTTOMING_PLATE", 16.0);
-            list.Add("PUNCH_HOLDER", 30.0);
-            list.Add("UPPER_PAD", 27.0);
-
+            StationToolingStructure toolingStructure = new StationToolingStructure();
+            var list = toolingStructure.GetPlateThicknesses();
             foreach (var plate in list)
             {
                 if(plate.Key.Equals("mat_thk", StringComparison.OrdinalIgnoreCase))
@@ -46,14 +39,8 @@ namespace TestCreateNewPlate.Controller
                 drawing.CreateNewPlate(plate.Key, plate.Value);
             }
 
-            //double cummulativeThickness = 0.0;
-            //foreach (var plate in list)
-            //{
-            //    cummulativeThickness += plate.Value;
-            //    Guide.InfoWriteLine($"Plate Thickness: {plate.Key} : {plate.Value}, cumThk: {cummulativeThickness}");
-            //}
+            drawing.CreateStationAssembly(list, "Stn1_Assembly");
             
-            drawing.CreateAssembly(list);
         }
     }
 }

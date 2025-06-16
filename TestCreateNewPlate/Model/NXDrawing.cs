@@ -70,7 +70,7 @@ namespace TestCreateNewPlate.Model
             ui.NXMessageBox.Show(title, msgboxType, message);
         }
 
-        public void CreateAssembly(Dictionary<string, double> plateList)
+        public void CreateStationAssembly(Dictionary<string, double> plateList, string fileName)
         {
             FileNew fileNew = session.Parts.FileNew();
             fileNew.TemplateFileName = "3DA_Template_STP-V00.prt";
@@ -79,7 +79,7 @@ namespace TestCreateNewPlate.Model
             fileNew.Units = Part.Units.Millimeters;
             fileNew.TemplatePresentationName = "Assembly";
             fileNew.SetCanCreateAltrep(false);
-            string fileName = "ToolAssembly";
+            //string fileName = "ToolAssembly";
             fileNew.NewFileName = $"{folderPath}{fileName}.prt";
             fileNew.MakeDisplayedPart = true;
             fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
@@ -114,8 +114,7 @@ namespace TestCreateNewPlate.Model
             ComponentAssembly compAssy = workAssy.ComponentAssembly;
             PartLoadStatus status = null;
             int layer = 100;
-            string referenceSetName = "MODEL";
-            string componentName = "DiePlate1";
+            string referenceSetName = "MODEL";            
             Point3d basePoint = new Point3d(0.0, 0.0, cumThk);
             Matrix3x3 orientation = new Matrix3x3();
             orientation.Xx = 1.0;
@@ -127,11 +126,19 @@ namespace TestCreateNewPlate.Model
             orientation.Zx = 0.0;
             orientation.Zy = 0.0;
             orientation.Zz = 1.0;
-
-            //string fileName = "DiePlate1";
+            
             string partToAdd = $"{folderPath}{compName}.prt";
-
-            compAssy.AddComponent(partToAdd, referenceSetName, componentName, basePoint, orientation, layer, out status);
+            
+            NXOpen.Assemblies.Component component = compAssy.AddComponent(partToAdd, referenceSetName, compName, basePoint, orientation, layer, out status);
+            
+            NXOpen.Positioning.ComponentPositioner positioner = workAssy.ComponentAssembly.Positioner;
+            NXOpen.Positioning.Network network = positioner.EstablishNetwork();
+            NXOpen.Positioning.ComponentNetwork componentNetwork = ((NXOpen.Positioning.ComponentNetwork)network);
+            NXOpen.Positioning.Constraint constraint = positioner.CreateConstraint(true);
+            NXOpen.Positioning.ComponentConstraint componentConstraint = ((NXOpen.Positioning.ComponentConstraint)constraint);
+            componentConstraint.ConstraintType = NXOpen.Positioning.Constraint.Type.Fix;
+            NXOpen.Positioning.ConstraintReference constraintReference = componentConstraint.CreateConstraintReference(component, component, false, false, false);
+            componentNetwork.Solve();
 
             NXOpen.Layer.StateInfo[] stateArray = new NXOpen.Layer.StateInfo[]
             {
