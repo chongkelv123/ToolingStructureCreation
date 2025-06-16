@@ -9,8 +9,11 @@ namespace TestCreateNewPlate.Model
     public class StationToolingStructure
     {
         Dictionary<string, double> plateThicknesses;
+        double plateWidth;
+        double plateLength;
+        string stationNumber = "";
 
-        public StationToolingStructure()
+        public StationToolingStructure(double plateWidth, double plateLength, string stationName)
         {
             plateThicknesses = new Dictionary<string, double>
             {
@@ -22,7 +25,11 @@ namespace TestCreateNewPlate.Model
                 { "PUNCH_HOLDER", 30.0 },
                 { "UPPER_PAD", 27.0 }
             };
+            this.plateWidth = plateWidth;
+            this.plateLength = plateLength;
+            this.stationNumber = stationName;
         }
+
         public Dictionary<string, double> GetPlateThicknesses()
         {
             return plateThicknesses;
@@ -40,5 +47,20 @@ namespace TestCreateNewPlate.Model
             }
             return totalThickness;
         }
+
+        public double GetPlateWidth()
+        {
+            return plateWidth;
+        }
+
+        public double GetPlateLength()
+        {
+            return plateLength;
+        }
+
+        public string GetStationNumber()
+        {
+            return stationNumber;
+        } 
     }
 }

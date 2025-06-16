@@ -35,7 +35,7 @@
             // BtnCancel
             // 
             this.BtnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.BtnCancel.Location = new System.Drawing.Point(526, 403);
+            this.BtnCancel.Location = new System.Drawing.Point(115, 58);
             this.BtnCancel.Name = "BtnCancel";
             this.BtnCancel.Size = new System.Drawing.Size(117, 35);
             this.BtnCancel.TabIndex = 0;
@@ -46,7 +46,7 @@
             // BtnApply
             // 
             this.BtnApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.BtnApply.Location = new System.Drawing.Point(649, 403);
+            this.BtnApply.Location = new System.Drawing.Point(238, 58);
             this.BtnApply.Name = "BtnApply";
             this.BtnApply.Size = new System.Drawing.Size(117, 35);
             this.BtnApply.TabIndex = 0;
@@ -58,7 +58,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(389, 105);
             this.Controls.Add(this.BtnApply);
             this.Controls.Add(this.BtnCancel);
             this.Name = "Form1";

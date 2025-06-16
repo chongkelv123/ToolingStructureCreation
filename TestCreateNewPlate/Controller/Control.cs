@@ -27,20 +27,12 @@ namespace TestCreateNewPlate.Controller
 
         public void Start()
         {
-            StationToolingStructure toolingStructure = new StationToolingStructure();
-            var list = toolingStructure.GetPlateThicknesses();
-            foreach (var plate in list)
-            {
-                if(plate.Key.Equals("mat_thk", StringComparison.OrdinalIgnoreCase))
-                {
-                    // Skip material thickness, as it is not a plate
-                    continue;
-                }
-                drawing.CreateNewPlate(plate.Key, plate.Value);
-            }
-
-            drawing.CreateStationAssembly(list, "Stn1_Assembly");
-            
+            //System.Diagnostics.Debugger.Launch();
+            StationToolingStructure stn1ToolStructure = new StationToolingStructure(300, 420, "Stn1");
+            StationToolingStructure stn2ToolStructure = new StationToolingStructure(300, 500, "Stn2");
+            drawing.CreateStationFactory(stn1ToolStructure);
+            drawing.CreateStationFactory(stn2ToolStructure);
+            drawing.CreateToolAssembly();
         }
     }
 }
