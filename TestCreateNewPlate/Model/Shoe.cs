@@ -57,7 +57,7 @@ namespace TestCreateNewPlate.Model
             fileNew.Units = Part.Units.Millimeters;
             fileNew.TemplatePresentationName = "Shoe";
             fileNew.SetCanCreateAltrep(false);
-            fileNew.NewFileName = $"{folderPath}-{shoeName}.prt";
+            fileNew.NewFileName = $"{folderPath}{shoeName}.prt";
             fileNew.MakeDisplayedPart = true;
             fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
             NXObject shoeObject;

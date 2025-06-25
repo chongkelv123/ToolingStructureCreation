@@ -40,6 +40,11 @@ namespace TestCreateNewPlate.Controller
             stn3ToolStructure.CreateStationFactory();
             stn4ToolStructure.CreateStationFactory();
 
+            Shoe upperShoe = new Shoe(Shoe.UPPER_SHOE, 1850, 500, 70, drawing);
+            Shoe lowerShoe = new Shoe(Shoe.LOWER_SHOE, 1850, 500, 70, drawing);
+            upperShoe.CreateNewShoe(folderPath);
+            lowerShoe.CreateNewShoe(folderPath);
+
             drawing.CreateToolAssembly(folderPath);
         }
     }

@@ -128,6 +128,11 @@ namespace TestCreateNewPlate.Model
 
             string partToAdd = $"{folderPath}{compName}.prt";
 
+            if(compName.Contains(DIE_PLATE) || compName.Contains(LOWER_PAD))
+            {
+                layer = 200;
+            }
+
             NXOpen.Assemblies.Component component = compAssy.AddComponent(partToAdd, referenceSetName, compName, basePoint, orientation, layer, out status);
 
             NXOpen.Positioning.ComponentPositioner positioner = workAssy.ComponentAssembly.Positioner;
@@ -141,10 +146,51 @@ namespace TestCreateNewPlate.Model
 
             NXOpen.Layer.StateInfo[] stateArray = new NXOpen.Layer.StateInfo[]
             {
-                new NXOpen.Layer.StateInfo(100, NXOpen.Layer.State.Selectable)
+                new NXOpen.Layer.StateInfo(layer, NXOpen.Layer.State.Selectable)
             };
             workAssy.Layers.ChangeStates(stateArray);
-        }        
+        }
+        public void InsertShoe(Part workAssy, string compName, Point3d basePoint, string folderPath)
+        {
+            ComponentAssembly compAssy = workAssy.ComponentAssembly;
+            PartLoadStatus status = null;
+            int layer = 100;
+            string referenceSetName = "MODEL";            
+            Matrix3x3 orientation = new Matrix3x3();
+            orientation.Xx = 1.0;
+            orientation.Xy = 0.0;
+            orientation.Xz = 0.0;
+            orientation.Yx = 0.0;
+            orientation.Yy = 1.0;
+            orientation.Yz = 0.0;
+            orientation.Zx = 0.0;
+            orientation.Zy = 0.0;
+            orientation.Zz = 1.0;
+
+            string partToAdd = $"{folderPath}{compName}.prt";
+
+            if(compName.Equals(Shoe.LOWER_SHOE))
+            {
+                layer = 200;
+            }
+
+            NXOpen.Assemblies.Component component = compAssy.AddComponent(partToAdd, referenceSetName, compName, basePoint, orientation, layer, out status);
+
+            NXOpen.Positioning.ComponentPositioner positioner = workAssy.ComponentAssembly.Positioner;
+            NXOpen.Positioning.Network network = positioner.EstablishNetwork();
+            NXOpen.Positioning.ComponentNetwork componentNetwork = ((NXOpen.Positioning.ComponentNetwork)network);
+            NXOpen.Positioning.Constraint constraint = positioner.CreateConstraint(true);
+            NXOpen.Positioning.ComponentConstraint componentConstraint = ((NXOpen.Positioning.ComponentConstraint)constraint);
+            componentConstraint.ConstraintType = NXOpen.Positioning.Constraint.Type.Fix;
+            NXOpen.Positioning.ConstraintReference constraintReference = componentConstraint.CreateConstraintReference(component, component, false, false, false);
+            componentNetwork.Solve();
+
+            NXOpen.Layer.StateInfo[] stateArray = new NXOpen.Layer.StateInfo[]
+            {
+                new NXOpen.Layer.StateInfo(layer, NXOpen.Layer.State.Selectable)
+            };
+            workAssy.Layers.ChangeStates(stateArray);
+        }
 
         public void CreateToolAssembly(string folderPath)
         {
@@ -161,25 +207,28 @@ namespace TestCreateNewPlate.Model
             NXObject plateObject;
             plateObject = fileNew.Commit();
 
-            Part workPart = session.Parts.Work;
+            Part workAssy = session.Parts.Work;
             Part displayPart = session.Parts.Display;
 
             fileNew.Destroy();
 
             session.ApplicationSwitchImmediate("UG_APP_MODELING");
 
-            workPart.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
+            workAssy.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
 
-            InsertStationAssembly(workPart, "Stn1-Assembly", 0.0, folderPath);
-            InsertStationAssembly(workPart, "Stn2-Assembly", 422.0, folderPath);
-            InsertStationAssembly(workPart, "Stn3-Assembly", 924.0, folderPath);
-            InsertStationAssembly(workPart, "Stn4-Assembly", 1376.0, folderPath);
+            InsertStationAssembly(workAssy, "Stn1-Assembly", 0.0, folderPath);
+            InsertStationAssembly(workAssy, "Stn2-Assembly", 422.0, folderPath);
+            InsertStationAssembly(workAssy, "Stn3-Assembly", 924.0, folderPath);
+            InsertStationAssembly(workAssy, "Stn4-Assembly", 1376.0, folderPath);
+
+            InsertShoe(workAssy, Shoe.UPPER_SHOE, new Point3d(-17.0, 0.0, 234.55), folderPath);
+            InsertShoe(workAssy, Shoe.LOWER_SHOE, new Point3d(-17.0, 0.0, 0.0), folderPath);
 
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
             BasePart.CloseAfterSave save = BasePart.CloseAfterSave.False;
-            workPart.Save(saveComponentParts, save);
+            workAssy.Save(saveComponentParts, save);
 
-            workPart.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
+            workAssy.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
         }
 
         public void InsertStationAssembly(Part workAssy, string assyName, double distance, string folderPath)
