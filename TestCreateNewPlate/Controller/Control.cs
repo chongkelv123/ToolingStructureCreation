@@ -16,8 +16,7 @@ namespace TestCreateNewPlate.Controller
 
         public NXDrawing GetDrawing => drawing;
         public formToolStructure GetForm => myForm;
-
-        //string folderPath = "C:\\CreateFolder\\Testing-Tooling-Structure\\";
+        
         string folderPath;
 
         public Control()
@@ -29,12 +28,18 @@ namespace TestCreateNewPlate.Controller
         }
 
         public void Start()
-        {
-            folderPath = myForm.GetPath;
+        {            
+            folderPath = myForm.GetPath + "\\";
             StationToolingStructure stn1ToolStructure = new StationToolingStructure(300, 420, "Stn1", drawing, folderPath);
             StationToolingStructure stn2ToolStructure = new StationToolingStructure(300, 500, "Stn2", drawing, folderPath);
+            StationToolingStructure stn3ToolStructure = new StationToolingStructure(300, 450, "Stn3", drawing, folderPath);
+            StationToolingStructure stn4ToolStructure = new StationToolingStructure(300, 440, "Stn4", drawing, folderPath);
+
             stn1ToolStructure.CreateStationFactory();
             stn2ToolStructure.CreateStationFactory();
+            stn3ToolStructure.CreateStationFactory();
+            stn4ToolStructure.CreateStationFactory();
+
             drawing.CreateToolAssembly(folderPath);
         }
     }

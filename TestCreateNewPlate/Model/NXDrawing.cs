@@ -172,6 +172,8 @@ namespace TestCreateNewPlate.Model
 
             InsertStationAssembly(workPart, "Stn1-Assembly", 0.0, folderPath);
             InsertStationAssembly(workPart, "Stn2-Assembly", 422.0, folderPath);
+            InsertStationAssembly(workPart, "Stn3-Assembly", 924.0, folderPath);
+            InsertStationAssembly(workPart, "Stn4-Assembly", 1376.0, folderPath);
 
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
             BasePart.CloseAfterSave save = BasePart.CloseAfterSave.False;
