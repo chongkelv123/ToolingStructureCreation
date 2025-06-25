@@ -38,9 +38,7 @@ namespace TestCreateNewPlate.Model
         Part workPart;
         UI ui;
         UFSession ufs;
-        Controller.Control control;
-
-        string folderPath = "C:\\CreateFolder\\Testing-Tooling-Structure\\";
+        Controller.Control control;        
 
         const string LOWER_PAD = "LOWER_PAD";
         const string DIE_PLATE = "DIE_PLATE";
@@ -48,7 +46,7 @@ namespace TestCreateNewPlate.Model
         const string STRIPPER_PLATE = "STRIPPER_PLATE";
         const string BOTTOMING_PLATE = "BOTTOMING_PLATE";
         const string PUNCH_HOLDER = "PUNCH_HOLDER";
-        const string UPPER_PAD = "UPPER_PAD";
+        const string UPPER_PAD = "UPPER_PAD";        
 
         public NXDrawing()
         {
@@ -70,7 +68,7 @@ namespace TestCreateNewPlate.Model
             ui.NXMessageBox.Show(title, msgboxType, message);
         }
 
-        public void CreateStationAssembly(Dictionary<string, double> plateList, string stationNumber)
+        public void CreateStationAssembly(Dictionary<string, double> plateList, string stationNumber, string folderPath)
         {
             FileNew fileNew = session.Parts.FileNew();
             fileNew.TemplateFileName = "3DA_Template_STP-V00.prt";
@@ -78,8 +76,7 @@ namespace TestCreateNewPlate.Model
             fileNew.ApplicationName = "AssemblyTemplate";
             fileNew.Units = Part.Units.Millimeters;
             fileNew.TemplatePresentationName = "Assembly";
-            fileNew.SetCanCreateAltrep(false);
-            //string fileName = "ToolAssembly";
+            fileNew.SetCanCreateAltrep(false);            
             fileNew.NewFileName = $"{folderPath}{stationNumber}-Assembly.prt";
             fileNew.MakeDisplayedPart = true;
             fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
@@ -93,6 +90,8 @@ namespace TestCreateNewPlate.Model
 
             session.ApplicationSwitchImmediate("UG_APP_MODELING");
 
+            workPart.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
+
             double cumThk = 0.0;
             foreach (var component in plateList)
             {
@@ -102,16 +101,14 @@ namespace TestCreateNewPlate.Model
                     continue; // Skip the material thickness entry
                 }
                 string fileName = stationNumber + "-" + component.Key;
-                InsertComponent2(workPart, fileName, cumThk);
+                InsertPlate(workPart, fileName, cumThk, folderPath);
             }
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
             BasePart.CloseAfterSave save = BasePart.CloseAfterSave.True;
-            workPart.Save(saveComponentParts, save);
-
-            //workPart.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);   
+            workPart.Save(saveComponentParts, save);            
         }
 
-        public void InsertComponent2(Part workAssy, string compName, double cumThk)
+        public void InsertPlate(Part workAssy, string compName, double cumThk, string folderPath)
         {
             ComponentAssembly compAssy = workAssy.ComponentAssembly;
             PartLoadStatus status = null;
@@ -147,113 +144,9 @@ namespace TestCreateNewPlate.Model
                 new NXOpen.Layer.StateInfo(100, NXOpen.Layer.State.Selectable)
             };
             workAssy.Layers.ChangeStates(stateArray);
-        }
+        }        
 
-        public void CreateNewPlate(StationToolingStructure toolingStructure, string fileName, double thickness)
-        {
-            FileNew fileNew = session.Parts.FileNew();
-            fileNew.TemplateFileName = "3DA_Template_PLATE-V00.prt";
-            fileNew.UseBlankTemplate = false;
-            fileNew.ApplicationName = "ModelTemplate";
-            fileNew.Units = Part.Units.Millimeters;
-            fileNew.TemplatePresentationName = "Plate";
-            fileNew.SetCanCreateAltrep(false);
-            fileNew.NewFileName = $"{folderPath}{toolingStructure.GetStationNumber()}-{fileName}.prt";
-            fileNew.MakeDisplayedPart = true;
-            fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
-            NXObject plateObject;
-            plateObject = fileNew.Commit();
-
-            Part workPart = session.Parts.Work;
-            Part displayPart = session.Parts.Display;
-
-            fileNew.Destroy();
-
-            session.ApplicationSwitchImmediate("UG_APP_MODELING");
-
-            NXOpen.Expression expressionPlateWidth = ((NXOpen.Expression)workPart.Expressions.FindObject("PlateWidth"));
-            NXOpen.Expression expressionPlateLength = ((NXOpen.Expression)workPart.Expressions.FindObject("PlateLength"));
-            NXOpen.Expression expressionPlateThk = ((NXOpen.Expression)workPart.Expressions.FindObject("PlateThk"));
-            if (expressionPlateWidth == null)
-            {
-                ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'PlateWidth' not found.");
-                return;
-            }
-            else if (expressionPlateLength == null)
-            {
-                ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'PlateLength' not found.");
-                return;
-            }
-            else if (expressionPlateThk == null)
-            {
-                ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'PlateThk' not found.");
-                return;
-            }
-            workPart.Expressions.EditExpression(expressionPlateWidth, toolingStructure.GetPlateWidth().ToString());
-            workPart.Expressions.EditExpression(expressionPlateLength, toolingStructure.GetPlateLength().ToString());
-            workPart.Expressions.EditExpression(expressionPlateThk, thickness.ToString());
-
-            NXOpen.Session.UndoMarkId undoMark = session.SetUndoMark(Session.MarkVisibility.Invisible, "Create New Plate");
-            session.UpdateManager.DoUpdate(undoMark);
-
-            /*
-             * Change Color
-             */
-            NXOpen.BodyCollection bodyCollection = workPart.Bodies;
-            foreach (NXOpen.Body body in bodyCollection)
-            {
-                if (fileName.Equals(UPPER_PAD))
-                {
-                    body.Color = (int)PlateColor.UPPERPAD;
-                }
-                else if (fileName.Equals(PUNCH_HOLDER))
-                {
-                    body.Color = (int)PlateColor.PUNCHHOLDER;
-                }
-                else if (fileName.Equals(BOTTOMING_PLATE))
-                {
-                    body.Color = (int)PlateColor.BOTTOMINGPLATE;
-                }
-                else if (fileName.Equals(STRIPPER_PLATE))
-                {
-                    body.Color = (int)PlateColor.STRIPPERPLATE;
-                }
-                else if (fileName.Equals(DIE_PLATE))
-                {
-                    body.Color = (int)PlateColor.DIEPLATE;
-                }
-                else if (fileName.Equals(LOWER_PAD))
-                {
-                    body.Color = (int)PlateColor.LOWERPAD;
-                }
-                else
-                {
-                    body.Color = (int)PlateColor.COMMONPLATE;
-                }
-            }
-
-            BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
-            BasePart.CloseAfterSave close = BasePart.CloseAfterSave.True;
-            workPart.Save(saveComponentParts, close);
-        }
-
-        public void CreateStationFactory(StationToolingStructure toolStructure)
-        {
-            var list = toolStructure.GetPlateThicknesses();
-            foreach (var plate in list)
-            {
-                if (plate.Key.Equals("mat_thk", StringComparison.OrdinalIgnoreCase))
-                {
-                    // Skip material thickness, as it is not a plate
-                    continue;
-                }
-                CreateNewPlate(toolStructure, plate.Key, plate.Value);
-            }
-
-            CreateStationAssembly(list, toolStructure.GetStationNumber());
-        }
-
-        public void CreateToolAssembly()
+        public void CreateToolAssembly(string folderPath)
         {
             FileNew fileNew = session.Parts.FileNew();
             fileNew.TemplateFileName = "3DA_Template_STP-V00.prt";
@@ -261,8 +154,7 @@ namespace TestCreateNewPlate.Model
             fileNew.ApplicationName = "AssemblyTemplate";
             fileNew.Units = Part.Units.Millimeters;
             fileNew.TemplatePresentationName = "Assembly";
-            fileNew.SetCanCreateAltrep(false);
-            //string fileName = "ToolAssembly";
+            fileNew.SetCanCreateAltrep(false);            
             fileNew.NewFileName = $"{folderPath}ToolingAssembly.prt";
             fileNew.MakeDisplayedPart = true;
             fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
@@ -276,8 +168,10 @@ namespace TestCreateNewPlate.Model
 
             session.ApplicationSwitchImmediate("UG_APP_MODELING");
 
-            InsertStationAssembly(workPart, "Stn1-Assembly", 0.0);
-            InsertStationAssembly(workPart, "Stn2-Assembly", 422.0);
+            workPart.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
+
+            InsertStationAssembly(workPart, "Stn1-Assembly", 0.0, folderPath);
+            InsertStationAssembly(workPart, "Stn2-Assembly", 422.0, folderPath);
 
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
             BasePart.CloseAfterSave save = BasePart.CloseAfterSave.False;
@@ -286,7 +180,7 @@ namespace TestCreateNewPlate.Model
             workPart.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
         }
 
-        public void InsertStationAssembly(Part workAssy, string assyName, double distance)
+        public void InsertStationAssembly(Part workAssy, string assyName, double distance, string folderPath)
         {
             ComponentAssembly compAssy = workAssy.ComponentAssembly;
             PartLoadStatus status = null;
@@ -322,6 +216,23 @@ namespace TestCreateNewPlate.Model
                 new NXOpen.Layer.StateInfo(100, NXOpen.Layer.State.Selectable)
             };
             workAssy.Layers.ChangeStates(stateArray);
+        }
+
+        public Session GetSession() 
+        { 
+            return session;
+        }
+        public UI GetUI() 
+        { 
+            return ui; 
+        }
+        public UFSession GetUFSession() 
+        { 
+            return ufs; 
+        }
+        public Part GetWorkPart() 
+        { 
+            return workPart; 
         }
     }
 }

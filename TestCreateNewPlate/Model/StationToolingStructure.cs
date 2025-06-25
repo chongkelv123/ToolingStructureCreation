@@ -11,9 +11,11 @@ namespace TestCreateNewPlate.Model
         Dictionary<string, double> plateThicknesses;
         double plateWidth;
         double plateLength;
-        string stationNumber = "";
+        string stationNumber;
+        NXDrawing drawing;
+        string folderPath;
 
-        public StationToolingStructure(double plateWidth, double plateLength, string stationName)
+        public StationToolingStructure(double plateWidth, double plateLength, string stationNumber, NXDrawing drawing, string folderPath)
         {
             plateThicknesses = new Dictionary<string, double>
             {
@@ -27,7 +29,9 @@ namespace TestCreateNewPlate.Model
             };
             this.plateWidth = plateWidth;
             this.plateLength = plateLength;
-            this.stationNumber = stationName;
+            this.stationNumber = stationNumber;
+            this.drawing = drawing;
+            this.folderPath = folderPath;
         }
 
         public Dictionary<string, double> GetPlateThicknesses()
@@ -61,6 +65,23 @@ namespace TestCreateNewPlate.Model
         public string GetStationNumber()
         {
             return stationNumber;
-        } 
+        }
+
+        public void CreateStationFactory()
+        {
+            var list = GetPlateThicknesses();
+            foreach (var plate in list)
+            {
+                if (plate.Key.Equals("mat_thk", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Skip material thickness, as it is not a plate
+                    continue;
+                }
+                Plate createPlate = new Plate(plate.Key, GetPlateLength(), GetPlateWidth(), plate.Value, drawing);
+                createPlate.CreateNewPlate(folderPath, stationNumber);
+            }
+
+            drawing.CreateStationAssembly(list, GetStationNumber(), folderPath);
+        }
     }
 }
