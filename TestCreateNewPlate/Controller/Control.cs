@@ -12,23 +12,25 @@ namespace TestCreateNewPlate.Controller
     public class Control
     {
         NXDrawing drawing;
-        Form1 myForm;
+        formToolStructure myForm;
 
         public NXDrawing GetDrawing => drawing;
-        public Form1 GetForm => myForm;
+        public formToolStructure GetForm => myForm;
 
-        string folderPath = "C:\\CreateFolder\\Testing-Tooling-Structure\\";
+        //string folderPath = "C:\\CreateFolder\\Testing-Tooling-Structure\\";
+        string folderPath;
 
         public Control()
         {
             drawing = new NXDrawing(this);
 
-            myForm = new Form1(this);
+            myForm = new formToolStructure(this);
             myForm.ShowDialog();
         }
 
         public void Start()
-        {            
+        {
+            folderPath = myForm.GetPath;
             StationToolingStructure stn1ToolStructure = new StationToolingStructure(300, 420, "Stn1", drawing, folderPath);
             StationToolingStructure stn2ToolStructure = new StationToolingStructure(300, 500, "Stn2", drawing, folderPath);
             stn1ToolStructure.CreateStationFactory();
