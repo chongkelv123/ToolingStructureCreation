@@ -67,6 +67,7 @@
     <Compile Include="Main\MyProgram.cs" />
     <Compile Include="Main\Unload.cs" />
     <Compile Include="Model\NXDrawing.cs" />
+    <Compile Include="Model\ParallelBar.cs" />
     <Compile Include="Model\Plate.cs" />
     <Compile Include="Model\Shoe.cs" />
     <Compile Include="Model\ToolingAssembly.cs" />

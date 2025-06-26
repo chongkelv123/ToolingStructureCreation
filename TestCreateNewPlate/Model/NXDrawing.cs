@@ -32,6 +32,7 @@ namespace TestCreateNewPlate.Model
         LOWERPAD = 92,
         LOWERSHOE = 60,
         COMMONPLATE = 80,
+        PARALLELBAR = 87,
     }
     public class NXDrawing
     {
