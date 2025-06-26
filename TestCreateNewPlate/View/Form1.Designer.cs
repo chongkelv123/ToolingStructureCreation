@@ -42,7 +42,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.txtLowerPadThk = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.txtDieHeight = new System.Windows.Forms.TextBox();
             this.txtDiePltThk = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -126,7 +126,7 @@
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.txtLowerPadThk);
             this.groupBox2.Controls.Add(this.label7);
-            this.groupBox2.Controls.Add(this.textBox2);
+            this.groupBox2.Controls.Add(this.txtDieHeight);
             this.groupBox2.Controls.Add(this.txtDiePltThk);
             this.groupBox2.Controls.Add(this.label12);
             this.groupBox2.Controls.Add(this.label6);
@@ -230,14 +230,14 @@
             this.label7.TabIndex = 1;
             this.label7.Text = "LOWER PAD:";
             // 
-            // textBox2
+            // txtDieHeight
             // 
-            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox2.Enabled = false;
-            this.textBox2.Location = new System.Drawing.Point(315, 41);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(150, 22);
-            this.textBox2.TabIndex = 7;
+            this.txtDieHeight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtDieHeight.Enabled = false;
+            this.txtDieHeight.Location = new System.Drawing.Point(315, 41);
+            this.txtDieHeight.Name = "txtDieHeight";
+            this.txtDieHeight.Size = new System.Drawing.Size(150, 22);
+            this.txtDieHeight.TabIndex = 7;
             // 
             // txtDiePltThk
             // 
@@ -453,7 +453,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtCommonPltThk;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox txtDieHeight;
         private System.Windows.Forms.Label label12;
     }
 }
