@@ -38,15 +38,7 @@ namespace TestCreateNewPlate.Model
         Part workPart;
         UI ui;
         UFSession ufs;
-        Controller.Control control;
-
-        /*const string LOWER_PAD = "LOWER_PAD";
-        const string DIE_PLATE = "DIE_PLATE";
-        const string MAT_THK = "mat_thk";
-        const string STRIPPER_PLATE = "STRIPPER_PLATE";
-        const string BOTTOMING_PLATE = "BOTTOMING_PLATE";
-        const string PUNCH_HOLDER = "PUNCH_HOLDER";
-        const string UPPER_PAD = "UPPER_PAD";*/
+        Controller.Control control;        
 
         public NXDrawing()
         {
@@ -66,122 +58,7 @@ namespace TestCreateNewPlate.Model
         public void ShowMessageBox(string title, NXMessageBox.DialogType msgboxType, string message)
         {
             ui.NXMessageBox.Show(title, msgboxType, message);
-        }
-
-        /*public void CreateStationAssembly(Dictionary<string, double> plateList, string stationNumber, string folderPath)
-        {
-            FileNew fileNew = session.Parts.FileNew();
-            fileNew.TemplateFileName = "3DA_Template_STP-V00.prt";
-            fileNew.UseBlankTemplate = false;
-            fileNew.ApplicationName = "AssemblyTemplate";
-            fileNew.Units = Part.Units.Millimeters;
-            fileNew.TemplatePresentationName = "Assembly";
-            fileNew.SetCanCreateAltrep(false);
-            fileNew.NewFileName = $"{folderPath}{stationNumber}-Assembly.prt";
-            fileNew.MakeDisplayedPart = true;
-            fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
-            NXObject plateObject;
-            plateObject = fileNew.Commit();
-
-            Part workPart = session.Parts.Work;
-            Part displayPart = session.Parts.Display;
-
-            fileNew.Destroy();
-
-            session.ApplicationSwitchImmediate("UG_APP_MODELING");
-
-            workPart.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
-
-            double cumThk = 0.0;
-            foreach (var component in plateList)
-            {
-                cumThk += component.Value;
-                if (component.Key.Equals(MAT_THK, StringComparison.OrdinalIgnoreCase))
-                {
-                    continue; // Skip the material thickness entry
-                }
-                string fileName = stationNumber + "-" + component.Key;
-                Plate.InsertPlate(workPart, fileName, cumThk, folderPath);
-            }
-            BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
-            BasePart.CloseAfterSave save = BasePart.CloseAfterSave.True;
-            workPart.Save(saveComponentParts, save);
-        }*/
-        public void CreateToolAssembly(string folderPath)
-        {
-            FileNew fileNew = session.Parts.FileNew();
-            fileNew.TemplateFileName = "3DA_Template_STP-V00.prt";
-            fileNew.UseBlankTemplate = false;
-            fileNew.ApplicationName = "AssemblyTemplate";
-            fileNew.Units = Part.Units.Millimeters;
-            fileNew.TemplatePresentationName = "Assembly";
-            fileNew.SetCanCreateAltrep(false);
-            fileNew.NewFileName = $"{folderPath}ToolingAssembly.prt";
-            fileNew.MakeDisplayedPart = true;
-            fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
-            NXObject plateObject;
-            plateObject = fileNew.Commit();
-
-            Part workAssy = session.Parts.Work;
-            Part displayPart = session.Parts.Display;
-
-            fileNew.Destroy();
-
-            session.ApplicationSwitchImmediate("UG_APP_MODELING");
-
-            workAssy.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
-
-            InsertStationAssembly(workAssy, "Stn1-Assembly", new Point3d(0.0, 0.0, 0.0), folderPath);
-            InsertStationAssembly(workAssy, "Stn2-Assembly", new Point3d(422.0, 0, 0), folderPath);
-            InsertStationAssembly(workAssy, "Stn3-Assembly", new Point3d(924.0, 0, 0), folderPath);
-            InsertStationAssembly(workAssy, "Stn4-Assembly", new Point3d(1376.0, 0, 0), folderPath);
-
-            Shoe.InsertShoe(workAssy, Shoe.UPPER_SHOE, new Point3d(-17.0, 0.0, 234.55), folderPath);
-            Shoe.InsertShoe(workAssy, Shoe.LOWER_SHOE, new Point3d(-17.0, 0.0, 0.0), folderPath);
-
-            BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
-            BasePart.CloseAfterSave save = BasePart.CloseAfterSave.False;
-            workAssy.Save(saveComponentParts, save);
-
-            workAssy.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
-        }
-
-        public void InsertStationAssembly(Part workAssy, string assyName, Point3d basePoint, string folderPath)
-        {
-            ComponentAssembly compAssy = workAssy.ComponentAssembly;
-            PartLoadStatus status = null;
-            int layer = 100;
-            string referenceSetName = "MODEL";            
-            Matrix3x3 orientation = new Matrix3x3();
-            orientation.Xx = 1.0;
-            orientation.Xy = 0.0;
-            orientation.Xz = 0.0;
-            orientation.Yx = 0.0;
-            orientation.Yy = 1.0;
-            orientation.Yz = 0.0;
-            orientation.Zx = 0.0;
-            orientation.Zy = 0.0;
-            orientation.Zz = 1.0;
-
-            string partToAdd = $"{folderPath}{assyName}.prt";
-
-            NXOpen.Assemblies.Component component = compAssy.AddComponent(partToAdd, referenceSetName, assyName, basePoint, orientation, layer, out status);
-
-            NXOpen.Positioning.ComponentPositioner positioner = workAssy.ComponentAssembly.Positioner;
-            NXOpen.Positioning.Network network = positioner.EstablishNetwork();
-            NXOpen.Positioning.ComponentNetwork componentNetwork = ((NXOpen.Positioning.ComponentNetwork)network);
-            NXOpen.Positioning.Constraint constraint = positioner.CreateConstraint(true);
-            NXOpen.Positioning.ComponentConstraint componentConstraint = ((NXOpen.Positioning.ComponentConstraint)constraint);
-            componentConstraint.ConstraintType = NXOpen.Positioning.Constraint.Type.Fix;
-            NXOpen.Positioning.ConstraintReference constraintReference = componentConstraint.CreateConstraintReference(component, component, false, false, false);
-            componentNetwork.Solve();
-
-            NXOpen.Layer.StateInfo[] stateArray = new NXOpen.Layer.StateInfo[]
-            {
-                new NXOpen.Layer.StateInfo(layer, NXOpen.Layer.State.Selectable)
-            };
-            workAssy.Layers.ChangeStates(stateArray);
-        }
+        }               
 
         public Session GetSession()
         {

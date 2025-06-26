@@ -31,13 +31,13 @@ namespace TestCreateNewPlate.Controller
 
         public void Start()
         {
-            plateThicknesses.Add(ToolingAssembly.LOWER_PAD, 25.0);
-            plateThicknesses.Add(ToolingAssembly.DIE_PLATE, 35.0);
-            plateThicknesses.Add(ToolingAssembly.MAT_THK, 1.55); // Material thickness, not a plate
-            plateThicknesses.Add(ToolingAssembly.STRIPPER_PLATE, 30.0);
-            plateThicknesses.Add(ToolingAssembly.BOTTOMING_PLATE, 16.0);
-            plateThicknesses.Add(ToolingAssembly.PUNCH_HOLDER, 30.0);
-            plateThicknesses.Add(ToolingAssembly.UPPER_PAD, 27.0);
+            plateThicknesses.Add(ToolingAssembly.LOWER_PAD, myForm.LowerPadThk);
+            plateThicknesses.Add(ToolingAssembly.DIE_PLATE, myForm.DiePltThk);
+            plateThicknesses.Add(ToolingAssembly.MAT_THK, myForm.MatThk); // Material thickness, not a plate
+            plateThicknesses.Add(ToolingAssembly.STRIPPER_PLATE, myForm.StripperPltThk);
+            plateThicknesses.Add(ToolingAssembly.BOTTOMING_PLATE, myForm.BottomPltThk);
+            plateThicknesses.Add(ToolingAssembly.PUNCH_HOLDER, myForm.PunHolderThk);
+            plateThicknesses.Add(ToolingAssembly.UPPER_PAD, myForm.UpperPadThk);
 
             folderPath = myForm.GetPath + "\\";
             ToolingAssembly stn1ToolStructure = new ToolingAssembly(300, 420, "Stn1", drawing, folderPath, plateThicknesses);
@@ -50,12 +50,27 @@ namespace TestCreateNewPlate.Controller
             stn3ToolStructure.CreateStationFactory();
             stn4ToolStructure.CreateStationFactory();
 
-            Shoe upperShoe = new Shoe(Shoe.UPPER_SHOE, 1850, 500, 70, drawing);
-            Shoe lowerShoe = new Shoe(Shoe.LOWER_SHOE, 1850, 500, 70, drawing);
+            Shoe upperShoe = new Shoe(Shoe.UPPER_SHOE, 1850, 500, myForm.UpperShoeThk, drawing);
+            Shoe lowerShoe = new Shoe(Shoe.LOWER_SHOE, 1850, 500, myForm.LowerShoeThk, drawing);
             upperShoe.CreateNewShoe(folderPath);
             lowerShoe.CreateNewShoe(folderPath);
 
-            drawing.CreateToolAssembly(folderPath);
+            ToolingAssembly.CreateToolAssembly(folderPath);
+        }
+
+        public double GetUpperShoe_ZValue()
+        {
+            double totalPlateThickness =
+                myForm.UpperPadThk +
+                myForm.PunHolderThk +
+                myForm.BottomPltThk +
+                myForm.StripperPltThk +
+                myForm.MatThk +
+                myForm.DiePltThk +
+                myForm.LowerPadThk +
+                myForm.UpperShoeThk;
+
+            return totalPlateThickness;
         }
     }
 }

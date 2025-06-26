@@ -16,6 +16,7 @@ namespace TestCreateNewPlate.Model
         string stationNumber;
         NXDrawing drawing;
         string folderPath;
+        static Session session;
 
         public const string LOWER_PAD = "LOWER_PAD";
         public const string DIE_PLATE = "DIE_PLATE";
@@ -37,6 +38,7 @@ namespace TestCreateNewPlate.Model
             this.stationNumber = stationNumber;
             this.drawing = drawing;
             this.folderPath = folderPath;
+            session = drawing.GetSession();
 
             PlateThicknesses = plateThicknesses ?? new Dictionary<string, double>();
         }        
@@ -130,9 +132,8 @@ namespace TestCreateNewPlate.Model
             BasePart.CloseAfterSave save = BasePart.CloseAfterSave.True;
             workPart.Save(saveComponentParts, save);
         }
-        public void CreateToolAssembly(string folderPath)
-        {
-            Session session = drawing.GetSession();
+        static public void CreateToolAssembly(string folderPath)
+        {            
             FileNew fileNew = session.Parts.FileNew();
             fileNew.TemplateFileName = TEMPLATE_STP_NAME;
             fileNew.UseBlankTemplate = false;
@@ -169,7 +170,7 @@ namespace TestCreateNewPlate.Model
 
             workAssy.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
         }
-        public void InsertStationAssembly(Part workAssy, string assyName, Point3d basePoint, string folderPath)
+        static public void InsertStationAssembly(Part workAssy, string assyName, Point3d basePoint, string folderPath)
         {
             ComponentAssembly compAssy = workAssy.ComponentAssembly;
             PartLoadStatus status = null;
