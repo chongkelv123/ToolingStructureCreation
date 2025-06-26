@@ -14,7 +14,7 @@ namespace TestCreateNewPlate.Controller
         NXDrawing drawing;
         formToolStructure myForm;
 
-        public NXDrawing GetDrawing => drawing;
+        public NXDrawing GetDrawing => drawing;        
         public formToolStructure GetForm => myForm;
 
         Dictionary<string, double> plateThicknesses = new Dictionary<string, double>();
@@ -57,20 +57,6 @@ namespace TestCreateNewPlate.Controller
 
             ToolingAssembly.CreateToolAssembly(folderPath);
         }
-
-        public double GetUpperShoe_ZValue()
-        {
-            double totalPlateThickness =
-                myForm.UpperPadThk +
-                myForm.PunHolderThk +
-                myForm.BottomPltThk +
-                myForm.StripperPltThk +
-                myForm.MatThk +
-                myForm.DiePltThk +
-                myForm.LowerPadThk +
-                myForm.UpperShoeThk;
-
-            return totalPlateThickness;
-        }
+        
     }
 }

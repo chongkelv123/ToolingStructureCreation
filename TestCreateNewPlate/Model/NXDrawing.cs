@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TestCreateNewPlate.Controller;
+using TestCreateNewPlate.View;
 
 namespace TestCreateNewPlate.Model
 {
@@ -75,6 +76,22 @@ namespace TestCreateNewPlate.Model
         public Part GetWorkPart()
         {
             return workPart;
+        }
+
+        public double GetUpperShoe_ZValue()
+        {
+            formToolStructure myForm = control.GetForm;
+            double totalPlateThickness =
+                myForm.UpperPadThk +
+                myForm.PunHolderThk +
+                myForm.BottomPltThk +
+                myForm.StripperPltThk +
+                myForm.MatThk +
+                myForm.DiePltThk +
+                myForm.LowerPadThk +
+                myForm.UpperShoeThk;
+
+            return totalPlateThickness;
         }
     }
 }
