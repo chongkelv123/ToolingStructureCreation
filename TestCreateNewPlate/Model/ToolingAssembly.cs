@@ -1,81 +1,104 @@
 ﻿using NXOpen;
-using NXOpen.Annotations;
 using NXOpen.Assemblies;
-using NXOpen.CAE;
-using NXOpen.CAE.Connections;
-using NXOpen.Display;
-using NXOpen.Features;
-using NXOpen.Layout2d;
-using NXOpen.UF;
-using NXOpenUI;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design.Serialization;
 using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using TestCreateNewPlate.Controller;
 
 namespace TestCreateNewPlate.Model
 {
-    public enum PlateColor
-    {
-        UPPERSHOE = 127,
-        UPPERPAD = 91,
-        PUNCHHOLDER = 59,
-        BOTTOMINGPLATE = 124,
-        STRIPPERPLATE = 55,
-        DIEPLATE = 108,
-        LOWERPAD = 92,
-        LOWERSHOE = 60,
-        COMMONPLATE = 80,
-    }
-    public class NXDrawing
-    {
-        Session session;
-        Part workPart;
-        UI ui;
-        UFSession ufs;
-        Controller.Control control;
+    public class ToolingAssembly
+    {        
+        public Dictionary<string, double> PlateThicknesses { get; set; }
+        double plateWidth;
+        double plateLength;
+        string stationNumber;
+        NXDrawing drawing;
+        string folderPath;
 
-        /*const string LOWER_PAD = "LOWER_PAD";
-        const string DIE_PLATE = "DIE_PLATE";
-        const string MAT_THK = "mat_thk";
-        const string STRIPPER_PLATE = "STRIPPER_PLATE";
-        const string BOTTOMING_PLATE = "BOTTOMING_PLATE";
-        const string PUNCH_HOLDER = "PUNCH_HOLDER";
-        const string UPPER_PAD = "UPPER_PAD";*/
+        public const string LOWER_PAD = "LOWER_PAD";
+        public const string DIE_PLATE = "DIE_PLATE";
+        public const string MAT_THK = "mat_thk";
+        public const string STRIPPER_PLATE = "STRIPPER_PLATE";
+        public const string BOTTOMING_PLATE = "BOTTOMING_PLATE";
+        public const string PUNCH_HOLDER = "PUNCH_HOLDER";
+        public const string UPPER_PAD = "UPPER_PAD";
+        public const string TEMPLATE_STP_NAME = "3DA_Template_STP-V00.prt";
+        public const string MODEL = "MODEL";
+        public const string ASSEMBLY_TEMPLATE = "AssemblyTemplate";
+        public const string UG_APP_MODELING = "UG_APP_MODELING";
+        public const string ASSEMBLY = "Assembly";
 
-        public NXDrawing()
+        public ToolingAssembly(double plateWidth, double plateLength, string stationNumber, NXDrawing drawing, string folderPath, Dictionary<string, double>plateThicknesses)
+        {            
+            this.plateWidth = plateWidth;
+            this.plateLength = plateLength;
+            this.stationNumber = stationNumber;
+            this.drawing = drawing;
+            this.folderPath = folderPath;
+
+            PlateThicknesses = plateThicknesses ?? new Dictionary<string, double>();
+        }        
+        
+
+        public double GetTotalThickness()
         {
+            double totalThickness = 0.0;
+            foreach (var plate in PlateThicknesses)
+            {
+                if (!plate.Key.Equals(MAT_THK, StringComparison.OrdinalIgnoreCase))
+                {
+                    totalThickness += plate.Value;
+                }
+            }
+            return totalThickness;
         }
 
-        public NXDrawing(Controller.Control control)
+        public double GetPlateWidth()
         {
-            session = Session.GetSession();
-            ufs = UFSession.GetUFSession();
-            workPart = session.Parts.Work;
-            ui = UI.GetUI();
-
-
-            this.control = control;
+            return plateWidth;
         }
 
-        public void ShowMessageBox(string title, NXMessageBox.DialogType msgboxType, string message)
+        public double GetPlateLength()
         {
-            ui.NXMessageBox.Show(title, msgboxType, message);
+            return plateLength;
         }
 
-        /*public void CreateStationAssembly(Dictionary<string, double> plateList, string stationNumber, string folderPath)
+        public string GetStationNumber()
         {
+            return stationNumber;
+        }
+
+        public void CreateStationFactory()
+        {
+            if (PlateThicknesses == null)
+            {
+                throw new InvalidOperationException("PlateThicknesses dictionary is not initialized. Please provide a valid dictionary of plate thicknesses.");
+            }
+            foreach (var plt in PlateThicknesses)
+            {
+                if (plt.Key.Equals(MAT_THK, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Skip material thickness, as it is not a plate
+                    continue;
+                }
+                Plate plate = new Plate(plt.Key, GetPlateLength(), GetPlateWidth(), plt.Value, drawing);
+                plate.CreateNewPlate(folderPath, stationNumber);
+            }
+
+            CreateStationAssembly(PlateThicknesses, GetStationNumber(), folderPath);
+        }
+
+        public void CreateStationAssembly(Dictionary<string, double> plateList, string stationNumber, string folderPath)
+        {
+            Session session = drawing.GetSession();
             FileNew fileNew = session.Parts.FileNew();
-            fileNew.TemplateFileName = "3DA_Template_STP-V00.prt";
+            fileNew.TemplateFileName = TEMPLATE_STP_NAME;
             fileNew.UseBlankTemplate = false;
-            fileNew.ApplicationName = "AssemblyTemplate";
+            fileNew.ApplicationName = ASSEMBLY_TEMPLATE;
             fileNew.Units = Part.Units.Millimeters;
-            fileNew.TemplatePresentationName = "Assembly";
+            fileNew.TemplatePresentationName = ASSEMBLY;
             fileNew.SetCanCreateAltrep(false);
             fileNew.NewFileName = $"{folderPath}{stationNumber}-Assembly.prt";
             fileNew.MakeDisplayedPart = true;
@@ -88,7 +111,7 @@ namespace TestCreateNewPlate.Model
 
             fileNew.Destroy();
 
-            session.ApplicationSwitchImmediate("UG_APP_MODELING");
+            session.ApplicationSwitchImmediate(UG_APP_MODELING);
 
             workPart.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
 
@@ -106,15 +129,16 @@ namespace TestCreateNewPlate.Model
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
             BasePart.CloseAfterSave save = BasePart.CloseAfterSave.True;
             workPart.Save(saveComponentParts, save);
-        }*/
+        }
         public void CreateToolAssembly(string folderPath)
         {
+            Session session = drawing.GetSession();
             FileNew fileNew = session.Parts.FileNew();
-            fileNew.TemplateFileName = "3DA_Template_STP-V00.prt";
+            fileNew.TemplateFileName = TEMPLATE_STP_NAME;
             fileNew.UseBlankTemplate = false;
-            fileNew.ApplicationName = "AssemblyTemplate";
+            fileNew.ApplicationName = ASSEMBLY_TEMPLATE;
             fileNew.Units = Part.Units.Millimeters;
-            fileNew.TemplatePresentationName = "Assembly";
+            fileNew.TemplatePresentationName = ASSEMBLY;
             fileNew.SetCanCreateAltrep(false);
             fileNew.NewFileName = $"{folderPath}ToolingAssembly.prt";
             fileNew.MakeDisplayedPart = true;
@@ -127,7 +151,7 @@ namespace TestCreateNewPlate.Model
 
             fileNew.Destroy();
 
-            session.ApplicationSwitchImmediate("UG_APP_MODELING");
+            session.ApplicationSwitchImmediate(UG_APP_MODELING);
 
             workAssy.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
 
@@ -145,13 +169,12 @@ namespace TestCreateNewPlate.Model
 
             workAssy.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
         }
-
         public void InsertStationAssembly(Part workAssy, string assyName, Point3d basePoint, string folderPath)
         {
             ComponentAssembly compAssy = workAssy.ComponentAssembly;
             PartLoadStatus status = null;
             int layer = 100;
-            string referenceSetName = "MODEL";            
+            string referenceSetName = MODEL;
             Matrix3x3 orientation = new Matrix3x3();
             orientation.Xx = 1.0;
             orientation.Xy = 0.0;
@@ -182,24 +205,5 @@ namespace TestCreateNewPlate.Model
             };
             workAssy.Layers.ChangeStates(stateArray);
         }
-
-        public Session GetSession()
-        {
-            return session;
-        }
-        public UI GetUI()
-        {
-            return ui;
-        }
-        public UFSession GetUFSession()
-        {
-            return ufs;
-        }
-        public Part GetWorkPart()
-        {
-            return workPart;
-        }
     }
 }
-
-

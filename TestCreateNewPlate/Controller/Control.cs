@@ -16,7 +16,9 @@ namespace TestCreateNewPlate.Controller
 
         public NXDrawing GetDrawing => drawing;
         public formToolStructure GetForm => myForm;
-        
+
+        Dictionary<string, double> plateThicknesses = new Dictionary<string, double>();
+
         string folderPath;
 
         public Control()
@@ -24,16 +26,24 @@ namespace TestCreateNewPlate.Controller
             drawing = new NXDrawing(this);
 
             myForm = new formToolStructure(this);
-            myForm.ShowDialog();
+            myForm.ShowDialog();                                       
         }
 
         public void Start()
-        {            
+        {
+            plateThicknesses.Add(ToolingAssembly.LOWER_PAD, 25.0);
+            plateThicknesses.Add(ToolingAssembly.DIE_PLATE, 35.0);
+            plateThicknesses.Add(ToolingAssembly.MAT_THK, 1.55); // Material thickness, not a plate
+            plateThicknesses.Add(ToolingAssembly.STRIPPER_PLATE, 30.0);
+            plateThicknesses.Add(ToolingAssembly.BOTTOMING_PLATE, 16.0);
+            plateThicknesses.Add(ToolingAssembly.PUNCH_HOLDER, 30.0);
+            plateThicknesses.Add(ToolingAssembly.UPPER_PAD, 27.0);
+
             folderPath = myForm.GetPath + "\\";
-            StationToolingStructure stn1ToolStructure = new StationToolingStructure(300, 420, "Stn1", drawing, folderPath);
-            StationToolingStructure stn2ToolStructure = new StationToolingStructure(300, 500, "Stn2", drawing, folderPath);
-            StationToolingStructure stn3ToolStructure = new StationToolingStructure(300, 450, "Stn3", drawing, folderPath);
-            StationToolingStructure stn4ToolStructure = new StationToolingStructure(300, 440, "Stn4", drawing, folderPath);
+            ToolingAssembly stn1ToolStructure = new ToolingAssembly(300, 420, "Stn1", drawing, folderPath, plateThicknesses);
+            ToolingAssembly stn2ToolStructure = new ToolingAssembly(300, 500, "Stn2", drawing, folderPath, plateThicknesses);
+            ToolingAssembly stn3ToolStructure = new ToolingAssembly(300, 450, "Stn3", drawing, folderPath, plateThicknesses);
+            ToolingAssembly stn4ToolStructure = new ToolingAssembly(300, 440, "Stn4", drawing, folderPath, plateThicknesses);
 
             stn1ToolStructure.CreateStationFactory();
             stn2ToolStructure.CreateStationFactory();

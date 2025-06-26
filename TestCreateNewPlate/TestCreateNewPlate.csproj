@@ -69,7 +69,7 @@
     <Compile Include="Model\NXDrawing.cs" />
     <Compile Include="Model\Plate.cs" />
     <Compile Include="Model\Shoe.cs" />
-    <Compile Include="Model\StationToolingStructure.cs" />
+    <Compile Include="Model\ToolingAssembly.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\Form1.cs">
       <SubType>Form</SubType>
