@@ -1,4 +1,5 @@
 ﻿using NXOpen;
+using NXOpen.Assemblies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -118,6 +119,47 @@ namespace TestCreateNewPlate.Model
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
             BasePart.CloseAfterSave close = BasePart.CloseAfterSave.True;
             workPart.Save(saveComponentParts, close);
+        }
+        static public void InsertShoe(Part workAssy, string compName, Point3d basePoint, string folderPath)
+        {
+            ComponentAssembly compAssy = workAssy.ComponentAssembly;
+            PartLoadStatus status = null;
+            int layer = 100;
+            string referenceSetName = "MODEL";
+            Matrix3x3 orientation = new Matrix3x3();
+            orientation.Xx = 1.0;
+            orientation.Xy = 0.0;
+            orientation.Xz = 0.0;
+            orientation.Yx = 0.0;
+            orientation.Yy = 1.0;
+            orientation.Yz = 0.0;
+            orientation.Zx = 0.0;
+            orientation.Zy = 0.0;
+            orientation.Zz = 1.0;
+
+            string partToAdd = $"{folderPath}{compName}.prt";
+
+            if (compName.Equals(Shoe.LOWER_SHOE))
+            {
+                layer = 200;
+            }
+
+            NXOpen.Assemblies.Component component = compAssy.AddComponent(partToAdd, referenceSetName, compName, basePoint, orientation, layer, out status);
+
+            NXOpen.Positioning.ComponentPositioner positioner = workAssy.ComponentAssembly.Positioner;
+            NXOpen.Positioning.Network network = positioner.EstablishNetwork();
+            NXOpen.Positioning.ComponentNetwork componentNetwork = ((NXOpen.Positioning.ComponentNetwork)network);
+            NXOpen.Positioning.Constraint constraint = positioner.CreateConstraint(true);
+            NXOpen.Positioning.ComponentConstraint componentConstraint = ((NXOpen.Positioning.ComponentConstraint)constraint);
+            componentConstraint.ConstraintType = NXOpen.Positioning.Constraint.Type.Fix;
+            NXOpen.Positioning.ConstraintReference constraintReference = componentConstraint.CreateConstraintReference(component, component, false, false, false);
+            componentNetwork.Solve();
+
+            NXOpen.Layer.StateInfo[] stateArray = new NXOpen.Layer.StateInfo[]
+            {
+                new NXOpen.Layer.StateInfo(layer, NXOpen.Layer.State.Selectable)
+            };
+            workAssy.Layers.ChangeStates(stateArray);
         }
     }
 }
