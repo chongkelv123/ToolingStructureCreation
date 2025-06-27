@@ -18,6 +18,8 @@ namespace TestCreateNewPlate.Model
 
         public const string UPPER_SHOE = "UPPER_SHOE";
         public const string LOWER_SHOE = "LOWER_SHOE";
+        public const string TEMPLATE_SHOE_NAME = "3DA_Template_SHOE-V00.prt";
+        public const string SHOE = "Shoe";
 
         public Shoe(string name, double length, double width, double height, NXDrawing drawing)
         {
@@ -52,13 +54,13 @@ namespace TestCreateNewPlate.Model
         {
             Session session = Session.GetSession();
             FileNew fileNew = session.Parts.FileNew();
-            fileNew.TemplateFileName = "3DA_Template_SHOE-V00.prt";
+            fileNew.TemplateFileName = TEMPLATE_SHOE_NAME;
             fileNew.UseBlankTemplate = false;
-            fileNew.ApplicationName = "ModelTemplate";
+            fileNew.ApplicationName = NXDrawing.MODEL_TEMPLATE;
             fileNew.Units = Part.Units.Millimeters;
-            fileNew.TemplatePresentationName = "Shoe";
+            fileNew.TemplatePresentationName = SHOE;
             fileNew.SetCanCreateAltrep(false);
-            fileNew.NewFileName = $"{folderPath}{shoeName}.prt";
+            fileNew.NewFileName = $"{folderPath}{shoeName}{NXDrawing.EXTENSION}";
             fileNew.MakeDisplayedPart = true;
             fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
             NXObject shoeObject;

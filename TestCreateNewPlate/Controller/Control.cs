@@ -58,6 +58,9 @@ namespace TestCreateNewPlate.Controller
             ParallelBar parallelBar = new ParallelBar(60, 415, myForm.ParallelBarThk, drawing);
             parallelBar.CreateNewParallelBar(folderPath);
 
+            CommonPlate commonPlate = new CommonPlate(2300, 980, myForm.CommonPltThk, drawing);
+            commonPlate.CreateNewCommonPlate(folderPath);
+
             ToolingAssembly.CreateToolAssembly(folderPath);
         }
         

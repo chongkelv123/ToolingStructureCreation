@@ -159,6 +159,8 @@ namespace TestCreateNewPlate.Model
             Shoe.Insert(workAssy, ParallelBar.PARALLEL_BAR, new Point3d(908.0, 0.0, -70.0), folderPath);
             Shoe.Insert(workAssy, ParallelBar.PARALLEL_BAR, new Point3d(1786.0, 0.0, -70.0), folderPath);
 
+            Shoe.Insert(workAssy, CommonPlate.LOWER_COMMON_PLATE, new Point3d(908.0, 0.0, -225.0), folderPath);
+
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
             BasePart.CloseAfterSave save = BasePart.CloseAfterSave.False;
             workAssy.Save(saveComponentParts, save);
