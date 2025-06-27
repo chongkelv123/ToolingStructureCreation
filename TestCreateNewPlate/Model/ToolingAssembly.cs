@@ -16,19 +16,10 @@ namespace TestCreateNewPlate.Model
         string stationNumber;
         NXDrawing drawing;
         string folderPath;
-        static Session session;
+        static Session session;        
 
-        public const string LOWER_PAD = "LOWER_PAD";
-        public const string DIE_PLATE = "DIE_PLATE";
-        public const string MAT_THK = "mat_thk";
-        public const string STRIPPER_PLATE = "STRIPPER_PLATE";
-        public const string BOTTOMING_PLATE = "BOTTOMING_PLATE";
-        public const string PUNCH_HOLDER = "PUNCH_HOLDER";
-        public const string UPPER_PAD = "UPPER_PAD";
-        public const string TEMPLATE_STP_NAME = "3DA_Template_STP-V00.prt";
-        public const string MODEL = "MODEL";
-        public const string ASSEMBLY_TEMPLATE = "AssemblyTemplate";
-        public const string UG_APP_MODELING = "UG_APP_MODELING";
+        public const string TEMPLATE_STP_NAME = "3DA_Template_STP-V00.prt";        
+        public const string ASSEMBLY_TEMPLATE = "AssemblyTemplate";        
         public const string ASSEMBLY = "Assembly";
 
         public ToolingAssembly(double plateWidth, double plateLength, string stationNumber, NXDrawing drawing, string folderPath, Dictionary<string, double>plateThicknesses)
@@ -49,7 +40,7 @@ namespace TestCreateNewPlate.Model
             double totalThickness = 0.0;
             foreach (var plate in PlateThicknesses)
             {
-                if (!plate.Key.Equals(MAT_THK, StringComparison.OrdinalIgnoreCase))
+                if (!plate.Key.Equals(NXDrawing.MAT_THK, StringComparison.OrdinalIgnoreCase))
                 {
                     totalThickness += plate.Value;
                 }
@@ -80,7 +71,7 @@ namespace TestCreateNewPlate.Model
             }
             foreach (var plt in PlateThicknesses)
             {
-                if (plt.Key.Equals(MAT_THK, StringComparison.OrdinalIgnoreCase))
+                if (plt.Key.Equals(NXDrawing.MAT_THK, StringComparison.OrdinalIgnoreCase))
                 {
                     // Skip material thickness, as it is not a plate
                     continue;
@@ -102,7 +93,7 @@ namespace TestCreateNewPlate.Model
             fileNew.Units = Part.Units.Millimeters;
             fileNew.TemplatePresentationName = ASSEMBLY;
             fileNew.SetCanCreateAltrep(false);
-            fileNew.NewFileName = $"{folderPath}{stationNumber}-Assembly.prt";
+            fileNew.NewFileName = $"{folderPath}{stationNumber}-Assembly{NXDrawing.EXTENSION}";
             fileNew.MakeDisplayedPart = true;
             fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
             NXObject plateObject;
@@ -113,7 +104,7 @@ namespace TestCreateNewPlate.Model
 
             fileNew.Destroy();
 
-            session.ApplicationSwitchImmediate(UG_APP_MODELING);
+            session.ApplicationSwitchImmediate(NXDrawing.UG_APP_MODELING);
 
             workPart.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
 
@@ -121,7 +112,7 @@ namespace TestCreateNewPlate.Model
             foreach (var component in plateList)
             {
                 cumThk += component.Value;
-                if (component.Key.Equals(MAT_THK, StringComparison.OrdinalIgnoreCase))
+                if (component.Key.Equals(NXDrawing.MAT_THK, StringComparison.OrdinalIgnoreCase))
                 {
                     continue; // Skip the material thickness entry
                 }
@@ -141,7 +132,7 @@ namespace TestCreateNewPlate.Model
             fileNew.Units = Part.Units.Millimeters;
             fileNew.TemplatePresentationName = ASSEMBLY;
             fileNew.SetCanCreateAltrep(false);
-            fileNew.NewFileName = $"{folderPath}ToolingAssembly.prt";
+            fileNew.NewFileName = $"{folderPath}ToolingAssembly{NXDrawing.EXTENSION}";
             fileNew.MakeDisplayedPart = true;
             fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
             NXObject plateObject;
@@ -152,7 +143,7 @@ namespace TestCreateNewPlate.Model
 
             fileNew.Destroy();
 
-            session.ApplicationSwitchImmediate(UG_APP_MODELING);
+            session.ApplicationSwitchImmediate(NXDrawing.UG_APP_MODELING);
 
             workAssy.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
 
@@ -161,8 +152,12 @@ namespace TestCreateNewPlate.Model
             InsertStationAssembly(workAssy, "Stn3-Assembly", new Point3d(924.0, 0, 0), folderPath);
             InsertStationAssembly(workAssy, "Stn4-Assembly", new Point3d(1376.0, 0, 0), folderPath);
 
-            Shoe.InsertShoe(workAssy, Shoe.UPPER_SHOE, new Point3d(-17.0, 0.0, 234.55), folderPath);
-            Shoe.InsertShoe(workAssy, Shoe.LOWER_SHOE, new Point3d(-17.0, 0.0, 0.0), folderPath);
+            Shoe.Insert(workAssy, Shoe.UPPER_SHOE, new Point3d(-17.0, 0.0, 234.55), folderPath);
+            Shoe.Insert(workAssy, Shoe.LOWER_SHOE, new Point3d(-17.0, 0.0, 0.0), folderPath);
+
+            Shoe.Insert(workAssy, ParallelBar.PARALLEL_BAR, new Point3d(30.0, 0.0, -70.0), folderPath);
+            Shoe.Insert(workAssy, ParallelBar.PARALLEL_BAR, new Point3d(908.0, 0.0, -70.0), folderPath);
+            Shoe.Insert(workAssy, ParallelBar.PARALLEL_BAR, new Point3d(1786.0, 0.0, -70.0), folderPath);
 
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
             BasePart.CloseAfterSave save = BasePart.CloseAfterSave.False;
@@ -175,7 +170,7 @@ namespace TestCreateNewPlate.Model
             ComponentAssembly compAssy = workAssy.ComponentAssembly;
             PartLoadStatus status = null;
             int layer = 100;
-            string referenceSetName = MODEL;
+            string referenceSetName = NXDrawing.MODEL;
             Matrix3x3 orientation = new Matrix3x3();
             orientation.Xx = 1.0;
             orientation.Xy = 0.0;
@@ -187,7 +182,7 @@ namespace TestCreateNewPlate.Model
             orientation.Zy = 0.0;
             orientation.Zz = 1.0;
 
-            string partToAdd = $"{folderPath}{assyName}.prt";
+            string partToAdd = $"{folderPath}{assyName}{NXDrawing.EXTENSION}";
 
             NXOpen.Assemblies.Component component = compAssy.AddComponent(partToAdd, referenceSetName, assyName, basePoint, orientation, layer, out status);
 

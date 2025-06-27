@@ -69,7 +69,7 @@ namespace TestCreateNewPlate.Model
 
             fileNew.Destroy();
 
-            session.ApplicationSwitchImmediate("UG_APP_MODELING");
+            session.ApplicationSwitchImmediate(NXDrawing.UG_APP_MODELING);
 
             NXOpen.Expression expressionShoeWidth = ((NXOpen.Expression)workPart.Expressions.FindObject("ShoeWidth"));
             NXOpen.Expression expressionShoeLength = ((NXOpen.Expression)workPart.Expressions.FindObject("ShoeLength"));
@@ -120,12 +120,12 @@ namespace TestCreateNewPlate.Model
             BasePart.CloseAfterSave close = BasePart.CloseAfterSave.True;
             workPart.Save(saveComponentParts, close);
         }
-        static public void InsertShoe(Part workAssy, string compName, Point3d basePoint, string folderPath)
+        static public void Insert(Part workAssy, string compName, Point3d basePoint, string folderPath)
         {
             ComponentAssembly compAssy = workAssy.ComponentAssembly;
             PartLoadStatus status = null;
             int layer = 100;
-            string referenceSetName = "MODEL";
+            string referenceSetName = NXDrawing.MODEL;
             Matrix3x3 orientation = new Matrix3x3();
             orientation.Xx = 1.0;
             orientation.Xy = 0.0;
@@ -137,7 +137,7 @@ namespace TestCreateNewPlate.Model
             orientation.Zy = 0.0;
             orientation.Zz = 1.0;
 
-            string partToAdd = $"{folderPath}{compName}.prt";
+            string partToAdd = $"{folderPath}{compName}{NXDrawing.EXTENSION}";
 
             if (compName.Equals(Shoe.LOWER_SHOE))
             {

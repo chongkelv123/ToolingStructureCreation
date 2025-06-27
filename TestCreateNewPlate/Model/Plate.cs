@@ -14,15 +14,10 @@ namespace TestCreateNewPlate.Model
         private double plateLength;
         private double plateWidth;
         private double plateThickness;
-        NXDrawing drawing;
+        NXDrawing drawing;     
 
-        public const string LOWER_PAD = "LOWER_PAD";
-        public const string DIE_PLATE = "DIE_PLATE";
-        public const string MAT_THK = "mat_thk";
-        public const string STRIPPER_PLATE = "STRIPPER_PLATE";
-        public const string BOTTOMING_PLATE = "BOTTOMING_PLATE";
-        public const string PUNCH_HOLDER = "PUNCH_HOLDER";
-        public const string UPPER_PAD = "UPPER_PAD";
+        public const string TEMPLATE_PLATE_NAME = "3DA_Template_PLATE-V00.prt";                
+        public const string PLATE = "Plate";
 
         public Plate(string name, double length, double width, double thickness, NXDrawing drawing)
         {
@@ -57,13 +52,13 @@ namespace TestCreateNewPlate.Model
         {
             Session session = Session.GetSession();
             FileNew fileNew = session.Parts.FileNew();
-            fileNew.TemplateFileName = "3DA_Template_PLATE-V00.prt";
+            fileNew.TemplateFileName = TEMPLATE_PLATE_NAME;
             fileNew.UseBlankTemplate = false;
-            fileNew.ApplicationName = "ModelTemplate";
+            fileNew.ApplicationName = NXDrawing.MODEL_TEMPLATE;
             fileNew.Units = Part.Units.Millimeters;
-            fileNew.TemplatePresentationName = "Plate";
+            fileNew.TemplatePresentationName = PLATE;
             fileNew.SetCanCreateAltrep(false);
-            fileNew.NewFileName = $"{folderPath}{stationNumber}-{plateName}.prt";
+            fileNew.NewFileName = $"{folderPath}{stationNumber}-{plateName}{NXDrawing.EXTENSION}";
             fileNew.MakeDisplayedPart = true;
             fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
             NXObject plateObject;
@@ -74,7 +69,7 @@ namespace TestCreateNewPlate.Model
 
             fileNew.Destroy();
 
-            session.ApplicationSwitchImmediate("UG_APP_MODELING");
+            session.ApplicationSwitchImmediate(NXDrawing.UG_APP_MODELING);
 
             NXOpen.Expression expressionPlateWidth = ((NXOpen.Expression)workPart.Expressions.FindObject("PlateWidth"));
             NXOpen.Expression expressionPlateLength = ((NXOpen.Expression)workPart.Expressions.FindObject("PlateLength"));
@@ -107,27 +102,27 @@ namespace TestCreateNewPlate.Model
             NXOpen.BodyCollection bodyCollection = workPart.Bodies;
             foreach (NXOpen.Body body in bodyCollection)
             {
-                if (plateName.Equals(UPPER_PAD))
+                if (plateName.Equals(NXDrawing.UPPER_PAD))
                 {
                     body.Color = (int)PlateColor.UPPERPAD;
                 }
-                else if (plateName.Equals(PUNCH_HOLDER))
+                else if (plateName.Equals(NXDrawing.PUNCH_HOLDER))
                 {
                     body.Color = (int)PlateColor.PUNCHHOLDER;
                 }
-                else if (plateName.Equals(BOTTOMING_PLATE))
+                else if (plateName.Equals(NXDrawing.BOTTOMING_PLATE))
                 {
                     body.Color = (int)PlateColor.BOTTOMINGPLATE;
                 }
-                else if (plateName.Equals(STRIPPER_PLATE))
+                else if (plateName.Equals(NXDrawing.STRIPPER_PLATE))
                 {
                     body.Color = (int)PlateColor.STRIPPERPLATE;
                 }
-                else if (plateName.Equals(DIE_PLATE))
+                else if (plateName.Equals(NXDrawing.DIE_PLATE))
                 {
                     body.Color = (int)PlateColor.DIEPLATE;
                 }
-                else if (plateName.Equals(LOWER_PAD))
+                else if (plateName.Equals(NXDrawing.LOWER_PAD))
                 {
                     body.Color = (int)PlateColor.LOWERPAD;
                 }
@@ -147,7 +142,7 @@ namespace TestCreateNewPlate.Model
             ComponentAssembly compAssy = workAssy.ComponentAssembly;
             PartLoadStatus status = null;
             int layer = 100;
-            string referenceSetName = "MODEL";
+            string referenceSetName = NXDrawing.MODEL;
             Point3d basePoint = new Point3d(0.0, 0.0, cumThk);
             Matrix3x3 orientation = new Matrix3x3();
             orientation.Xx = 1.0;
@@ -160,9 +155,9 @@ namespace TestCreateNewPlate.Model
             orientation.Zy = 0.0;
             orientation.Zz = 1.0;
 
-            string partToAdd = $"{folderPath}{compName}.prt";
+            string partToAdd = $"{folderPath}{compName}{NXDrawing.EXTENSION}";
 
-            if (compName.Contains(DIE_PLATE) || compName.Contains(LOWER_PAD))
+            if (compName.Contains(NXDrawing.DIE_PLATE) || compName.Contains(NXDrawing.LOWER_PAD))
             {
                 layer = 200;
             }

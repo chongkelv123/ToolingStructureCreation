@@ -31,13 +31,13 @@ namespace TestCreateNewPlate.Controller
 
         public void Start()
         {
-            plateThicknesses.Add(ToolingAssembly.LOWER_PAD, myForm.LowerPadThk);
-            plateThicknesses.Add(ToolingAssembly.DIE_PLATE, myForm.DiePltThk);
-            plateThicknesses.Add(ToolingAssembly.MAT_THK, myForm.MatThk); // Material thickness, not a plate
-            plateThicknesses.Add(ToolingAssembly.STRIPPER_PLATE, myForm.StripperPltThk);
-            plateThicknesses.Add(ToolingAssembly.BOTTOMING_PLATE, myForm.BottomPltThk);
-            plateThicknesses.Add(ToolingAssembly.PUNCH_HOLDER, myForm.PunHolderThk);
-            plateThicknesses.Add(ToolingAssembly.UPPER_PAD, myForm.UpperPadThk);
+            plateThicknesses.Add(NXDrawing.LOWER_PAD, myForm.LowerPadThk);
+            plateThicknesses.Add(NXDrawing.DIE_PLATE, myForm.DiePltThk);
+            plateThicknesses.Add(NXDrawing.MAT_THK, myForm.MatThk); // Material thickness, not a plate
+            plateThicknesses.Add(NXDrawing.STRIPPER_PLATE, myForm.StripperPltThk);
+            plateThicknesses.Add(NXDrawing.BOTTOMING_PLATE, myForm.BottomPltThk);
+            plateThicknesses.Add(NXDrawing.PUNCH_HOLDER, myForm.PunHolderThk);
+            plateThicknesses.Add(NXDrawing.UPPER_PAD, myForm.UpperPadThk);
 
             folderPath = myForm.GetPath + "\\";
             ToolingAssembly stn1ToolStructure = new ToolingAssembly(300, 420, "Stn1", drawing, folderPath, plateThicknesses);
@@ -54,6 +54,9 @@ namespace TestCreateNewPlate.Controller
             Shoe lowerShoe = new Shoe(Shoe.LOWER_SHOE, 1850, 500, myForm.LowerShoeThk, drawing);
             upperShoe.CreateNewShoe(folderPath);
             lowerShoe.CreateNewShoe(folderPath);
+
+            ParallelBar parallelBar = new ParallelBar(60, 415, myForm.ParallelBarThk, drawing);
+            parallelBar.CreateNewParallelBar(folderPath);
 
             ToolingAssembly.CreateToolAssembly(folderPath);
         }

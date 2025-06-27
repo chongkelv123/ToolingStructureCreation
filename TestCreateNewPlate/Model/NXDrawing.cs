@@ -34,13 +34,27 @@ namespace TestCreateNewPlate.Model
         COMMONPLATE = 80,
         PARALLELBAR = 87,
     }
+
     public class NXDrawing
     {
         Session session;
         Part workPart;
         UI ui;
         UFSession ufs;
-        Controller.Control control;        
+        Controller.Control control;
+
+        public const string LOWER_PAD = "LOWER_PAD";
+        public const string DIE_PLATE = "DIE_PLATE";
+        public const string MAT_THK = "mat_thk";
+        public const string STRIPPER_PLATE = "STRIPPER_PLATE";
+        public const string BOTTOMING_PLATE = "BOTTOMING_PLATE";
+        public const string PUNCH_HOLDER = "PUNCH_HOLDER";
+        public const string UPPER_PAD = "UPPER_PAD";
+
+        public const string UG_APP_MODELING = "UG_APP_MODELING";
+        public const string MODEL = "MODEL";
+        public const string EXTENSION = ".prt";
+        public const string MODEL_TEMPLATE = "ModelTemplate";
 
         public NXDrawing()
         {
@@ -60,7 +74,7 @@ namespace TestCreateNewPlate.Model
         public void ShowMessageBox(string title, NXMessageBox.DialogType msgboxType, string message)
         {
             ui.NXMessageBox.Show(title, msgboxType, message);
-        }               
+        }
 
         public Session GetSession()
         {
