@@ -13,7 +13,7 @@ using ToolingStructureCreation.Controller;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ToolingStructureCreation.View
-{    
+{
     public partial class formToolStructure : System.Windows.Forms.Form
     {
         Controller.Control control;
@@ -34,6 +34,9 @@ namespace ToolingStructureCreation.View
             InitializeComponent();
             this.control = control;
             UpdateDieHeight();
+            UpdatePunchLength();
+            UpdatePenetration();
+            UpdateFeedHeight();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -137,7 +140,7 @@ namespace ToolingStructureCreation.View
         private void txtUpperShoeThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
-            UpdateDieHeight();
+            UpdateDieHeight();            
         }
         private void CheckInputAndEnableApply()
         {
@@ -168,54 +171,67 @@ namespace ToolingStructureCreation.View
         {
             CheckInputAndEnableApply();
             UpdateDieHeight();
+            UpdatePunchLength();
+            UpdatePenetration();
         }
 
         private void txtBottomPltThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
             UpdateDieHeight();
+            UpdatePunchLength();
+            UpdatePenetration();
         }
 
         private void txtStripperPlt_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
             UpdateDieHeight();
+            UpdatePunchLength();
+            UpdatePenetration();
         }
 
         private void txtMatThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
             UpdateDieHeight();
+            UpdatePunchLength();
+            UpdatePenetration();
         }
 
         private void txtDiePltThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
             UpdateDieHeight();
+            UpdateFeedHeight();
         }
 
         private void txtLowerPadThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
             UpdateDieHeight();
+            UpdateFeedHeight();
         }
 
         private void txtLowerShoeThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
             UpdateDieHeight();
+            UpdateFeedHeight();
         }
 
         private void txtParallelBarThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
             UpdateDieHeight();
+            UpdateFeedHeight();
         }
 
         private void txtCommonPltThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
             UpdateDieHeight();
+            UpdateFeedHeight();
         }
 
         private double SumAllThickness(params System.Windows.Forms.TextBox[] textBoxes)
@@ -231,6 +247,75 @@ namespace ToolingStructureCreation.View
             return sum;
         }
 
+        private double SnapToNearestBand(double value, List<double> bands)
+        {
+            foreach (var band in bands.OrderByDescending(b => b))
+            {
+                if (value > band && value <= band + 10.0)
+                {
+                    return band + 10.0;
+                }
+                if (value == band)
+                {
+                    return band;
+                }
+            }
+            return value;
+        }
+
+        private double GetLowerDieSetThickness()
+        {
+            return SumAllThickness(
+                txtLowerShoeThk, txtLowerPadThk, txtDiePltThk,
+                txtParallelBarThk, txtCommonPltThk
+                );
+        }
+        private void UpdateFeedHeight()
+        {
+            bool IsLiftHeightFilled = !string.IsNullOrWhiteSpace(txtLiftHeight.Text);
+            if (IsLiftHeightFilled)
+            {
+                double liftHeight = double.TryParse(txtLiftHeight.Text, out double value) ? value : 0.0;
+                double lowerDieSetThickness = GetLowerDieSetThickness();
+                txtFeedHeight.Text = (liftHeight + lowerDieSetThickness).ToString();
+            }
+            else
+            {
+                txtFeedHeight.Text = string.Empty;
+            }
+        }
+
+        private double GetPHld_BPlt_SPlt_MatThk()
+        {          
+            return SumAllThickness(
+                txtPunHolderThk,
+                txtBottomPltThk, txtStripperPlt, txtMatThk
+                );
+        }
+
+        private double GetPunchLength()
+        {
+            List<double> punchLengthList = new List<double>
+            {
+                50.0, 60.0, 70.0, 80.0
+            };
+
+            double value = GetPHld_BPlt_SPlt_MatThk();
+
+            return SnapToNearestBand(value, punchLengthList);
+        }
+
+        private void UpdatePunchLength()
+        {
+            txtPunchLength.Text = GetPunchLength().ToString();
+        }
+
+        private void UpdatePenetration()
+        {
+            double penetration = GetPunchLength() - GetPHld_BPlt_SPlt_MatThk();
+            txtPenetration.Text = penetration.ToString();
+        }
+
         private void UpdateDieHeight()
         {
             double totalThickness = SumAllThickness(
@@ -240,6 +325,16 @@ namespace ToolingStructureCreation.View
                 txtParallelBarThk, txtCommonPltThk);
 
             txtDieHeight.Text = totalThickness.ToString();
+        }
+
+        private void txtLiftHeight_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            KeyPressEvent_NumericalOnly(sender, e);
+        }
+
+        private void txtLiftHeight_TextChanged(object sender, EventArgs e)
+        {
+            UpdateFeedHeight();
         }
     }
 }

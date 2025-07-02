@@ -44,7 +44,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.txtDieHeight = new System.Windows.Forms.TextBox();
             this.txtDiePltThk = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.txtMatThk = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -59,15 +58,32 @@
             this.txtUpperPadThk = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.txtPunchLength = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.txtPenetration = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.txtFeedHeight = new System.Windows.Forms.TextBox();
+            this.txtLiftHeight = new System.Windows.Forms.TextBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(590, 477);
+            this.btnCancel.Location = new System.Drawing.Point(590, 487);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(117, 35);
             this.btnCancel.TabIndex = 0;
@@ -79,7 +95,7 @@
             // 
             this.btnApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnApply.Enabled = false;
-            this.btnApply.Location = new System.Drawing.Point(713, 477);
+            this.btnApply.Location = new System.Drawing.Point(713, 487);
             this.btnApply.Name = "btnApply";
             this.btnApply.Size = new System.Drawing.Size(117, 35);
             this.btnApply.TabIndex = 0;
@@ -95,7 +111,7 @@
             this.groupBox1.Controls.Add(this.txtPath);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(819, 76);
+            this.groupBox1.Size = new System.Drawing.Size(459, 76);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Where would you like the Tooling Assembly to be saved to?";
@@ -108,7 +124,7 @@
             this.txtPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtPath.Location = new System.Drawing.Point(6, 21);
             this.txtPath.Name = "txtPath";
-            this.txtPath.Size = new System.Drawing.Size(807, 22);
+            this.txtPath.Size = new System.Drawing.Size(447, 22);
             this.txtPath.TabIndex = 0;
             this.txtPath.TextChanged += new System.EventHandler(this.txtPath_TextChanged);
             // 
@@ -118,6 +134,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupBox2.Controls.Add(this.groupBox5);
+            this.groupBox2.Controls.Add(this.groupBox4);
+            this.groupBox2.Controls.Add(this.groupBox3);
             this.groupBox2.Controls.Add(this.txtCommonPltThk);
             this.groupBox2.Controls.Add(this.label11);
             this.groupBox2.Controls.Add(this.txtParallelBarThk);
@@ -126,9 +145,7 @@
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.txtLowerPadThk);
             this.groupBox2.Controls.Add(this.label7);
-            this.groupBox2.Controls.Add(this.txtDieHeight);
             this.groupBox2.Controls.Add(this.txtDiePltThk);
-            this.groupBox2.Controls.Add(this.label12);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.txtMatThk);
             this.groupBox2.Controls.Add(this.label5);
@@ -145,7 +162,7 @@
             this.groupBox2.Controls.Add(this.pictureBox1);
             this.groupBox2.Location = new System.Drawing.Point(12, 94);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(818, 377);
+            this.groupBox2.Size = new System.Drawing.Size(818, 345);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Tooling Structure: Assign Plate Thickness";
@@ -234,9 +251,9 @@
             // 
             this.txtDieHeight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtDieHeight.Enabled = false;
-            this.txtDieHeight.Location = new System.Drawing.Point(315, 41);
+            this.txtDieHeight.Location = new System.Drawing.Point(6, 22);
             this.txtDieHeight.Name = "txtDieHeight";
-            this.txtDieHeight.Size = new System.Drawing.Size(150, 22);
+            this.txtDieHeight.Size = new System.Drawing.Size(108, 22);
             this.txtDieHeight.TabIndex = 7;
             // 
             // txtDiePltThk
@@ -249,15 +266,6 @@
             this.txtDiePltThk.Text = "35.0";
             this.txtDiePltThk.TextChanged += new System.EventHandler(this.txtDiePltThk_TextChanged);
             this.txtDiePltThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDiePltThk_KeyPress);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(312, 22);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(86, 16);
-            this.label12.TabIndex = 1;
-            this.label12.Text = "DIE HEIGHT:";
             // 
             // label6
             // 
@@ -394,19 +402,149 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(559, 21);
+            this.pictureBox1.Location = new System.Drawing.Point(558, 21);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(253, 316);
+            this.pictureBox1.Size = new System.Drawing.Size(253, 303);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.txtDieHeight);
+            this.groupBox3.Location = new System.Drawing.Point(300, 25);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(237, 57);
+            this.groupBox3.TabIndex = 12;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "DIE HEIGHT:";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.label13);
+            this.groupBox4.Controls.Add(this.label12);
+            this.groupBox4.Controls.Add(this.txtPenetration);
+            this.groupBox4.Controls.Add(this.txtPunchLength);
+            this.groupBox4.Location = new System.Drawing.Point(300, 88);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(237, 96);
+            this.groupBox4.TabIndex = 12;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "PUNCH INFO:";
+            // 
+            // txtPunchLength
+            // 
+            this.txtPunchLength.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtPunchLength.Enabled = false;
+            this.txtPunchLength.Location = new System.Drawing.Point(115, 25);
+            this.txtPunchLength.Name = "txtPunchLength";
+            this.txtPunchLength.Size = new System.Drawing.Size(108, 22);
+            this.txtPunchLength.TabIndex = 7;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(6, 27);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(97, 16);
+            this.label12.TabIndex = 13;
+            this.label12.Text = "PUN LENGTH:";
+            // 
+            // txtPenetration
+            // 
+            this.txtPenetration.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtPenetration.Enabled = false;
+            this.txtPenetration.Location = new System.Drawing.Point(115, 53);
+            this.txtPenetration.Name = "txtPenetration";
+            this.txtPenetration.Size = new System.Drawing.Size(108, 22);
+            this.txtPenetration.TabIndex = 7;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(6, 55);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(107, 16);
+            this.label13.TabIndex = 13;
+            this.label13.Text = "PENETRATION:";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.label14);
+            this.groupBox5.Controls.Add(this.label15);
+            this.groupBox5.Controls.Add(this.txtFeedHeight);
+            this.groupBox5.Controls.Add(this.txtLiftHeight);
+            this.groupBox5.Location = new System.Drawing.Point(300, 193);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(237, 96);
+            this.groupBox5.TabIndex = 12;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "FEED HEIGHT INFO:";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(6, 55);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(100, 16);
+            this.label14.TabIndex = 13;
+            this.label14.Text = "FEED HEIGHT:";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(6, 27);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(91, 16);
+            this.label15.TabIndex = 13;
+            this.label15.Text = "LIFT HEIGHT:";
+            // 
+            // txtFeedHeight
+            // 
+            this.txtFeedHeight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtFeedHeight.Enabled = false;
+            this.txtFeedHeight.Location = new System.Drawing.Point(115, 53);
+            this.txtFeedHeight.Name = "txtFeedHeight";
+            this.txtFeedHeight.Size = new System.Drawing.Size(108, 22);
+            this.txtFeedHeight.TabIndex = 7;
+            // 
+            // txtLiftHeight
+            // 
+            this.txtLiftHeight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtLiftHeight.Location = new System.Drawing.Point(115, 25);
+            this.txtLiftHeight.Name = "txtLiftHeight";
+            this.txtLiftHeight.Size = new System.Drawing.Size(108, 22);
+            this.txtLiftHeight.TabIndex = 12;
+            this.txtLiftHeight.Text = "5.0";
+            this.txtLiftHeight.TextChanged += new System.EventHandler(this.txtLiftHeight_TextChanged);
+            this.txtLiftHeight.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtLiftHeight_KeyPress);
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.button1);
+            this.groupBox6.Location = new System.Drawing.Point(483, 12);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(340, 76);
+            this.groupBox6.TabIndex = 3;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Select Sketch to make plate station:";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(129, 32);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(191, 37);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "Select Sketch";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // formToolStructure
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(843, 524);
+            this.ClientSize = new System.Drawing.Size(843, 534);
+            this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnApply);
@@ -419,6 +557,13 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -454,6 +599,18 @@
         private System.Windows.Forms.TextBox txtCommonPltThk;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox txtDieHeight;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox txtPunchLength;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox txtPenetration;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox txtFeedHeight;
+        private System.Windows.Forms.TextBox txtLiftHeight;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.Button button1;
     }
 }
