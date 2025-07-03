@@ -34,6 +34,18 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txtPath = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.txtFeedHeight = new System.Windows.Forms.TextBox();
+            this.txtLiftHeight = new System.Windows.Forms.TextBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.txtPenetration = new System.Windows.Forms.TextBox();
+            this.txtPunchLength = new System.Windows.Forms.TextBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.txtDieHeight = new System.Windows.Forms.TextBox();
             this.txtCommonPltThk = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.txtParallelBarThk = new System.Windows.Forms.TextBox();
@@ -42,7 +54,6 @@
             this.label9 = new System.Windows.Forms.Label();
             this.txtLowerPadThk = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.txtDieHeight = new System.Windows.Forms.TextBox();
             this.txtDiePltThk = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.txtMatThk = new System.Windows.Forms.TextBox();
@@ -58,25 +69,14 @@
             this.txtUpperPadThk = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.txtPunchLength = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.txtPenetration = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.txtFeedHeight = new System.Windows.Forms.TextBox();
-            this.txtLiftHeight = new System.Windows.Forms.TextBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnSelectSketch = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.groupBox3.SuspendLayout();
-            this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox6.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -167,6 +167,125 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Tooling Structure: Assign Plate Thickness";
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.label14);
+            this.groupBox5.Controls.Add(this.label15);
+            this.groupBox5.Controls.Add(this.txtFeedHeight);
+            this.groupBox5.Controls.Add(this.txtLiftHeight);
+            this.groupBox5.Location = new System.Drawing.Point(300, 193);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(237, 96);
+            this.groupBox5.TabIndex = 12;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "FEED HEIGHT INFO:";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(6, 55);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(100, 16);
+            this.label14.TabIndex = 13;
+            this.label14.Text = "FEED HEIGHT:";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(6, 27);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(91, 16);
+            this.label15.TabIndex = 13;
+            this.label15.Text = "LIFT HEIGHT:";
+            // 
+            // txtFeedHeight
+            // 
+            this.txtFeedHeight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtFeedHeight.Enabled = false;
+            this.txtFeedHeight.Location = new System.Drawing.Point(115, 53);
+            this.txtFeedHeight.Name = "txtFeedHeight";
+            this.txtFeedHeight.Size = new System.Drawing.Size(108, 22);
+            this.txtFeedHeight.TabIndex = 7;
+            // 
+            // txtLiftHeight
+            // 
+            this.txtLiftHeight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtLiftHeight.Location = new System.Drawing.Point(115, 25);
+            this.txtLiftHeight.Name = "txtLiftHeight";
+            this.txtLiftHeight.Size = new System.Drawing.Size(108, 22);
+            this.txtLiftHeight.TabIndex = 12;
+            this.txtLiftHeight.Text = "5.0";
+            this.txtLiftHeight.TextChanged += new System.EventHandler(this.txtLiftHeight_TextChanged);
+            this.txtLiftHeight.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtLiftHeight_KeyPress);
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.label13);
+            this.groupBox4.Controls.Add(this.label12);
+            this.groupBox4.Controls.Add(this.txtPenetration);
+            this.groupBox4.Controls.Add(this.txtPunchLength);
+            this.groupBox4.Location = new System.Drawing.Point(300, 88);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(237, 96);
+            this.groupBox4.TabIndex = 12;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "PUNCH INFO:";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(6, 55);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(107, 16);
+            this.label13.TabIndex = 13;
+            this.label13.Text = "PENETRATION:";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(6, 27);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(97, 16);
+            this.label12.TabIndex = 13;
+            this.label12.Text = "PUN LENGTH:";
+            // 
+            // txtPenetration
+            // 
+            this.txtPenetration.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtPenetration.Enabled = false;
+            this.txtPenetration.Location = new System.Drawing.Point(115, 53);
+            this.txtPenetration.Name = "txtPenetration";
+            this.txtPenetration.Size = new System.Drawing.Size(108, 22);
+            this.txtPenetration.TabIndex = 7;
+            // 
+            // txtPunchLength
+            // 
+            this.txtPunchLength.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtPunchLength.Enabled = false;
+            this.txtPunchLength.Location = new System.Drawing.Point(115, 25);
+            this.txtPunchLength.Name = "txtPunchLength";
+            this.txtPunchLength.Size = new System.Drawing.Size(108, 22);
+            this.txtPunchLength.TabIndex = 7;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.txtDieHeight);
+            this.groupBox3.Location = new System.Drawing.Point(300, 25);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(237, 57);
+            this.groupBox3.TabIndex = 12;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "DIE HEIGHT:";
+            // 
+            // txtDieHeight
+            // 
+            this.txtDieHeight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtDieHeight.Enabled = false;
+            this.txtDieHeight.Location = new System.Drawing.Point(6, 22);
+            this.txtDieHeight.Name = "txtDieHeight";
+            this.txtDieHeight.Size = new System.Drawing.Size(108, 22);
+            this.txtDieHeight.TabIndex = 7;
+            // 
             // txtCommonPltThk
             // 
             this.txtCommonPltThk.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -246,15 +365,6 @@
             this.label7.Size = new System.Drawing.Size(90, 16);
             this.label7.TabIndex = 1;
             this.label7.Text = "LOWER PAD:";
-            // 
-            // txtDieHeight
-            // 
-            this.txtDieHeight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtDieHeight.Enabled = false;
-            this.txtDieHeight.Location = new System.Drawing.Point(6, 22);
-            this.txtDieHeight.Name = "txtDieHeight";
-            this.txtDieHeight.Size = new System.Drawing.Size(108, 22);
-            this.txtDieHeight.TabIndex = 7;
             // 
             // txtDiePltThk
             // 
@@ -409,119 +519,9 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.txtDieHeight);
-            this.groupBox3.Location = new System.Drawing.Point(300, 25);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(237, 57);
-            this.groupBox3.TabIndex = 12;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "DIE HEIGHT:";
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.label13);
-            this.groupBox4.Controls.Add(this.label12);
-            this.groupBox4.Controls.Add(this.txtPenetration);
-            this.groupBox4.Controls.Add(this.txtPunchLength);
-            this.groupBox4.Location = new System.Drawing.Point(300, 88);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(237, 96);
-            this.groupBox4.TabIndex = 12;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "PUNCH INFO:";
-            // 
-            // txtPunchLength
-            // 
-            this.txtPunchLength.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtPunchLength.Enabled = false;
-            this.txtPunchLength.Location = new System.Drawing.Point(115, 25);
-            this.txtPunchLength.Name = "txtPunchLength";
-            this.txtPunchLength.Size = new System.Drawing.Size(108, 22);
-            this.txtPunchLength.TabIndex = 7;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(6, 27);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(97, 16);
-            this.label12.TabIndex = 13;
-            this.label12.Text = "PUN LENGTH:";
-            // 
-            // txtPenetration
-            // 
-            this.txtPenetration.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtPenetration.Enabled = false;
-            this.txtPenetration.Location = new System.Drawing.Point(115, 53);
-            this.txtPenetration.Name = "txtPenetration";
-            this.txtPenetration.Size = new System.Drawing.Size(108, 22);
-            this.txtPenetration.TabIndex = 7;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(6, 55);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(107, 16);
-            this.label13.TabIndex = 13;
-            this.label13.Text = "PENETRATION:";
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.label14);
-            this.groupBox5.Controls.Add(this.label15);
-            this.groupBox5.Controls.Add(this.txtFeedHeight);
-            this.groupBox5.Controls.Add(this.txtLiftHeight);
-            this.groupBox5.Location = new System.Drawing.Point(300, 193);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(237, 96);
-            this.groupBox5.TabIndex = 12;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "FEED HEIGHT INFO:";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(6, 55);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(100, 16);
-            this.label14.TabIndex = 13;
-            this.label14.Text = "FEED HEIGHT:";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(6, 27);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(91, 16);
-            this.label15.TabIndex = 13;
-            this.label15.Text = "LIFT HEIGHT:";
-            // 
-            // txtFeedHeight
-            // 
-            this.txtFeedHeight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtFeedHeight.Enabled = false;
-            this.txtFeedHeight.Location = new System.Drawing.Point(115, 53);
-            this.txtFeedHeight.Name = "txtFeedHeight";
-            this.txtFeedHeight.Size = new System.Drawing.Size(108, 22);
-            this.txtFeedHeight.TabIndex = 7;
-            // 
-            // txtLiftHeight
-            // 
-            this.txtLiftHeight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtLiftHeight.Location = new System.Drawing.Point(115, 25);
-            this.txtLiftHeight.Name = "txtLiftHeight";
-            this.txtLiftHeight.Size = new System.Drawing.Size(108, 22);
-            this.txtLiftHeight.TabIndex = 12;
-            this.txtLiftHeight.Text = "5.0";
-            this.txtLiftHeight.TextChanged += new System.EventHandler(this.txtLiftHeight_TextChanged);
-            this.txtLiftHeight.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtLiftHeight_KeyPress);
-            // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.button1);
+            this.groupBox6.Controls.Add(this.btnSelectSketch);
             this.groupBox6.Location = new System.Drawing.Point(483, 12);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(340, 76);
@@ -529,14 +529,14 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Select Sketch to make plate station:";
             // 
-            // button1
+            // btnSelectSketch
             // 
-            this.button1.Location = new System.Drawing.Point(129, 32);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(191, 37);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Select Sketch";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnSelectSketch.Location = new System.Drawing.Point(129, 32);
+            this.btnSelectSketch.Name = "btnSelectSketch";
+            this.btnSelectSketch.Size = new System.Drawing.Size(191, 37);
+            this.btnSelectSketch.TabIndex = 0;
+            this.btnSelectSketch.Text = "Select Sketch";
+            this.btnSelectSketch.UseVisualStyleBackColor = true;
             // 
             // formToolStructure
             // 
@@ -556,13 +556,13 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox6.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -611,6 +611,6 @@
         private System.Windows.Forms.TextBox txtFeedHeight;
         private System.Windows.Forms.TextBox txtLiftHeight;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnSelectSketch;
     }
 }
