@@ -58,7 +58,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.txtMatThk = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.txtStripperPlt = new System.Windows.Forms.TextBox();
+            this.txtStripperPltThk = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.txtBottomPltThk = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -70,7 +70,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.btnSelectSketch = new System.Windows.Forms.Button();
+            this.lblPlateSketchStatus = new System.Windows.Forms.Label();
+            this.lblPlateSketchInstructions = new System.Windows.Forms.Label();
+            this.btnSelectPlateSketch = new System.Windows.Forms.Button();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.lblShoeSketchStatus = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.btnSelectShoeSketch = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -78,12 +84,13 @@
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox6.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(590, 487);
+            this.btnCancel.Location = new System.Drawing.Point(615, 491);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(117, 35);
             this.btnCancel.TabIndex = 0;
@@ -95,7 +102,7 @@
             // 
             this.btnApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnApply.Enabled = false;
-            this.btnApply.Location = new System.Drawing.Point(713, 487);
+            this.btnApply.Location = new System.Drawing.Point(738, 491);
             this.btnApply.Name = "btnApply";
             this.btnApply.Size = new System.Drawing.Size(117, 35);
             this.btnApply.TabIndex = 0;
@@ -111,7 +118,7 @@
             this.groupBox1.Controls.Add(this.txtPath);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(459, 76);
+            this.groupBox1.Size = new System.Drawing.Size(439, 76);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Where would you like the Tooling Assembly to be saved to?";
@@ -124,7 +131,7 @@
             this.txtPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtPath.Location = new System.Drawing.Point(6, 21);
             this.txtPath.Name = "txtPath";
-            this.txtPath.Size = new System.Drawing.Size(447, 22);
+            this.txtPath.Size = new System.Drawing.Size(427, 22);
             this.txtPath.TabIndex = 0;
             this.txtPath.TextChanged += new System.EventHandler(this.txtPath_TextChanged);
             // 
@@ -149,7 +156,7 @@
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.txtMatThk);
             this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.txtStripperPlt);
+            this.groupBox2.Controls.Add(this.txtStripperPltThk);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.txtBottomPltThk);
             this.groupBox2.Controls.Add(this.label3);
@@ -162,7 +169,7 @@
             this.groupBox2.Controls.Add(this.pictureBox1);
             this.groupBox2.Location = new System.Drawing.Point(12, 94);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(818, 345);
+            this.groupBox2.Size = new System.Drawing.Size(843, 349);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Tooling Structure: Assign Plate Thickness";
@@ -408,14 +415,14 @@
             // 
             // txtStripperPlt
             // 
-            this.txtStripperPlt.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtStripperPlt.Location = new System.Drawing.Point(121, 137);
-            this.txtStripperPlt.Name = "txtStripperPlt";
-            this.txtStripperPlt.Size = new System.Drawing.Size(150, 22);
-            this.txtStripperPlt.TabIndex = 5;
-            this.txtStripperPlt.Text = "30.0";
-            this.txtStripperPlt.TextChanged += new System.EventHandler(this.txtStripperPlt_TextChanged);
-            this.txtStripperPlt.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtStripperPlt_KeyPress);
+            this.txtStripperPltThk.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtStripperPltThk.Location = new System.Drawing.Point(121, 137);
+            this.txtStripperPltThk.Name = "txtStripperPlt";
+            this.txtStripperPltThk.Size = new System.Drawing.Size(150, 22);
+            this.txtStripperPltThk.TabIndex = 5;
+            this.txtStripperPltThk.Text = "30.0";
+            this.txtStripperPltThk.TextChanged += new System.EventHandler(this.txtStripperPlt_TextChanged);
+            this.txtStripperPltThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtStripperPlt_KeyPress);
             // 
             // label4
             // 
@@ -514,36 +521,106 @@
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(558, 21);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(253, 303);
+            this.pictureBox1.Size = new System.Drawing.Size(278, 307);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.btnSelectSketch);
-            this.groupBox6.Location = new System.Drawing.Point(483, 12);
+            this.groupBox6.Controls.Add(this.lblPlateSketchStatus);
+            this.groupBox6.Controls.Add(this.lblPlateSketchInstructions);
+            this.groupBox6.Controls.Add(this.btnSelectPlateSketch);
+            this.groupBox6.Location = new System.Drawing.Point(12, 446);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(340, 76);
+            this.groupBox6.Size = new System.Drawing.Size(292, 80);
             this.groupBox6.TabIndex = 3;
             this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Select Sketch to make plate station:";
+            this.groupBox6.Text = "Select Plate Sketch";
             // 
-            // btnSelectSketch
+            // lblPlateSketchStatus
             // 
-            this.btnSelectSketch.Location = new System.Drawing.Point(129, 32);
-            this.btnSelectSketch.Name = "btnSelectSketch";
-            this.btnSelectSketch.Size = new System.Drawing.Size(191, 37);
-            this.btnSelectSketch.TabIndex = 0;
-            this.btnSelectSketch.Text = "Select Sketch";
-            this.btnSelectSketch.UseVisualStyleBackColor = true;
+            this.lblPlateSketchStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblPlateSketchStatus.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPlateSketchStatus.ForeColor = System.Drawing.Color.Red;
+            this.lblPlateSketchStatus.Location = new System.Drawing.Point(147, 42);
+            this.lblPlateSketchStatus.Name = "lblPlateSketchStatus";
+            this.lblPlateSketchStatus.Size = new System.Drawing.Size(139, 28);
+            this.lblPlateSketchStatus.TabIndex = 3;
+            this.lblPlateSketchStatus.Text = "No sketch selected";
+            // 
+            // lblPlateSketchInstructions
+            // 
+            this.lblPlateSketchInstructions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblPlateSketchInstructions.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPlateSketchInstructions.Location = new System.Drawing.Point(6, 21);
+            this.lblPlateSketchInstructions.Name = "lblPlateSketchInstructions";
+            this.lblPlateSketchInstructions.Size = new System.Drawing.Size(280, 21);
+            this.lblPlateSketchInstructions.TabIndex = 4;
+            this.lblPlateSketchInstructions.Text = "Select a plate sketch from the NX model.";
+            // 
+            // btnSelectPlateSketch
+            // 
+            this.btnSelectPlateSketch.Location = new System.Drawing.Point(6, 42);
+            this.btnSelectPlateSketch.Name = "btnSelectPlateSketch";
+            this.btnSelectPlateSketch.Size = new System.Drawing.Size(133, 28);
+            this.btnSelectPlateSketch.TabIndex = 0;
+            this.btnSelectPlateSketch.Text = "Select Sketch...";
+            this.btnSelectPlateSketch.UseVisualStyleBackColor = true;
+            this.btnSelectPlateSketch.Click += new System.EventHandler(this.btnSelectPlateSketch_Click);
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.lblShoeSketchStatus);
+            this.groupBox7.Controls.Add(this.label17);
+            this.groupBox7.Controls.Add(this.btnSelectShoeSketch);
+            this.groupBox7.Location = new System.Drawing.Point(312, 449);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(292, 80);
+            this.groupBox7.TabIndex = 5;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Select Shoe Sketch";
+            // 
+            // lblShoeSketchStatus
+            // 
+            this.lblShoeSketchStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblShoeSketchStatus.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblShoeSketchStatus.ForeColor = System.Drawing.Color.Red;
+            this.lblShoeSketchStatus.Location = new System.Drawing.Point(147, 42);
+            this.lblShoeSketchStatus.Name = "lblShoeSketchStatus";
+            this.lblShoeSketchStatus.Size = new System.Drawing.Size(139, 28);
+            this.lblShoeSketchStatus.TabIndex = 3;
+            this.lblShoeSketchStatus.Text = "No sketch selected";
+            // 
+            // label17
+            // 
+            this.label17.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label17.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Location = new System.Drawing.Point(6, 21);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(280, 21);
+            this.label17.TabIndex = 4;
+            this.label17.Text = "Select a shoe sketch from the NX model.";
+            // 
+            // btnSelectShoeSketch
+            // 
+            this.btnSelectShoeSketch.Location = new System.Drawing.Point(6, 42);
+            this.btnSelectShoeSketch.Name = "btnSelectShoeSketch";
+            this.btnSelectShoeSketch.Size = new System.Drawing.Size(133, 28);
+            this.btnSelectShoeSketch.TabIndex = 0;
+            this.btnSelectShoeSketch.Text = "Select Sketch...";
+            this.btnSelectShoeSketch.UseVisualStyleBackColor = true;
+            this.btnSelectShoeSketch.Click += new System.EventHandler(this.btnSelectShoeSketch_Click);
             // 
             // formToolStructure
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(843, 534);
+            this.ClientSize = new System.Drawing.Size(868, 538);
+            this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -564,6 +641,7 @@
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox6.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -582,7 +660,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtMatThk;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox txtStripperPlt;
+        private System.Windows.Forms.TextBox txtStripperPltThk;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtBottomPltThk;
         private System.Windows.Forms.Label label3;
@@ -611,6 +689,12 @@
         private System.Windows.Forms.TextBox txtFeedHeight;
         private System.Windows.Forms.TextBox txtLiftHeight;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.Button btnSelectSketch;
+        private System.Windows.Forms.Button btnSelectPlateSketch;
+        private System.Windows.Forms.Label lblPlateSketchStatus;
+        private System.Windows.Forms.Label lblPlateSketchInstructions;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.Label lblShoeSketchStatus;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Button btnSelectShoeSketch;
     }
 }

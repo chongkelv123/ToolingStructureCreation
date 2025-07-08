@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NXOpen;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToolingStructureCreation.Controller;
+using ToolingStructureCreation.Model;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ToolingStructureCreation.View
@@ -17,18 +19,31 @@ namespace ToolingStructureCreation.View
     public partial class formToolStructure : System.Windows.Forms.Form
     {
         Controller.Control control;
-        public string GetPath => txtPath.Text;
+        public string GetPath => txtPath.Text + "\\";
         public double UpperShoeThk => double.TryParse(txtUpperShoeThk.Text, out double value) ? value : 0.0;
         public double UpperPadThk => double.TryParse(txtUpperPadThk.Text, out double value) ? value : 0.0;
         public double PunHolderThk => double.TryParse(txtPunHolderThk.Text, out double value) ? value : 0.0;
         public double BottomPltThk => double.TryParse(txtBottomPltThk.Text, out double value) ? value : 0.0;
-        public double StripperPltThk => double.TryParse(txtStripperPlt.Text, out double value) ? value : 0.0;
+        public double StripperPltThk => double.TryParse(txtStripperPltThk.Text, out double value) ? value : 0.0;
         public double MatThk => double.TryParse(txtMatThk.Text, out double value) ? value : 0.0;
         public double DiePltThk => double.TryParse(txtDiePltThk.Text, out double value) ? value : 0.0;
         public double LowerPadThk => double.TryParse(txtLowerPadThk.Text, out double value) ? value : 0.0;
         public double LowerShoeThk => double.TryParse(txtLowerShoeThk.Text, out double value) ? value : 0.0;
         public double ParallelBarThk => double.TryParse(txtParallelBarThk.Text, out double value) ? value : 0.0;
         public double CommonPltThk => double.TryParse(txtCommonPltThk.Text, out double value) ? value : 0.0;
+
+        bool isPlateSketchSelected = false;
+        bool isShoeSketchSelected = false;
+        public bool IsPlateSketchSelected => isPlateSketchSelected;
+        public bool IsShoeSketchSelected => isShoeSketchSelected;
+
+        const string PLATE = "Plate";
+        const string SHOE = "Shoe";
+        TaggedObject[] plateTaggedObjects;
+        TaggedObject[] shoeTaggedObjects;
+        List<Model.Sketch> stationSketchLists;
+        List<Model.Sketch> shoeSketchLists;
+
         public formToolStructure(Controller.Control control)
         {
             InitializeComponent();
@@ -45,8 +60,26 @@ namespace ToolingStructureCreation.View
         }
 
         private void btnApply_Click(object sender, EventArgs e)
-        {
-            control.Start();
+        {           
+            
+            StationAssemblyFactory stnAsmFactory = new StationAssemblyFactory(
+                new Dictionary<string, double>
+                {
+                    { NXDrawing.LOWER_PAD, LowerPadThk },
+                    { NXDrawing.DIE_PLATE, DiePltThk },
+                    { NXDrawing.MAT_THK, MatThk }, // Material thickness, not a plate
+                    { NXDrawing.STRIPPER_PLATE, StripperPltThk },
+                    { NXDrawing.BOTTOMING_PLATE, BottomPltThk },
+                    { NXDrawing.PUNCH_HOLDER, PunHolderThk },
+                    { NXDrawing.UPPER_PAD, UpperPadThk }
+                },
+                stationSketchLists,
+                shoeSketchLists,
+                GetPath,
+                control
+            );
+
+            control.Start(stnAsmFactory);
             this.Close();
         }
 
@@ -140,7 +173,7 @@ namespace ToolingStructureCreation.View
         private void txtUpperShoeThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
-            UpdateDieHeight();            
+            UpdateDieHeight();
         }
         private void CheckInputAndEnableApply()
         {
@@ -149,13 +182,14 @@ namespace ToolingStructureCreation.View
                 !string.IsNullOrWhiteSpace(txtUpperPadThk.Text) &&
                 !string.IsNullOrWhiteSpace(txtPunHolderThk.Text) &&
                 !string.IsNullOrWhiteSpace(txtBottomPltThk.Text) &&
-                !string.IsNullOrWhiteSpace(txtStripperPlt.Text) &&
+                !string.IsNullOrWhiteSpace(txtStripperPltThk.Text) &&
                 !string.IsNullOrWhiteSpace(txtMatThk.Text) &&
                 !string.IsNullOrWhiteSpace(txtDiePltThk.Text) &&
                 !string.IsNullOrWhiteSpace(txtLowerPadThk.Text) &&
                 !string.IsNullOrWhiteSpace(txtLowerShoeThk.Text) &&
                 !string.IsNullOrWhiteSpace(txtParallelBarThk.Text) &&
                 !string.IsNullOrWhiteSpace(txtCommonPltThk.Text) &&
+                (IsPlateSketchSelected || IsShoeSketchSelected) &&
                 IsDirectoryExists();
 
             btnApply.Enabled = allFilled;
@@ -286,11 +320,40 @@ namespace ToolingStructureCreation.View
         }
 
         private double GetPHld_BPlt_SPlt_MatThk()
-        {          
+        {
             return SumAllThickness(
                 txtPunHolderThk,
-                txtBottomPltThk, txtStripperPlt, txtMatThk
+                txtBottomPltThk, txtStripperPltThk, txtMatThk
                 );
+        }
+
+        public double GetUpperShoeZPosition()
+        {
+            return SumAllThickness(
+                txtUpperShoeThk,
+                txtUpperPadThk, 
+                txtPunHolderThk,
+                txtBottomPltThk,
+                txtStripperPltThk,
+                txtMatThk,
+                txtDiePltThk,
+                txtLowerPadThk
+                );
+        }
+
+        public double GetParallelBarZPosition()
+        {
+            return SumAllThickness(
+                txtLowerShoeThk
+                ) * -1;
+        }
+
+        public double GetCommonPlateZPosition()
+        {
+            return SumAllThickness(
+                txtLowerShoeThk,
+                txtParallelBarThk
+                ) * -1;
         }
 
         private double GetPunchLength()
@@ -320,7 +383,7 @@ namespace ToolingStructureCreation.View
         {
             double totalThickness = SumAllThickness(
                 txtUpperShoeThk, txtUpperPadThk, txtPunHolderThk,
-                txtBottomPltThk, txtStripperPlt, txtMatThk,
+                txtBottomPltThk, txtStripperPltThk, txtMatThk,
                 txtDiePltThk, txtLowerPadThk, txtLowerShoeThk,
                 txtParallelBarThk, txtCommonPltThk);
 
@@ -335,6 +398,68 @@ namespace ToolingStructureCreation.View
         private void txtLiftHeight_TextChanged(object sender, EventArgs e)
         {
             UpdateFeedHeight();
+        }
+
+        private void btnSelectPlateSketch_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            NXDrawing xDrawing = control.GetDrawing;
+            Model.SketchSelection plateSketch = new Model.SketchSelection(xDrawing);
+            plateTaggedObjects = plateSketch.SelectSketch();
+            if (plateTaggedObjects != null)
+            {
+                isPlateSketchSelected = true;
+                UpdateSketchStatus(PLATE, lblPlateSketchStatus);
+                stationSketchLists = plateSketch.AskListFromTaggedObjects(plateTaggedObjects);
+            }
+            else
+            {
+                isPlateSketchSelected = false;
+                UpdateSketchStatus(PLATE, lblPlateSketchStatus);
+            }
+
+            CheckInputAndEnableApply();
+            this.Show();
+        }
+
+        private void UpdateSketchStatus(string sketchType, System.Windows.Forms.Label label)
+        {
+            const string NO_SKETCH_SELECTED = "No sketch selected";
+            string updateStatusText = $"{sketchType} sketch selected";
+
+            if(label == lblPlateSketchStatus)
+            {
+                label.Text = isPlateSketchSelected ? updateStatusText : NO_SKETCH_SELECTED;
+                label.ForeColor = isPlateSketchSelected ? Color.Green : Color.Red;
+            }
+            else if(label == lblShoeSketchStatus)
+            {
+                label.Text = isShoeSketchSelected ? updateStatusText : NO_SKETCH_SELECTED;
+                label.ForeColor = isShoeSketchSelected ? Color.Green : Color.Red;
+            }            
+        }
+
+        private void btnSelectShoeSketch_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            
+            NXDrawing xDrawing = control.GetDrawing;
+            Model.SketchSelection shoeSketch = new Model.SketchSelection(xDrawing);
+            shoeTaggedObjects = shoeSketch.SelectSketch();
+            if (shoeTaggedObjects != null)
+            {
+                isShoeSketchSelected = true;
+                UpdateSketchStatus(SHOE, lblShoeSketchStatus);
+                shoeSketchLists = shoeSketch.AskListFromTaggedObjects(shoeTaggedObjects);
+            }
+            else
+            {
+                isShoeSketchSelected = false;
+                UpdateSketchStatus(SHOE, lblShoeSketchStatus);
+            }
+
+            CheckInputAndEnableApply();
+            this.Show();
         }
     }
 }
