@@ -116,9 +116,18 @@ namespace ToolingStructureCreation.Model
 
                 double firstParallelBarXPosition = shoeSketch.StartLocation.X + (PARALLEL_BAR_WIDTH / 2.0);
                 double lastParallelBarXPosition = shoeSketch.StartLocation.X + shoeSketch.Length - PARALLEL_BAR_WIDTH / 2.0;
-                Shoe.Insert(workAssy, ParallelBar.PARALLEL_BAR, new Point3d(firstParallelBarXPosition, 0.0, -70.0), folderPath);
-                Shoe.Insert(workAssy, ParallelBar.PARALLEL_BAR, new Point3d(shoeSketch.MidPoint.X, 0.0, -70.0), folderPath);
-                Shoe.Insert(workAssy, ParallelBar.PARALLEL_BAR, new Point3d(lastParallelBarXPosition, 0.0, -70.0), folderPath);
+                double distBetweenFirstLastPBars = (lastParallelBarXPosition - firstParallelBarXPosition);
+                const double DIST_BETWEEN_PBAR = 330.0;
+                int numberOfParallelBars = (int)Math.Ceiling(distBetweenFirstLastPBars / DIST_BETWEEN_PBAR);
+                Shoe.Insert(workAssy, ParallelBar.PARALLEL_BAR, new Point3d(firstParallelBarXPosition, 0.0, myForm.GetParallelBarZPosition()), folderPath);                
+                Shoe.Insert(workAssy, ParallelBar.PARALLEL_BAR, new Point3d(lastParallelBarXPosition, 0.0, myForm.GetParallelBarZPosition()), folderPath);
+
+                for (int j = 0; j < numberOfParallelBars-2; j++)
+                {
+                    double dist = distBetweenFirstLastPBars / (numberOfParallelBars - 1);
+                    double xPosition = firstParallelBarXPosition + (j + 1) * dist;
+                    Shoe.Insert(workAssy, ParallelBar.PARALLEL_BAR, new Point3d(xPosition, 0.0, myForm.GetParallelBarZPosition()), folderPath);
+                }
 
                 Shoe.Insert(workAssy, CommonPlate.LOWER_COMMON_PLATE, new Point3d(shoeSketch.MidPoint.X, 0.0, myForm.GetCommonPlateZPosition()), folderPath);
             }                        
