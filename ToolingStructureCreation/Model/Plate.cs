@@ -13,11 +13,11 @@ namespace ToolingStructureCreation.Model
         private string plateName;
         private double plateLength;
         private double plateWidth;
-        private double plateThickness;
-        NXDrawing drawing;     
+        private double plateThickness;        
 
         public const string TEMPLATE_PLATE_NAME = "3DA_Template_PLATE-V00.prt";                
         public const string PLATE = "Plate";
+        NXDrawing drawing;
 
         public Plate(string name, double length, double width, double thickness, NXDrawing drawing)
         {

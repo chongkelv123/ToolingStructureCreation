@@ -70,7 +70,10 @@
     <Compile Include="Model\NXDrawing.cs" />
     <Compile Include="Model\ParallelBar.cs" />
     <Compile Include="Model\Plate.cs" />
+    <Compile Include="Model\Sketch.cs" />
+    <Compile Include="Model\SketchSelection.cs" />
     <Compile Include="Model\Shoe.cs" />
+    <Compile Include="Model\StationAssemblyFactory.cs" />
     <Compile Include="Model\ToolingAssembly.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource.Designer.cs">

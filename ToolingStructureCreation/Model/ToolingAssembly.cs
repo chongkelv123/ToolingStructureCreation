@@ -9,21 +9,21 @@ using System.Threading.Tasks;
 namespace ToolingStructureCreation.Model
 {
     public class ToolingAssembly
-    {        
+    {
         public Dictionary<string, double> PlateThicknesses { get; set; }
         double plateWidth;
         double plateLength;
         string stationNumber;
         NXDrawing drawing;
         string folderPath;
-        static Session session;        
+        static Session session;
 
-        public const string TEMPLATE_STP_NAME = "3DA_Template_STP-V00.prt";        
-        public const string ASSEMBLY_TEMPLATE = "AssemblyTemplate";        
+        public const string TEMPLATE_STP_NAME = "3DA_Template_STP-V00.prt";
+        public const string ASSEMBLY_TEMPLATE = "AssemblyTemplate";
         public const string ASSEMBLY = "Assembly";
 
-        public ToolingAssembly(double plateWidth, double plateLength, string stationNumber, NXDrawing drawing, string folderPath, Dictionary<string, double>plateThicknesses)
-        {            
+        public ToolingAssembly(double plateWidth, double plateLength, string stationNumber, NXDrawing drawing, string folderPath, Dictionary<string, double> plateThicknesses)
+        {
             this.plateWidth = plateWidth;
             this.plateLength = plateLength;
             this.stationNumber = stationNumber;
@@ -32,8 +32,7 @@ namespace ToolingStructureCreation.Model
             session = drawing.GetSession();
 
             PlateThicknesses = plateThicknesses ?? new Dictionary<string, double>();
-        }        
-        
+        }
 
         public double GetTotalThickness()
         {
@@ -83,9 +82,9 @@ namespace ToolingStructureCreation.Model
             CreateStationAssembly(PlateThicknesses, GetStationNumber(), folderPath);
         }
 
-        public void CreateStationAssembly(Dictionary<string, double> plateList, string stationNumber, string folderPath)
+        public static void CreateStationAssembly(Dictionary<string, double> plateList, string stationNumber, string folderPath)
         {
-            Session session = drawing.GetSession();
+            Session session = Session.GetSession();
             FileNew fileNew = session.Parts.FileNew();
             fileNew.TemplateFileName = TEMPLATE_STP_NAME;
             fileNew.UseBlankTemplate = false;
@@ -124,7 +123,7 @@ namespace ToolingStructureCreation.Model
             workPart.Save(saveComponentParts, save);
         }
         static public void CreateToolAssembly(string folderPath)
-        {            
+        {
             FileNew fileNew = session.Parts.FileNew();
             fileNew.TemplateFileName = TEMPLATE_STP_NAME;
             fileNew.UseBlankTemplate = false;
