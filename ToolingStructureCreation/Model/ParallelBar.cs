@@ -14,19 +14,18 @@ namespace ToolingStructureCreation.Model
         private double parallelBarWidth;
         private double parallelBarThickness;
         public int Quantity { get; set; }
-        NXDrawing drawing;
+        //NXDrawing drawing;
 
         public const string TEMPLATE_PARALLELBAR_NAME = "3DA_Template_PARALLELBAR-V00.prt";
         public const string PARALLELBAR = "ParallelBar";
 
         public const string PARALLEL_BAR = "PARALLEL_BAR";
 
-        public ParallelBar(double length, double width, double thickness, NXDrawing drawing)
+        public ParallelBar(double length, double width, double thickness)
         {            
             this.parallelBarLength = length;
             this.parallelBarWidth = width;
-            this.parallelBarThickness = thickness;
-            this.drawing = drawing;
+            this.parallelBarThickness = thickness;            
         }
 
         public double GetParallelBarLength()
@@ -71,17 +70,17 @@ namespace ToolingStructureCreation.Model
             NXOpen.Expression expressionThk = ((NXOpen.Expression)workPart.Expressions.FindObject("Thk"));
             if (expressionWidth == null)
             {
-                drawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Width' not found.");
+                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Width' not found.");
                 return;
             }
             else if (expressionLength == null)
             {
-                drawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Length' not found.");
+                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Length' not found.");
                 return;
             }
             else if (expressionThk == null)
             {
-                drawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Thk' not found.");
+                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Thk' not found.");
                 return;
             }
             workPart.Expressions.EditExpression(expressionWidth, GetParallelBarWidth().ToString());

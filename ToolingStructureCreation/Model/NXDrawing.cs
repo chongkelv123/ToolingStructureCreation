@@ -71,8 +71,9 @@ namespace ToolingStructureCreation.Model
             this.control = control;
         }
 
-        public void ShowMessageBox(string title, NXMessageBox.DialogType msgboxType, string message)
+        public static void ShowMessageBox(string title, NXMessageBox.DialogType msgboxType, string message)
         {
+            UI ui = UI.GetUI();
             ui.NXMessageBox.Show(title, msgboxType, message);
         }
 

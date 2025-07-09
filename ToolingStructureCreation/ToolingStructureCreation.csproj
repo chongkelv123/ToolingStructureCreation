@@ -67,6 +67,8 @@
     <Compile Include="Main\MyProgram.cs" />
     <Compile Include="Main\Unload.cs" />
     <Compile Include="Model\CommonPlate.cs" />
+    <Compile Include="Model\ICommonPlate.cs" />
+    <Compile Include="Model\Machine.cs" />
     <Compile Include="Model\NXDrawing.cs" />
     <Compile Include="Model\ParallelBar.cs" />
     <Compile Include="Model\Plate.cs" />

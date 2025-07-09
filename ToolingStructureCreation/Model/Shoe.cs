@@ -13,21 +13,19 @@ namespace ToolingStructureCreation.Model
         private string shoeName;
         private double shoeLength;
         private double shoeWidth;
-        private double shoeHeight;
-        private NXDrawing drawing;
+        private double shoeHeight;        
 
         public const string UPPER_SHOE = "UPPER_SHOE";
         public const string LOWER_SHOE = "LOWER_SHOE";
         public const string TEMPLATE_SHOE_NAME = "3DA_Template_SHOE-V00.prt";
         public const string SHOE = "Shoe";
 
-        public Shoe(string name, double length, double width, double height, NXDrawing drawing)
+        public Shoe(string name, double length, double width, double height)
         {
             this.shoeName = name;
             this.shoeLength = length;
             this.shoeWidth = width;
-            this.shoeHeight = height;
-            this.drawing = drawing;
+            this.shoeHeight = height;            
         }
 
         public string GetShoeName()
@@ -78,17 +76,17 @@ namespace ToolingStructureCreation.Model
             NXOpen.Expression expressionShoeThk = ((NXOpen.Expression)workPart.Expressions.FindObject("ShoeThk"));
             if (expressionShoeWidth == null)
             {
-                drawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'ShoeWidth' not found.");
+                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'ShoeWidth' not found.");
                 return;
             }
             else if (expressionShoeLength == null)
             {
-                drawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'ShoeLength' not found.");
+                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'ShoeLength' not found.");
                 return;
             }
             else if (expressionShoeThk == null)
             {
-                drawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'ShoeThk' not found.");
+                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'ShoeThk' not found.");
                 return;
             }
             workPart.Expressions.EditExpression(expressionShoeWidth, GetShoeWidth().ToString());

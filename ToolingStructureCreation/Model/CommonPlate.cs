@@ -7,23 +7,21 @@ using System.Threading.Tasks;
 
 namespace ToolingStructureCreation.Model
 {
-    public class CommonPlate
+    public class CommonPlate: ICommonPlate
     {
         private double Length;
         private double Width;
         private double Thickness;
-        NXDrawing drawing;
 
         public const string TEMPLATE_LOWCOMPLT_NAME = "3DA_Template_LOWCOMPLT-V00.prt";
         public const string LOWCOMPLT = "LowCommonPlate";
         public const string LOWER_COMMON_PLATE = "LOWER_COMMON_PLATE";
 
-        public CommonPlate(double length, double width, double thickness, NXDrawing drawing)
+        public CommonPlate(double length, double width, double thickness)
         {
             this.Length = length;
             this.Width = width;
             this.Thickness = thickness;
-            this.drawing = drawing;
         }
         public double GetLength()
         {
@@ -61,17 +59,17 @@ namespace ToolingStructureCreation.Model
             NXOpen.Expression expressionThk = ((NXOpen.Expression)workPart.Expressions.FindObject("Thk"));
             if (expressionWidth == null)
             {
-                drawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Width' not found.");
+                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Width' not found.");
                 return;
             }
             else if (expressionLength == null)
             {
-                drawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Length' not found.");
+                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Length' not found.");
                 return;
             }
             else if (expressionThk == null)
             {
-                drawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Thk' not found.");
+                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Thk' not found.");
                 return;
             }
             workPart.Expressions.EditExpression(expressionWidth, GetWidth().ToString());

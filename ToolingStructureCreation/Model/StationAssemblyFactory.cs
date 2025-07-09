@@ -15,7 +15,7 @@ namespace ToolingStructureCreation.Model
         public List<Sketch> ShoeSketchLists;
         string folderPath = "";
         const string STN = "Stn";
-        NXDrawing drawing;
+        //NXDrawing drawing;
         Controller.Control control;
         formToolStructure myForm;
 
@@ -50,7 +50,7 @@ namespace ToolingStructureCreation.Model
                         // Skip material thickness, as it is not a plate
                         continue;
                     }
-                    Plate plate = new Plate(plt.Key, stnSketch.Length, stnSketch.Width, plt.Value, drawing);
+                    Plate plate = new Plate(plt.Key, stnSketch.Length, stnSketch.Width, plt.Value);
                     plate.CreateNewPlate(folderPath, stnNumber);
                 }
 
@@ -60,16 +60,18 @@ namespace ToolingStructureCreation.Model
             for (int i = 0; i < ShoeSketchLists.Count; i++)
             {
                 Sketch shoeSketch = ShoeSketchLists[i];
-                Shoe upperShoe = new Shoe(Shoe.UPPER_SHOE, shoeSketch.Length, shoeSketch.Width, myForm.UpperShoeThk, drawing);
-                Shoe lowerShoe = new Shoe(Shoe.LOWER_SHOE, shoeSketch.Length, shoeSketch.Width, myForm.LowerShoeThk, drawing);
+                Shoe upperShoe = new Shoe(Shoe.UPPER_SHOE, shoeSketch.Length, shoeSketch.Width, myForm.UpperShoeThk);
+                Shoe lowerShoe = new Shoe(Shoe.LOWER_SHOE, shoeSketch.Length, shoeSketch.Width, myForm.LowerShoeThk);
                 upperShoe.CreateNewShoe(folderPath);
                 lowerShoe.CreateNewShoe(folderPath);
 
                 
-                ParallelBar parallelBar = new ParallelBar(PARALLEL_BAR_WIDTH, shoeSketch.Width-85.0, myForm.ParallelBarThk, drawing);
+                ParallelBar parallelBar = new ParallelBar(PARALLEL_BAR_WIDTH, shoeSketch.Width-85.0, myForm.ParallelBarThk);
                 parallelBar.CreateNewParallelBar(folderPath);
 
-                CommonPlate commonPlate = new CommonPlate(2300, 980, myForm.CommonPltThk, drawing);
+                Machine machine = myForm.GetMachine;
+                var commonPltInfo = machine.GetCommonPlate(myForm.GetMachineName);
+                CommonPlate commonPlate = new CommonPlate(commonPltInfo.GetLength(), commonPltInfo.GetWidth(), myForm.CommonPltThk);
                 commonPlate.CreateNewCommonPlate(folderPath);
             }
             

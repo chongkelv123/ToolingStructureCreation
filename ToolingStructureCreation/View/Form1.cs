@@ -1,4 +1,5 @@
 ﻿using NXOpen;
+using NXOpen.Annotations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -31,6 +32,7 @@ namespace ToolingStructureCreation.View
         public double LowerShoeThk => double.TryParse(txtLowerShoeThk.Text, out double value) ? value : 0.0;
         public double ParallelBarThk => double.TryParse(txtParallelBarThk.Text, out double value) ? value : 0.0;
         public double CommonPltThk => double.TryParse(txtCommonPltThk.Text, out double value) ? value : 0.0;
+        public string GetMachineName => cboMachine.SelectedItem.ToString();
 
         bool isPlateSketchSelected = false;
         bool isShoeSketchSelected = false;
@@ -43,15 +45,36 @@ namespace ToolingStructureCreation.View
         TaggedObject[] shoeTaggedObjects;
         List<Model.Sketch> stationSketchLists;
         List<Model.Sketch> shoeSketchLists;
+        Machine machine;
 
         public formToolStructure(Controller.Control control)
         {
             InitializeComponent();
+            InitializeCboMachine();
             this.control = control;
             UpdateDieHeight();
             UpdatePunchLength();
             UpdatePenetration();
             UpdateFeedHeight();
+        }
+
+        private void InitializeCboMachine()
+        {
+            machine = new Machine();
+            cboMachine.DataSource = machine.GetMachines();
+            cboMachine.SelectedIndex = 8; // Set default selection to the first machine
+            UpdateCommonPltThk(machine);
+        }
+
+        private void UpdateCommonPltThk(Machine machine)
+        {
+            if (machine == null)
+            {
+                return;
+            }
+            CommonPlate commonPlate = machine.GetCommonPlate(GetMachineName);
+
+            txtCommonPltThk.Text = commonPlate.GetThickness().ToString();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -60,8 +83,8 @@ namespace ToolingStructureCreation.View
         }
 
         private void btnApply_Click(object sender, EventArgs e)
-        {           
-            
+        {
+
             StationAssemblyFactory stnAsmFactory = new StationAssemblyFactory(
                 new Dictionary<string, double>
                 {
@@ -87,6 +110,8 @@ namespace ToolingStructureCreation.View
         {
             CheckInputAndEnableApply();
         }
+
+        public Machine GetMachine => machine;
 
         private bool IsDirectoryExists()
         {
@@ -331,7 +356,7 @@ namespace ToolingStructureCreation.View
         {
             return SumAllThickness(
                 txtUpperShoeThk,
-                txtUpperPadThk, 
+                txtUpperPadThk,
                 txtPunHolderThk,
                 txtBottomPltThk,
                 txtStripperPltThk,
@@ -427,22 +452,22 @@ namespace ToolingStructureCreation.View
             const string NO_SKETCH_SELECTED = "No sketch selected";
             string updateStatusText = $"{sketchType} sketch selected";
 
-            if(label == lblPlateSketchStatus)
+            if (label == lblPlateSketchStatus)
             {
                 label.Text = isPlateSketchSelected ? updateStatusText : NO_SKETCH_SELECTED;
                 label.ForeColor = isPlateSketchSelected ? Color.Green : Color.Red;
             }
-            else if(label == lblShoeSketchStatus)
+            else if (label == lblShoeSketchStatus)
             {
                 label.Text = isShoeSketchSelected ? updateStatusText : NO_SKETCH_SELECTED;
                 label.ForeColor = isShoeSketchSelected ? Color.Green : Color.Red;
-            }            
+            }
         }
 
         private void btnSelectShoeSketch_Click(object sender, EventArgs e)
         {
             this.Hide();
-            
+
             NXDrawing xDrawing = control.GetDrawing;
             Model.SketchSelection shoeSketch = new Model.SketchSelection(xDrawing);
             shoeTaggedObjects = shoeSketch.SelectSketch();
@@ -460,6 +485,11 @@ namespace ToolingStructureCreation.View
 
             CheckInputAndEnableApply();
             this.Show();
+        }
+
+        private void cboMachine_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateCommonPltThk(machine);
         }
     }
 }

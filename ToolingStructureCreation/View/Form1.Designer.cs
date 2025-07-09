@@ -77,6 +77,9 @@
             this.lblShoeSketchStatus = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.btnSelectShoeSketch = new System.Windows.Forms.Button();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.cboMachine = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -85,12 +88,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox6.SuspendLayout();
             this.groupBox7.SuspendLayout();
+            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(615, 491);
+            this.btnCancel.Location = new System.Drawing.Point(615, 539);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(117, 35);
             this.btnCancel.TabIndex = 0;
@@ -102,7 +106,7 @@
             // 
             this.btnApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnApply.Enabled = false;
-            this.btnApply.Location = new System.Drawing.Point(738, 491);
+            this.btnApply.Location = new System.Drawing.Point(738, 539);
             this.btnApply.Name = "btnApply";
             this.btnApply.Size = new System.Drawing.Size(117, 35);
             this.btnApply.TabIndex = 0;
@@ -137,10 +141,10 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupBox2.Controls.Add(this.groupBox8);
             this.groupBox2.Controls.Add(this.groupBox5);
             this.groupBox2.Controls.Add(this.groupBox4);
             this.groupBox2.Controls.Add(this.groupBox3);
@@ -169,7 +173,7 @@
             this.groupBox2.Controls.Add(this.pictureBox1);
             this.groupBox2.Location = new System.Drawing.Point(12, 94);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(843, 349);
+            this.groupBox2.Size = new System.Drawing.Size(843, 394);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Tooling Structure: Assign Plate Thickness";
@@ -296,6 +300,7 @@
             // txtCommonPltThk
             // 
             this.txtCommonPltThk.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtCommonPltThk.Enabled = false;
             this.txtCommonPltThk.Location = new System.Drawing.Point(121, 305);
             this.txtCommonPltThk.Name = "txtCommonPltThk";
             this.txtCommonPltThk.Size = new System.Drawing.Size(150, 22);
@@ -413,11 +418,11 @@
             this.label5.TabIndex = 1;
             this.label5.Text = "MAT THK:";
             // 
-            // txtStripperPlt
+            // txtStripperPltThk
             // 
             this.txtStripperPltThk.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtStripperPltThk.Location = new System.Drawing.Point(121, 137);
-            this.txtStripperPltThk.Name = "txtStripperPlt";
+            this.txtStripperPltThk.Name = "txtStripperPltThk";
             this.txtStripperPltThk.Size = new System.Drawing.Size(150, 22);
             this.txtStripperPltThk.TabIndex = 5;
             this.txtStripperPltThk.Text = "30.0";
@@ -515,8 +520,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(558, 21);
@@ -528,10 +532,11 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox6.Controls.Add(this.lblPlateSketchStatus);
             this.groupBox6.Controls.Add(this.lblPlateSketchInstructions);
             this.groupBox6.Controls.Add(this.btnSelectPlateSketch);
-            this.groupBox6.Location = new System.Drawing.Point(12, 446);
+            this.groupBox6.Location = new System.Drawing.Point(12, 494);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(292, 80);
             this.groupBox6.TabIndex = 3;
@@ -572,10 +577,11 @@
             // 
             // groupBox7
             // 
+            this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox7.Controls.Add(this.lblShoeSketchStatus);
             this.groupBox7.Controls.Add(this.label17);
             this.groupBox7.Controls.Add(this.btnSelectShoeSketch);
-            this.groupBox7.Location = new System.Drawing.Point(312, 449);
+            this.groupBox7.Location = new System.Drawing.Point(312, 497);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(292, 80);
             this.groupBox7.TabIndex = 5;
@@ -614,12 +620,41 @@
             this.btnSelectShoeSketch.UseVisualStyleBackColor = true;
             this.btnSelectShoeSketch.Click += new System.EventHandler(this.btnSelectShoeSketch_Click);
             // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.cboMachine);
+            this.groupBox8.Controls.Add(this.label16);
+            this.groupBox8.Location = new System.Drawing.Point(300, 301);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(236, 79);
+            this.groupBox8.TabIndex = 13;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Choose machine for Common Plate";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(7, 24);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(71, 16);
+            this.label16.TabIndex = 14;
+            this.label16.Text = "MACHINE:";
+            // 
+            // cboMachine
+            // 
+            this.cboMachine.FormattingEnabled = true;
+            this.cboMachine.Location = new System.Drawing.Point(83, 21);
+            this.cboMachine.Name = "cboMachine";
+            this.cboMachine.Size = new System.Drawing.Size(147, 24);
+            this.cboMachine.TabIndex = 15;
+            this.cboMachine.SelectedIndexChanged += new System.EventHandler(this.cboMachine_SelectedIndexChanged);
+            // 
             // formToolStructure
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(868, 538);
+            this.ClientSize = new System.Drawing.Size(868, 586);
             this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox2);
@@ -642,6 +677,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox6.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -696,5 +733,8 @@
         private System.Windows.Forms.Label lblShoeSketchStatus;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Button btnSelectShoeSketch;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.ComboBox cboMachine;
     }
 }

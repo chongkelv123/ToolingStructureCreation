@@ -18,8 +18,7 @@ namespace ToolingStructureCreation.Controller
         public formToolStructure GetForm => myForm;
 
         Dictionary<string, double> plateThicknesses = new Dictionary<string, double>();
-
-        string folderPath = "";
+        
 
         public Control()
         {

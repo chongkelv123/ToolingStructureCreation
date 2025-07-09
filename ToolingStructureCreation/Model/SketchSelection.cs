@@ -16,7 +16,7 @@ namespace ToolingStructureCreation.Model
         UI ui;
 
         public double DiagonalLength { get; set; }
-        List<Point3d> sortedPoints;
+        //List<Point3d> sortedPoints;
         bool showDebugMessages = false;
 
         public SketchSelection(NXDrawing drawing)

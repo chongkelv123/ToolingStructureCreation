@@ -75,7 +75,7 @@ namespace ToolingStructureCreation.Model
                     // Skip material thickness, as it is not a plate
                     continue;
                 }
-                Plate plate = new Plate(plt.Key, GetPlateLength(), GetPlateWidth(), plt.Value, drawing);
+                Plate plate = new Plate(plt.Key, GetPlateLength(), GetPlateWidth(), plt.Value);
                 plate.CreateNewPlate(folderPath, stationNumber);
             }
 

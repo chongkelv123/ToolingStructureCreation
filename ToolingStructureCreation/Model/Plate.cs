@@ -17,15 +17,14 @@ namespace ToolingStructureCreation.Model
 
         public const string TEMPLATE_PLATE_NAME = "3DA_Template_PLATE-V00.prt";                
         public const string PLATE = "Plate";
-        NXDrawing drawing;
+        //NXDrawing drawing;
 
-        public Plate(string name, double length, double width, double thickness, NXDrawing drawing)
+        public Plate(string name, double length, double width, double thickness)
         {
             this.plateName = name;
             this.plateLength = length;
             this.plateWidth = width;
-            this.plateThickness = thickness;
-            this.drawing = drawing;
+            this.plateThickness = thickness;            
         }
 
         public string GetPlateName()
@@ -76,17 +75,17 @@ namespace ToolingStructureCreation.Model
             NXOpen.Expression expressionPlateThk = ((NXOpen.Expression)workPart.Expressions.FindObject("PlateThk"));
             if (expressionPlateWidth == null)
             {
-                drawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'PlateWidth' not found.");
+                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'PlateWidth' not found.");
                 return;
             }
             else if (expressionPlateLength == null)
             {
-                drawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'PlateLength' not found.");
+                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'PlateLength' not found.");
                 return;
             }
             else if (expressionPlateThk == null)
             {
-                drawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'PlateThk' not found.");
+                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'PlateThk' not found.");
                 return;
             }
             workPart.Expressions.EditExpression(expressionPlateWidth, GetPlateWidth().ToString());
