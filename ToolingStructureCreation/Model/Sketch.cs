@@ -33,7 +33,7 @@ namespace ToolingStructureCreation.Model
         public double Width => width;
         public Point3d StartLocation => startLocation;
         public Point3d MidPoint => midPoint;
-        public List<Point3d> PointCollections => pointCollections;
+        //public List<Point3d> PointCollections => pointCollections;
 
         public bool IsRectangle(TaggedObject[] taggedObjs)
         {

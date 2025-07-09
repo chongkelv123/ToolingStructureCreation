@@ -13,11 +13,12 @@ namespace ToolingStructureCreation.Controller
     {
         NXDrawing drawing;
         formToolStructure myForm;
+        StripLayout stripLayout;
 
         public NXDrawing GetDrawing => drawing;
         public formToolStructure GetForm => myForm;
 
-        Dictionary<string, double> plateThicknesses = new Dictionary<string, double>();
+        Dictionary<string, double> plateThicknesses = new Dictionary<string, double>();        
 
 
         public Control()
@@ -27,7 +28,7 @@ namespace ToolingStructureCreation.Controller
             {
                 return;
             }
-
+            stripLayout = drawing.GetStripLayout();
             myForm = new formToolStructure(this);
             myForm.Show();
         }
@@ -37,6 +38,7 @@ namespace ToolingStructureCreation.Controller
             stnAsmFactory.CreateStnAsmFactory();
             stnAsmFactory.CreateToolAsmFactory();
         }
+        public StripLayout GetStripLayout => stripLayout;
 
     }
 }

@@ -322,6 +322,13 @@ namespace ToolingStructureCreation.View
             return value;
         }
 
+        public double GetDiePlt_LowPadThk()
+        {
+            return SumAllThickness(
+                txtDiePltThk, txtLowerPadThk
+                );
+        }
+
         private double GetLowerDieSetThickness()
         {
             return SumAllThickness(
@@ -360,22 +367,22 @@ namespace ToolingStructureCreation.View
                 txtPunHolderThk,
                 txtBottomPltThk,
                 txtStripperPltThk,
-                txtMatThk,
-                txtDiePltThk,
-                txtLowerPadThk
+                txtMatThk               
                 );
         }
 
         public double GetParallelBarZPosition()
         {
             return SumAllThickness(
-                txtLowerShoeThk
+                txtDiePltThk, txtLowerPadThk, txtLowerShoeThk
                 ) * -1;
         }
 
         public double GetCommonPlateZPosition()
         {
             return SumAllThickness(
+                txtDiePltThk,
+                txtLowerPadThk,
                 txtLowerShoeThk,
                 txtParallelBarThk
                 ) * -1;

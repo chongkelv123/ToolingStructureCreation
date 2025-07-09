@@ -56,6 +56,8 @@ namespace ToolingStructureCreation.Model
         public const string EXTENSION = ".prt";
         public const string MODEL_TEMPLATE = "ModelTemplate";
 
+        bool showDebugMessages = false;
+
         public NXDrawing()
         {
         }
@@ -127,6 +129,16 @@ namespace ToolingStructureCreation.Model
             }
 
             return true;
+        }
+        public StripLayout GetStripLayout()
+        {
+            var fullPath = workPart.FullPath;
+            var position = new Point3d(0.0, 0.0, 0.0); // Default position, can be modified later            
+            if (showDebugMessages)
+            {
+                Guide.InfoWriteLine($"Full path: {fullPath}");
+            }
+            return new StripLayout(fullPath, position);
         }
     }
 }
