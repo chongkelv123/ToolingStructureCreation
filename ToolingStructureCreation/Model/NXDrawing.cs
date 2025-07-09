@@ -109,6 +109,25 @@ namespace ToolingStructureCreation.Model
 
             return totalPlateThickness;
         }
+
+        public bool IsDrawingOpen()
+        {
+            string title = "No active drawing";
+            string message = "You accidentally launched the Tooling Structure Creation command by mistake and ";
+            NXMessageBox.DialogType msgboxType = NXMessageBox.DialogType.Warning;
+
+            Part displayPart = session.Parts.Display;
+            bool isNoCompnent = displayPart == null;
+
+            if (isNoCompnent)
+            {
+                message += " you are not open any drawings yet! ;-)";
+                ShowMessageBox(title, msgboxType, message);
+                return false;
+            }
+
+            return true;
+        }
     }
 }
 

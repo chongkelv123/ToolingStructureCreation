@@ -14,25 +14,29 @@ namespace ToolingStructureCreation.Controller
         NXDrawing drawing;
         formToolStructure myForm;
 
-        public NXDrawing GetDrawing => drawing;        
+        public NXDrawing GetDrawing => drawing;
         public formToolStructure GetForm => myForm;
 
         Dictionary<string, double> plateThicknesses = new Dictionary<string, double>();
-        
+
 
         public Control()
         {
             drawing = new NXDrawing(this);
+            if (!drawing.IsDrawingOpen())
+            {
+                return;
+            }
 
             myForm = new formToolStructure(this);
-            myForm.Show();                                
+            myForm.Show();
         }
 
         public void Start(StationAssemblyFactory stnAsmFactory)
-        {                     
+        {
             stnAsmFactory.CreateStnAsmFactory();
-            stnAsmFactory.CreateToolAsmFactory();            
+            stnAsmFactory.CreateToolAsmFactory();
         }
-        
+
     }
 }
