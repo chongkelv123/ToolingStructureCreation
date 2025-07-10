@@ -1,5 +1,6 @@
 ﻿using NXOpen;
 using NXOpen.Annotations;
+using NXOpen.UF;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -36,6 +38,8 @@ namespace ToolingStructureCreation.View
 
         bool isPlateSketchSelected = false;
         bool isShoeSketchSelected = false;
+        bool showDebugMessage = false; // Set to true to show debug messages
+
         public bool IsPlateSketchSelected => isPlateSketchSelected;
         public bool IsShoeSketchSelected => isShoeSketchSelected;
 
@@ -51,11 +55,19 @@ namespace ToolingStructureCreation.View
         {
             InitializeComponent();
             InitializeCboMachine();
+            InitializeCboDesign();
             this.control = control;
             UpdateDieHeight();
             UpdatePunchLength();
             UpdatePenetration();
             UpdateFeedHeight();
+        }
+
+        private void InitializeCboDesign()
+        {
+            Designer designer = new Designer();
+            cboDesign.DataSource = designer.GetDesigners();
+            cboDesign.SelectedIndex = 0; // Set default selection to the first designer
         }
 
         private void InitializeCboMachine()
@@ -498,5 +510,83 @@ namespace ToolingStructureCreation.View
         {
             UpdateCommonPltThk(machine);
         }
+
+        private void chkRetriveProjInfo_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkRetriveProjInfo.Checked)
+            {
+                UpdateProjectInfo();
+            }
+            else
+            {
+                ClearProjectInfo();
+            }
+        }
+
+        private void UpdateProjectInfo()
+        {
+            var dictProjInfo = ProjectInfo.ReadFromFile();
+            string model = dictProjInfo[ProjectInfo.MODEL];
+            string part = dictProjInfo[ProjectInfo.PART];
+            string codePrefix = dictProjInfo[ProjectInfo.CODE_PREFIX];
+            string designer = dictProjInfo[ProjectInfo.DESIGNER];
+            
+            txtModel.Text = model;
+            txtPart.Text = part;
+            txtCodePrefix.Text = codePrefix;
+            cboDesign.Text = designer;
+        }
+
+        private void ClearProjectInfo()
+        {
+            txtModel.Text = string.Empty;
+            txtPart.Text = string.Empty;
+            txtCodePrefix.Text = string.Empty;
+            cboDesign.SelectedIndex = -1; // Clear selection
+        }
+
+        private void btnSaveProjInfo_Click(object sender, EventArgs e)
+        {
+            UpdateProjectInfoToFile();
+        }
+        private void UpdateProjectInfoToFile()
+        {
+            if (IsProjectInfoFilled())
+            {
+                List<string> info = new List<string>() { 
+                    TextModel, 
+                    TextPart, 
+                    TextCodePrefix, 
+                    TextDesginer };
+                if (showDebugMessage)
+                {
+                    string message = "";
+                    message += $"Model: {TextModel}\n";
+                    message += $"Part: {TextPart}\n";
+                    message += $"Code Prefix: {TextCodePrefix}\n";
+                    message += $"Designer: {TextDesginer}\n";
+                    Guide.InfoWriteLine(message);
+                }
+                
+                ProjectInfo.WriteToFile(info);
+            }
+        }
+
+        private bool IsProjectInfoFilled()
+        {
+            bool isFilled =
+                !string.IsNullOrWhiteSpace(txtModel.Text) &&
+                !string.IsNullOrWhiteSpace(txtPart.Text) &&
+                !string.IsNullOrWhiteSpace(txtCodePrefix.Text) &&
+                !string.IsNullOrWhiteSpace(cboDesign.Text);
+
+            return isFilled;
+        }
+
+        public string TextModel => txtModel.Text.Trim();
+        public string TextPart => txtPart.Text.Trim();
+        public string TextCodePrefix => txtCodePrefix.Text.Trim();
+        public string TextDesginer => cboDesign.SelectedItem?.ToString() ?? cboDesign.Text;
+
     }
 }

@@ -67,11 +67,13 @@
     <Compile Include="Main\MyProgram.cs" />
     <Compile Include="Main\Unload.cs" />
     <Compile Include="Model\CommonPlate.cs" />
+    <Compile Include="Model\Designer.cs" />
     <Compile Include="Model\ICommonPlate.cs" />
     <Compile Include="Model\Machine.cs" />
     <Compile Include="Model\NXDrawing.cs" />
     <Compile Include="Model\ParallelBar.cs" />
     <Compile Include="Model\Plate.cs" />
+    <Compile Include="Model\ProjectInfo.cs" />
     <Compile Include="Model\Sketch.cs" />
     <Compile Include="Model\SketchSelection.cs" />
     <Compile Include="Model\Shoe.cs" />
