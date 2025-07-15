@@ -15,6 +15,9 @@ namespace ToolingStructureCreation.Model
         string part;
         string dwgCodePrefix;
         string designer;
+        string item;
+        int stnNumber;
+        string version;
 
         const string DIRECTORY = "D:/NXCUSTOM/temp";
         const string INFO_FILENAME = "project_info.data";
@@ -31,10 +34,20 @@ namespace ToolingStructureCreation.Model
             this.designer = designer;
         }
 
+        public ProjectInfo(string model, string part, string dwgCodePrefix, string designer, string item, int stnNumber, string version) : this(model, part, dwgCodePrefix, designer)
+        {
+            this.item = item;
+            this.stnNumber = stnNumber;
+            this.version = version;
+        }
+
         public string Model => model;
         public string Part => part;
         public string DwgCodePrefix => dwgCodePrefix;
         public string Designer => designer;
+        public string Item { get => item; set => item = value; }
+        public int StnNumber { get => stnNumber; set => stnNumber = value; } 
+        public string Version { get => version; set => version = value; }
 
         public static void WriteToFile(List<string> projectInfoToText)
         {

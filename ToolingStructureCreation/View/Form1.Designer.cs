@@ -81,6 +81,8 @@
             this.label17 = new System.Windows.Forms.Label();
             this.btnSelectShoeSketch = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.btnSaveProjInfo = new System.Windows.Forms.Button();
+            this.chkRetriveProjInfo = new System.Windows.Forms.CheckBox();
             this.cboDesign = new System.Windows.Forms.ComboBox();
             this.txtCodePrefix = new System.Windows.Forms.TextBox();
             this.txtPart = new System.Windows.Forms.TextBox();
@@ -89,8 +91,6 @@
             this.label19 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
-            this.chkRetriveProjInfo = new System.Windows.Forms.CheckBox();
-            this.btnSaveProjInfo = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox8.SuspendLayout();
@@ -134,7 +134,7 @@
             this.groupBox1.Controls.Add(this.txtPath);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(504, 71);
+            this.groupBox1.Size = new System.Drawing.Size(608, 71);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Where would you like the Tooling Assembly to be saved to? Copy and paste the addr" +
@@ -148,7 +148,7 @@
             this.txtPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtPath.Location = new System.Drawing.Point(6, 21);
             this.txtPath.Name = "txtPath";
-            this.txtPath.Size = new System.Drawing.Size(492, 22);
+            this.txtPath.Size = new System.Drawing.Size(596, 22);
             this.txtPath.TabIndex = 0;
             this.txtPath.TextChanged += new System.EventHandler(this.txtPath_TextChanged);
             // 
@@ -623,7 +623,7 @@
             this.groupBox7.Controls.Add(this.lblShoeSketchStatus);
             this.groupBox7.Controls.Add(this.label17);
             this.groupBox7.Controls.Add(this.btnSelectShoeSketch);
-            this.groupBox7.Location = new System.Drawing.Point(312, 564);
+            this.groupBox7.Location = new System.Drawing.Point(313, 561);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(292, 80);
             this.groupBox7.TabIndex = 5;
@@ -681,6 +681,27 @@
             this.groupBox9.TabIndex = 6;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Project Information";
+            // 
+            // btnSaveProjInfo
+            // 
+            this.btnSaveProjInfo.Location = new System.Drawing.Point(676, 17);
+            this.btnSaveProjInfo.Name = "btnSaveProjInfo";
+            this.btnSaveProjInfo.Size = new System.Drawing.Size(140, 30);
+            this.btnSaveProjInfo.TabIndex = 7;
+            this.btnSaveProjInfo.Text = "Save to file";
+            this.btnSaveProjInfo.UseVisualStyleBackColor = true;
+            this.btnSaveProjInfo.Click += new System.EventHandler(this.btnSaveProjInfo_Click);
+            // 
+            // chkRetriveProjInfo
+            // 
+            this.chkRetriveProjInfo.AutoSize = true;
+            this.chkRetriveProjInfo.Location = new System.Drawing.Point(676, 61);
+            this.chkRetriveProjInfo.Name = "chkRetriveProjInfo";
+            this.chkRetriveProjInfo.Size = new System.Drawing.Size(151, 20);
+            this.chkRetriveProjInfo.TabIndex = 6;
+            this.chkRetriveProjInfo.Text = "Retrieve project info:";
+            this.chkRetriveProjInfo.UseVisualStyleBackColor = true;
+            this.chkRetriveProjInfo.CheckedChanged += new System.EventHandler(this.chkRetriveProjInfo_CheckedChanged);
             // 
             // cboDesign
             // 
@@ -754,27 +775,6 @@
             this.label21.Size = new System.Drawing.Size(57, 26);
             this.label21.TabIndex = 0;
             this.label21.Text = "MODEL:";
-            // 
-            // chkRetriveProjInfo
-            // 
-            this.chkRetriveProjInfo.AutoSize = true;
-            this.chkRetriveProjInfo.Location = new System.Drawing.Point(676, 61);
-            this.chkRetriveProjInfo.Name = "chkRetriveProjInfo";
-            this.chkRetriveProjInfo.Size = new System.Drawing.Size(151, 20);
-            this.chkRetriveProjInfo.TabIndex = 6;
-            this.chkRetriveProjInfo.Text = "Retrieve project info:";
-            this.chkRetriveProjInfo.UseVisualStyleBackColor = true;
-            this.chkRetriveProjInfo.CheckedChanged += new System.EventHandler(this.chkRetriveProjInfo_CheckedChanged);
-            // 
-            // btnSaveProjInfo
-            // 
-            this.btnSaveProjInfo.Location = new System.Drawing.Point(676, 17);
-            this.btnSaveProjInfo.Name = "btnSaveProjInfo";
-            this.btnSaveProjInfo.Size = new System.Drawing.Size(140, 30);
-            this.btnSaveProjInfo.TabIndex = 7;
-            this.btnSaveProjInfo.Text = "Save to file";
-            this.btnSaveProjInfo.UseVisualStyleBackColor = true;
-            this.btnSaveProjInfo.Click += new System.EventHandler(this.btnSaveProjInfo_Click);
             // 
             // formToolStructure
             // 
