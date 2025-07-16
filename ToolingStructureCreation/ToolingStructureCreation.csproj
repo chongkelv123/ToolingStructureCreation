@@ -86,6 +86,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\CodeGeneratorService.cs" />
+    <Compile Include="Services\ICodeGeneratorServices.cs" />
+    <Compile Include="Services\PlateCodeGeneratorService.cs" />
+    <Compile Include="Services\ShoeCodeGeneratorService.cs" />
     <Compile Include="View\Form1.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -554,17 +554,17 @@ namespace ToolingStructureCreation.View
             if (IsProjectInfoFilled())
             {
                 List<string> info = new List<string>() { 
-                    TextModel, 
-                    TextPart, 
-                    TextCodePrefix, 
-                    TextDesginer };
+                    GetModel, 
+                    GetPart, 
+                    GetCodePrefix, 
+                    GetDesginer };
                 if (showDebugMessage)
                 {
                     string message = "";
-                    message += $"Model: {TextModel}\n";
-                    message += $"Part: {TextPart}\n";
-                    message += $"Code Prefix: {TextCodePrefix}\n";
-                    message += $"Designer: {TextDesginer}\n";
+                    message += $"Model: {GetModel}\n";
+                    message += $"Part: {GetPart}\n";
+                    message += $"Code Prefix: {GetCodePrefix}\n";
+                    message += $"Designer: {GetDesginer}\n";
                     Guide.InfoWriteLine(message);
                 }
                 
@@ -583,10 +583,10 @@ namespace ToolingStructureCreation.View
             return isFilled;
         }
 
-        public string TextModel => txtModel.Text.Trim();
-        public string TextPart => txtPart.Text.Trim();
-        public string TextCodePrefix => txtCodePrefix.Text.Trim();
-        public string TextDesginer => cboDesign.SelectedItem?.ToString() ?? cboDesign.Text;
+        public string GetModel => txtModel.Text.Trim();
+        public string GetPart => txtPart.Text.Trim();
+        public string GetCodePrefix => txtCodePrefix.Text.Trim();
+        public string GetDesginer => cboDesign.SelectedItem?.ToString() ?? cboDesign.Text;
 
     }
 }

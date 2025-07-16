@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="Model\SketchSelectionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\CodeGeneratorServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
