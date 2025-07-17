@@ -62,7 +62,7 @@ namespace ToolingStructureCreation.Model
             return stationNumber;
         }
 
-        public void CreateStationFactory()
+        /*public void CreateStationFactory()
         {
             if (PlateThicknesses == null)
             {
@@ -80,7 +80,7 @@ namespace ToolingStructureCreation.Model
             }
 
             CreateStationAssembly(PlateThicknesses, GetStationNumber(), folderPath);
-        }
+        }*/
 
         public static void CreateStationAssembly(Dictionary<string, double> plateList, string stationNumber, string folderPath)
         {
@@ -114,15 +114,15 @@ namespace ToolingStructureCreation.Model
                 if (component.Key.Equals(NXDrawing.MAT_THK, StringComparison.OrdinalIgnoreCase))
                 {
                     continue; // Skip the material thickness entry
-                }
-                string fileName = stationNumber + "-" + component.Key;
+                }                
+                string fileName = component.Key;
                 Plate.InsertPlate(workPart, fileName, cumThk, folderPath);
             }
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
             BasePart.CloseAfterSave save = BasePart.CloseAfterSave.True;
             workPart.Save(saveComponentParts, save);
         }
-        static public void CreateToolAssembly(string folderPath)
+        /*static public void CreateToolAssembly(string folderPath)
         {
             FileNew fileNew = session.Parts.FileNew();
             fileNew.TemplateFileName = TEMPLATE_STP_NAME;
@@ -165,7 +165,8 @@ namespace ToolingStructureCreation.Model
             workAssy.Save(saveComponentParts, save);
 
             workAssy.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
-        }
+        }*/
+
         static public void InsertStationAssembly(Part workAssy, string assyName, Point3d basePoint, string folderPath)
         {
             ComponentAssembly compAssy = workAssy.ComponentAssembly;

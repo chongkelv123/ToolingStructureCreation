@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ToolingStructureCreation.Model;
 
 namespace ToolingStructureCreation.Services.Tests
 {
@@ -291,9 +292,9 @@ namespace ToolingStructureCreation.Services.Tests
         {
             // Arrange
             var type = ToolingStructureType.SHOE;
-            var dirPath = "C:\\CreateFolder\\Testing-Tooling-Structure\\test_runNumber";
+            var dirPath = "C:\\CreateFolder\\Testing-Tooling-Structure";
             var codePrefix = "40XC00-2401-";
-            var expected = "40XC00-2401-0004";
+            var expected = "40XC00-2401-0002";
 
             //Act
             var result = CodeGeneratorService.GenerateDrawingCode(type, dirPath, codePrefix);
@@ -307,10 +308,10 @@ namespace ToolingStructureCreation.Services.Tests
         {
             // Arrange
             var type = ToolingStructureType.SHOE;
-            var dirPath = "C:\\CreateFolder\\Testing-Tooling-Structure\\test_runNumber";
+            var dirPath = "C:\\CreateFolder\\Testing-Tooling-Structure";
             var codePrefix = "40XC00-2401-";
-            var itemName = type.ToString();
-            var expected = $"40XC00-2401-0004_{itemName}-V00.prt";
+            var itemName = Shoe.UPPER_SHOE;
+            var expected = $"40XC00-2401-0002_{itemName}-V00";
             // Act
             var result = CodeGeneratorService.GenerateFileName(type, dirPath, codePrefix, itemName);
             // Assert
@@ -325,7 +326,7 @@ namespace ToolingStructureCreation.Services.Tests
             var codePrefix = "40XC00-2401-";
             var itemName = type.ToString();
             var stnNumber = 3;
-            var expected = $"40XC00-2401-0303_{itemName}-V00.prt";
+            var expected = $"40XC00-2401-0303_{itemName}-V00";
             // Act
             var result = CodeGeneratorService.GenerateFileName(type, dirPath, codePrefix, itemName, stnNumber);
             // Assert

@@ -150,7 +150,7 @@ namespace ToolingStructureCreation.Services
         }
 
         public static string GetCodePrefix(string rawCodePrefix)
-        {                        
+        {
             var codeParts = NormalizeDrawingCodeParts(rawCodePrefix);
             string prefix = codeParts.Item1;
             string suffix = codeParts.Item2;
@@ -169,7 +169,7 @@ namespace ToolingStructureCreation.Services
             foreach (string file in files)
             {
                 string fileName = Path.GetFileNameWithoutExtension(file);
-                
+
                 // 1) Must start with prefix + station  
                 if (!fileName.StartsWith(codePrefix + stationPart))
                     continue;
@@ -190,7 +190,7 @@ namespace ToolingStructureCreation.Services
                         continue;
                 }
 
-                if(
+                if (
                     type == ToolingStructureType.ASSEMBLY ||
                     type == ToolingStructureType.UPPER_PAD_SPACER ||
                     type == ToolingStructureType.UPPER_PAD ||
@@ -198,7 +198,7 @@ namespace ToolingStructureCreation.Services
                     type == ToolingStructureType.BOTTOMING_PLATE ||
                     type == ToolingStructureType.STRIPPER_PLATE ||
                     type == ToolingStructureType.DIE_PLATE ||
-                    type == ToolingStructureType.LOWER_PAD || 
+                    type == ToolingStructureType.LOWER_PAD ||
                     type == ToolingStructureType.LOWER_PAD_SPACER
                     )
                 {
@@ -221,7 +221,7 @@ namespace ToolingStructureCreation.Services
 
         public static string GenerateDrawingCode(ToolingStructureType type, string dirPath, string codePrefix, int stnNumber = 0)
         {
-            return $"{codePrefix}{AskNextRunningNumber(type, dirPath, codePrefix, stnNumber)}";            
+            return $"{codePrefix}{AskNextRunningNumber(type, dirPath, codePrefix, stnNumber)}";
         }
 
         public static string GenerateFolderCode(ToolingStructureType type, string dirPath, string codePrefix, string itemName, int stnNumber = 0)
@@ -231,21 +231,67 @@ namespace ToolingStructureCreation.Services
         }
 
         public static string GenerateFileName(ToolingStructureType type, string dirPath, string codePrefix, string itemName, int stnNumber = 0)
-        {
-            string drawingCode = GenerateDrawingCode(type, dirPath, codePrefix, stnNumber);
+        {            
             string folderCode = GenerateFolderCode(type, dirPath, codePrefix, itemName, stnNumber);
-            string version = AskVersion(drawingCode, dirPath);
-            return $"{folderCode}{version}.prt";
-        }
+            string baseName = $"{folderCode}-V00";
+            string version = AskVersion(baseName, dirPath);
+            return $"{folderCode}{version}";
+        }        
 
-        public string AskFolderCode(ProjectInfo inputInfo)
+        public static ToolingStructureType GetToolingType(string type)
         {
-            throw new NotImplementedException();
-        }
-
-        public string AskDrawingCode(ProjectInfo inputInfo)
-        {
-            throw new NotImplementedException();
+            if (type.Equals(ToolingStructureType.SHOE.ToString()))
+            {
+                return ToolingStructureType.SHOE;
+            }
+            else if (type.Equals(ToolingStructureType.ACCESSORIES.ToString()))
+            {
+                return ToolingStructureType.ACCESSORIES;
+            }
+            else if (type.Equals(ToolingStructureType.UPPER_PAD_SPACER.ToString()))
+            {
+                return ToolingStructureType.UPPER_PAD_SPACER;
+            }
+            else if (type.Equals(ToolingStructureType.UPPER_PAD.ToString()))
+            {
+                return ToolingStructureType.UPPER_PAD;
+            }
+            else if (type.Equals(ToolingStructureType.PUNCH_HOLDER.ToString()))
+            {
+                return ToolingStructureType.PUNCH_HOLDER;
+            }
+            else if (type.Equals(ToolingStructureType.BOTTOMING_PLATE.ToString()))
+            {
+                return ToolingStructureType.BOTTOMING_PLATE;
+            }
+            else if (type.Equals(ToolingStructureType.STRIPPER_PLATE.ToString()))
+            {
+                return ToolingStructureType.STRIPPER_PLATE;
+            }
+            else if (type.Equals(ToolingStructureType.DIE_PLATE.ToString()))
+            {
+                return ToolingStructureType.DIE_PLATE;
+            }
+            else if (type.Equals(ToolingStructureType.LOWER_PAD.ToString()))
+            {
+                return ToolingStructureType.LOWER_PAD;
+            }
+            else if (type.Equals(ToolingStructureType.LOWER_PAD_SPACER.ToString()))
+            {
+                return ToolingStructureType.LOWER_PAD_SPACER;
+            }
+            else if (type.Equals(ToolingStructureType.INSERT.ToString()))
+            {
+                return ToolingStructureType.INSERT;
+            }
+            else if (type.Equals(ToolingStructureType.ASSEMBLY.ToString()))
+            {
+                return ToolingStructureType.ASSEMBLY;
+            }
+            else
+            {
+                throw new ArgumentException($"Unsupported ToolingStructureType: {type}");
+            }
         }
     }
 }

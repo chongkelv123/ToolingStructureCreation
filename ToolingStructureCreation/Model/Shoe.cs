@@ -10,7 +10,7 @@ namespace ToolingStructureCreation.Model
 {
     public class Shoe
     {
-        private string shoeName;
+        private string fileNameWithExtension;
         private double shoeLength;
         private double shoeWidth;
         private double shoeHeight;        
@@ -22,7 +22,7 @@ namespace ToolingStructureCreation.Model
 
         public Shoe(string name, double length, double width, double height)
         {
-            this.shoeName = name;
+            this.fileNameWithExtension = name;
             this.shoeLength = length;
             this.shoeWidth = width;
             this.shoeHeight = height;            
@@ -30,7 +30,7 @@ namespace ToolingStructureCreation.Model
 
         public string GetShoeName()
         {
-            return shoeName;
+            return fileNameWithExtension;
         }
 
         public double GetShoeLength()
@@ -58,7 +58,7 @@ namespace ToolingStructureCreation.Model
             fileNew.Units = Part.Units.Millimeters;
             fileNew.TemplatePresentationName = SHOE;
             fileNew.SetCanCreateAltrep(false);
-            fileNew.NewFileName = $"{folderPath}{shoeName}{NXDrawing.EXTENSION}";
+            fileNew.NewFileName = $"{folderPath}{fileNameWithExtension}{NXDrawing.EXTENSION}";
             fileNew.MakeDisplayedPart = true;
             fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
             NXObject shoeObject;
@@ -102,11 +102,11 @@ namespace ToolingStructureCreation.Model
             NXOpen.BodyCollection bodyCollection = workPart.Bodies;
             foreach (NXOpen.Body body in bodyCollection)
             {
-                if (shoeName.Equals(UPPER_SHOE))
+                if (fileNameWithExtension.Contains(UPPER_SHOE))
                 {
                     body.Color = (int)PlateColor.UPPERSHOE;
                 }
-                else if (shoeName.Equals(LOWER_SHOE))
+                else if (fileNameWithExtension.Contains(LOWER_SHOE))
                 {
                     body.Color = (int)PlateColor.LOWERSHOE;
                 }                

@@ -9,6 +9,7 @@ namespace ToolingStructureCreation.Model
 {
     public class CommonPlate: ICommonPlate
     {
+        private string fileName;
         private double Length;
         private double Width;
         private double Thickness;
@@ -17,8 +18,9 @@ namespace ToolingStructureCreation.Model
         public const string LOWCOMPLT = "LowCommonPlate";
         public const string LOWER_COMMON_PLATE = "LOWER_COMMON_PLATE";
 
-        public CommonPlate(double length, double width, double thickness)
+        public CommonPlate(double length, double width, double thickness, string fileName = null)
         {
+            this.fileName = fileName;
             this.Length = length;
             this.Width = width;
             this.Thickness = thickness;
@@ -41,7 +43,7 @@ namespace ToolingStructureCreation.Model
             fileNew.Units = Part.Units.Millimeters;
             fileNew.TemplatePresentationName = LOWCOMPLT;
             fileNew.SetCanCreateAltrep(false);
-            fileNew.NewFileName = $"{folderPath}{LOWER_COMMON_PLATE}{NXDrawing.EXTENSION}";
+            fileNew.NewFileName = $"{folderPath}{fileName}{NXDrawing.EXTENSION}";
             fileNew.MakeDisplayedPart = true;
             fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
             NXObject plateObject;

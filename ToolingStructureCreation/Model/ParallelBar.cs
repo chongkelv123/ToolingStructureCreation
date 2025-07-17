@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 namespace ToolingStructureCreation.Model
 {
     public class ParallelBar
-    {        
+    {
+        private string fileName;
         private double parallelBarLength;
         private double parallelBarWidth;
         private double parallelBarThickness;
@@ -21,11 +22,12 @@ namespace ToolingStructureCreation.Model
 
         public const string PARALLEL_BAR = "PARALLEL_BAR";
 
-        public ParallelBar(double length, double width, double thickness)
-        {            
+        public ParallelBar(string fileName, double length, double width, double thickness)
+        {
+            this.fileName = fileName;
             this.parallelBarLength = length;
             this.parallelBarWidth = width;
-            this.parallelBarThickness = thickness;            
+            this.parallelBarThickness = thickness;
         }
 
         public double GetParallelBarLength()
@@ -52,7 +54,7 @@ namespace ToolingStructureCreation.Model
             fileNew.Units = Part.Units.Millimeters;
             fileNew.TemplatePresentationName = PARALLELBAR;
             fileNew.SetCanCreateAltrep(false);
-            fileNew.NewFileName = $"{folderPath}{PARALLEL_BAR}{NXDrawing.EXTENSION}";
+            fileNew.NewFileName = $"{folderPath}{fileName}{NXDrawing.EXTENSION}";
             fileNew.MakeDisplayedPart = true;
             fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
             NXObject plateObject;

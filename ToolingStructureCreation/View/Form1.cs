@@ -583,6 +583,17 @@ namespace ToolingStructureCreation.View
             return isFilled;
         }
 
+        public ProjectInfo GetProjectInfo()
+        {
+            ProjectInfo projectInfo = new ProjectInfo(
+                GetModel,
+                GetPart,
+                GetCodePrefix,
+                GetDesginer
+            );
+            return projectInfo;
+        }
+
         public string GetModel => txtModel.Text.Trim();
         public string GetPart => txtPart.Text.Trim();
         public string GetCodePrefix => txtCodePrefix.Text.Trim();

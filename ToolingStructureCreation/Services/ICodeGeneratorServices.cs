@@ -9,7 +9,8 @@ namespace ToolingStructureCreation.Services
 {
     public interface ICodeGeneratorServices
     {
-        string AskFolderCode(ProjectInfo inputInfo);
-        string AskDrawingCode(ProjectInfo inputInfo);
+        string AskFolderCode();
+        string AskDrawingCode();
+        string AskFileName();
     }
 }

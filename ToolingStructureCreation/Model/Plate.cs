@@ -10,7 +10,7 @@ namespace ToolingStructureCreation.Model
 {
     public class Plate
     {
-        private string plateName;
+        private string fileName;
         private double plateLength;
         private double plateWidth;
         private double plateThickness;        
@@ -19,9 +19,9 @@ namespace ToolingStructureCreation.Model
         public const string PLATE = "Plate";
         //NXDrawing drawing;
 
-        public Plate(string name, double length, double width, double thickness)
+        public Plate(string fileName, double length, double width, double thickness)
         {
-            this.plateName = name;
+            this.fileName = fileName;
             this.plateLength = length;
             this.plateWidth = width;
             this.plateThickness = thickness;            
@@ -29,7 +29,7 @@ namespace ToolingStructureCreation.Model
 
         public string GetPlateName()
         {
-            return plateName;
+            return fileName;
         }
 
         public double GetPlateLength()
@@ -47,7 +47,7 @@ namespace ToolingStructureCreation.Model
             return plateThickness;
         }
 
-        public void CreateNewPlate(string folderPath, string stationNumber)
+        public void CreateNewPlate(string folderPath)
         {
             Session session = Session.GetSession();
             FileNew fileNew = session.Parts.FileNew();
@@ -57,7 +57,7 @@ namespace ToolingStructureCreation.Model
             fileNew.Units = Part.Units.Millimeters;
             fileNew.TemplatePresentationName = PLATE;
             fileNew.SetCanCreateAltrep(false);
-            fileNew.NewFileName = $"{folderPath}{stationNumber}-{plateName}{NXDrawing.EXTENSION}";
+            fileNew.NewFileName = $"{folderPath}{fileName}{NXDrawing.EXTENSION}";
             fileNew.MakeDisplayedPart = true;
             fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
             NXObject plateObject;
@@ -101,27 +101,27 @@ namespace ToolingStructureCreation.Model
             NXOpen.BodyCollection bodyCollection = workPart.Bodies;
             foreach (NXOpen.Body body in bodyCollection)
             {
-                if (plateName.Equals(NXDrawing.UPPER_PAD))
+                if (fileName.Contains(NXDrawing.UPPER_PAD))
                 {
                     body.Color = (int)PlateColor.UPPERPAD;
                 }
-                else if (plateName.Equals(NXDrawing.PUNCH_HOLDER))
+                else if (fileName.Contains(NXDrawing.PUNCH_HOLDER))
                 {
                     body.Color = (int)PlateColor.PUNCHHOLDER;
                 }
-                else if (plateName.Equals(NXDrawing.BOTTOMING_PLATE))
+                else if (fileName.Contains(NXDrawing.BOTTOMING_PLATE))
                 {
                     body.Color = (int)PlateColor.BOTTOMINGPLATE;
                 }
-                else if (plateName.Equals(NXDrawing.STRIPPER_PLATE))
+                else if (fileName.Contains(NXDrawing.STRIPPER_PLATE))
                 {
                     body.Color = (int)PlateColor.STRIPPERPLATE;
                 }
-                else if (plateName.Equals(NXDrawing.DIE_PLATE))
+                else if (fileName.Contains(NXDrawing.DIE_PLATE))
                 {
                     body.Color = (int)PlateColor.DIEPLATE;
                 }
-                else if (plateName.Equals(NXDrawing.LOWER_PAD))
+                else if (fileName.Contains(NXDrawing.LOWER_PAD))
                 {
                     body.Color = (int)PlateColor.LOWERPAD;
                 }
