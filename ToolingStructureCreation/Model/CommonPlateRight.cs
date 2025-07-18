@@ -7,14 +7,12 @@ using System.Threading.Tasks;
 
 namespace ToolingStructureCreation.Model
 {
-    public class CommonPlate: CommonPlateBase
+    public class CommonPlateRight: CommonPlateBase
     {
-        public const string TEMPLATE_LOWCOMPLT_NAME = "3DA_Template_LOWCOMPLT-V00.prt";
-        public const string LOWCOMPLT = "LowCommonPlate";
-        public const string LOWER_COMMON_PLATE = "LOWER_COMMON_PLATE";
+        public const string TEMPLATE_LOWCOMPLTRIGHT_NAME = "3DA_Template_LOWCOMPLT_RIGHT-V00.prt";
+        public const string LOWCOMPLT_RIGHT = "LowCommonPlateRight";
 
-        public CommonPlate(double length, double width, double thickness, string fileName = null) : 
-            base(length, width, thickness, fileName)
+        public CommonPlateRight(double length, double width, double thickness, string fileName = null) : base(length, width, thickness, fileName)
         {
         }
 
@@ -22,11 +20,11 @@ namespace ToolingStructureCreation.Model
         {
             Session session = Session.GetSession();
             FileNew fileNew = session.Parts.FileNew();
-            fileNew.TemplateFileName = TEMPLATE_LOWCOMPLT_NAME;
+            fileNew.TemplateFileName = TEMPLATE_LOWCOMPLTRIGHT_NAME;
             fileNew.UseBlankTemplate = false;
             fileNew.ApplicationName = NXDrawing.MODEL_TEMPLATE;
             fileNew.Units = Part.Units.Millimeters;
-            fileNew.TemplatePresentationName = LOWCOMPLT;
+            fileNew.TemplatePresentationName = LOWCOMPLT_RIGHT;
             fileNew.SetCanCreateAltrep(false);
             fileNew.NewFileName = $"{folderPath}{GetFileName()}{NXDrawing.EXTENSION}";
             fileNew.MakeDisplayedPart = true;
@@ -70,5 +68,5 @@ namespace ToolingStructureCreation.Model
             BasePart.CloseAfterSave close = BasePart.CloseAfterSave.True;
             workPart.Save(saveComponentParts, close);
         }
-    }
+    }   
 }

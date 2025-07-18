@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Threading.Tasks;
 using ToolingStructureCreation.Services;
@@ -14,6 +15,7 @@ namespace ToolingStructureCreation.Model
         public Dictionary<string, double> PlateThicknesses { get; set; }
         public List<Sketch> StationSketchLists;
         public List<Sketch> ShoeSketchLists;
+        public List<Sketch> ComPltSketchLists;
         string folderPath = "";
         const string STN = "Stn";
 
@@ -29,11 +31,12 @@ namespace ToolingStructureCreation.Model
         List<string> pBarComponentCollection;
         List<string> comPltComponentCollection;
         List<string> subToolAsmCollection;
-        public StationAssemblyFactory(Dictionary<string, double> plateThicknesses, List<Sketch> stationSketchLists, List<Sketch> shoeSketchLists, string folderPath, Controller.Control control)
+        public StationAssemblyFactory(Dictionary<string, double> plateThicknesses, List<Sketch> stationSketchLists, List<Sketch> shoeSketchLists, List<Sketch> comPltSketchLists, string folderPath, Controller.Control control)
         {
             PlateThicknesses = plateThicknesses ?? new Dictionary<string, double>();
             StationSketchLists = stationSketchLists ?? new List<Sketch>();
             ShoeSketchLists = shoeSketchLists ?? new List<Sketch>();
+            ComPltSketchLists = comPltSketchLists ?? new List<Sketch>();
             this.folderPath = folderPath;
             this.control = control;
             myForm = control.GetForm;
@@ -86,23 +89,28 @@ namespace ToolingStructureCreation.Model
 
             Sketch shoeSketch = null;
 
+
+            // Create Shoe
+            ProjectInfo projectInfo = myForm.GetProjectInfo();
             for (int i = 0; i < ShoeSketchLists.Count; i++)
             {
-                shoeSketch = ShoeSketchLists[i];
-                ProjectInfo projectInfo = myForm.GetProjectInfo();
-                ShoeCodeGeneratorService uprShoeGenerator = new ShoeCodeGeneratorService(control, projectInfo, Shoe.UPPER_SHOE);
+                shoeSketch = ShoeSketchLists[i];                
+                string uprShoeItemName = $"{Shoe.UPPER_SHOE}-{i + 1}";
+                ShoeCodeGeneratorService uprShoeGenerator = new ShoeCodeGeneratorService(control, projectInfo, uprShoeItemName);
                 string uprShoeFileNameWithoutExtension = uprShoeGenerator.AskFileName();
                 uprShoeComponentCollection.Add(uprShoeFileNameWithoutExtension);
                 Shoe upperShoe = new Shoe(uprShoeFileNameWithoutExtension, shoeSketch.Length, shoeSketch.Width, myForm.UpperShoeThk);
                 upperShoe.CreateNewShoe(folderPath);
 
-                ShoeCodeGeneratorService lowShoeGenerator = new ShoeCodeGeneratorService(control, projectInfo, Shoe.LOWER_SHOE);
+                string lowShoeItemName = $"{Shoe.LOWER_SHOE}-{i + 1}";
+                ShoeCodeGeneratorService lowShoeGenerator = new ShoeCodeGeneratorService(control, projectInfo, lowShoeItemName);
                 string lowShoeFileNameWithoutExtension = lowShoeGenerator.AskFileName();
                 lowShoeComponentCollection.Add(lowShoeFileNameWithoutExtension);
                 Shoe lowerShoe = new Shoe(lowShoeFileNameWithoutExtension, shoeSketch.Length, shoeSketch.Width, myForm.LowerShoeThk);
                 lowerShoe.CreateNewShoe(folderPath);
             }
 
+            // Create Parallel Bar
             if (shoeSketch != null)
             {
                 string pBarItemName = ParallelBar.PARALLEL_BAR;
@@ -113,14 +121,35 @@ namespace ToolingStructureCreation.Model
                 parallelBar.CreateNewParallelBar(folderPath);
             }
 
+            // Create Common Plate
             string compPltItemName = CommonPlate.LOWER_COMMON_PLATE;
-            ShoeCodeGeneratorService compCodeGenerator = new ShoeCodeGeneratorService(control, myForm.GetProjectInfo(), compPltItemName);
-            string compPlatefileName = compCodeGenerator.AskFileName();
-            comPltComponentCollection.Add(compPlatefileName);
             Machine machine = myForm.GetMachine;
             var commonPltInfo = machine.GetCommonPlate(myForm.GetMachineName);
-            CommonPlate commonPlate = new CommonPlate(commonPltInfo.GetLength(), commonPltInfo.GetWidth(), myForm.CommonPltThk, compPlatefileName);
-            commonPlate.CreateNewCommonPlate(folderPath);
+            if (ComPltSketchLists.Count > 0)
+            {
+                // Create Common Plate (Double Joint Tool)
+                for (int i = 0; i < ComPltSketchLists.Count; i++)
+                {
+                    compPltItemName = $"{CommonPlate.LOWER_COMMON_PLATE}-{i + 1}";
+                    Sketch comPltSketch = ComPltSketchLists[i];
+                    ShoeCodeGeneratorService compCodeGenerator = new ShoeCodeGeneratorService(control, myForm.GetProjectInfo(), compPltItemName);
+                    string compPlatefileName = compCodeGenerator.AskFileName();
+                    comPltComponentCollection.Add(compPlatefileName);                    
+                    CommonPlate commonPlate = new CommonPlate(comPltSketch.Length, comPltSketch.Width, myForm.CommonPltThk, compPlatefileName);
+                    commonPlate.CreateNewCommonPlate(folderPath);
+                }
+            }
+            else
+            {
+                // Create Common Plate (Single)
+                
+                ShoeCodeGeneratorService compCodeGenerator = new ShoeCodeGeneratorService(control, myForm.GetProjectInfo(), compPltItemName);
+                string compPlatefileName = compCodeGenerator.AskFileName();
+                comPltComponentCollection.Add(compPlatefileName);                
+                CommonPlate commonPlate = new CommonPlate(commonPltInfo.GetLength(), commonPltInfo.GetWidth(), myForm.CommonPltThk, compPlatefileName);
+                commonPlate.CreateNewCommonPlate(folderPath);
+            }
+            
         }
 
         public void CreateToolAsmFactory()
@@ -161,14 +190,14 @@ namespace ToolingStructureCreation.Model
             for (int i = 0; i < StationSketchLists.Count; i++)
             {
                 Sketch stnSketch = StationSketchLists[i];
-                string compName = subToolAsmCollection[i];                
+                string compName = subToolAsmCollection[i];
                 Point3d startLocation = stnSketch.StartLocation;
                 double stnAsmZPosition = myForm.GetDiePlt_LowPadThk() * -1;
 
                 ToolingAssembly.InsertStationAssembly(
                     workAssy,
-                    compName, 
-                    new Point3d(startLocation.X, Y_POSITION, stnAsmZPosition), 
+                    compName,
+                    new Point3d(startLocation.X, Y_POSITION, stnAsmZPosition),
                     folderPath);
             }
 
@@ -178,22 +207,18 @@ namespace ToolingStructureCreation.Model
                 Sketch shoeSketch = ShoeSketchLists[i];
                 double uprShoeZPosition = myForm.GetUpperShoeZPosition();
                 double lowShoeZPosition = myForm.GetDiePlt_LowPadThk() * -1;
-                foreach (var compName in uprShoeComponentCollection)
-                {
-                    Shoe.Insert(
+                string uprShoeCompName = uprShoeComponentCollection[i];
+                string lowShoeCompName = lowShoeComponentCollection[i];
+                Shoe.Insert(
                         workAssy,
-                        compName,
+                        uprShoeCompName,
                         new Point3d(shoeSketch.StartLocation.X, Y_POSITION, uprShoeZPosition),
                         folderPath);
-                }
-                foreach (var compName in lowShoeComponentCollection)
-                {
-                    Shoe.Insert(
+                Shoe.Insert(
                         workAssy,
-                        compName,
+                        lowShoeCompName,
                         new Point3d(shoeSketch.StartLocation.X, Y_POSITION, lowShoeZPosition),
                         folderPath);
-                }
 
                 foreach (var compName in pBarComponentCollection)
                 {
@@ -212,16 +237,37 @@ namespace ToolingStructureCreation.Model
                         Shoe.Insert(workAssy, compName, new Point3d(xPosition, Y_POSITION, myForm.GetParallelBarZPosition()), folderPath);
                     }
                 }
-                
-                foreach(var compName in comPltComponentCollection)
+
+                if (ComPltSketchLists == null || ComPltSketchLists.Count == 0)
                 {
+                    if (i >= 0 && i < comPltComponentCollection.Count)
+                    {
+                        string comPltCompName = comPltComponentCollection[i];
+
+                        Shoe.Insert(
+                            workAssy,
+                            comPltCompName,
+                            new Point3d(shoeSketch.MidPoint.X, Y_POSITION, myForm.GetCommonPlateZPosition()),
+                            folderPath);
+                    }
+                }
+            }
+
+            // Insert Common Plate (Double Joint Tool)
+            for (int i = 0; i < ComPltSketchLists.Count; i++)
+            {
+                Sketch comPltSketch = ComPltSketchLists[i];
+
+                if (i >= 0 && i < comPltComponentCollection.Count)
+                {
+                    string comPltCompName = comPltComponentCollection[i];
+                    double comPltZPosition = myForm.GetCommonPlateZPosition();
                     Shoe.Insert(
                         workAssy,
-                        compName, 
-                        new Point3d(shoeSketch.MidPoint.X, Y_POSITION, myForm.GetCommonPlateZPosition()), 
+                        comPltCompName,
+                        new Point3d(comPltSketch.MidPoint.X, Y_POSITION, comPltZPosition),
                         folderPath);
                 }
-                
             }
 
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
@@ -240,7 +286,7 @@ namespace ToolingStructureCreation.Model
             fileNew.ApplicationName = ToolingAssembly.ASSEMBLY_TEMPLATE;
             fileNew.Units = Part.Units.Millimeters;
             fileNew.TemplatePresentationName = ToolingAssembly.ASSEMBLY;
-            fileNew.SetCanCreateAltrep(false);            
+            fileNew.SetCanCreateAltrep(false);
             fileNew.NewFileName = $"{folderPath}{fileName}{NXDrawing.EXTENSION}";
             fileNew.MakeDisplayedPart = true;
             fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
