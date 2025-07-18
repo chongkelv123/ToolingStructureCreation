@@ -38,6 +38,7 @@ namespace ToolingStructureCreation.View
 
         bool isPlateSketchSelected = false;
         bool isShoeSketchSelected = false;
+        bool isComPltSketchSelected = false;
         bool showDebugMessage = false; // Set to true to show debug messages
 
         public bool IsPlateSketchSelected => isPlateSketchSelected;
@@ -45,10 +46,14 @@ namespace ToolingStructureCreation.View
 
         const string PLATE = "Plate";
         const string SHOE = "Shoe";
+        const string COMPLATE = "ComPlt";
+
         TaggedObject[] plateTaggedObjects;
         TaggedObject[] shoeTaggedObjects;
+        TaggedObject[] comPltTaggedObjects;
         List<Model.Sketch> stationSketchLists;
         List<Model.Sketch> shoeSketchLists;
+        List<Model.Sketch> comPlateSketchList;
         Machine machine;
 
         public formToolStructure(Controller.Control control)
@@ -74,7 +79,7 @@ namespace ToolingStructureCreation.View
         {
             machine = new Machine();
             cboMachine.DataSource = machine.GetMachines();
-            cboMachine.SelectedIndex = 8; // Set default selection to the first machine
+            cboMachine.SelectedIndex = 0; // Set default selection to the first machine
             UpdateCommonPltThk(machine);
         }
 
@@ -110,6 +115,7 @@ namespace ToolingStructureCreation.View
                 },
                 stationSketchLists,
                 shoeSketchLists,
+                comPlateSketchList,
                 GetPath,
                 control
             );
@@ -226,7 +232,7 @@ namespace ToolingStructureCreation.View
                 !string.IsNullOrWhiteSpace(txtLowerShoeThk.Text) &&
                 !string.IsNullOrWhiteSpace(txtParallelBarThk.Text) &&
                 !string.IsNullOrWhiteSpace(txtCommonPltThk.Text) &&
-                (IsPlateSketchSelected || IsShoeSketchSelected) &&
+                (IsPlateSketchSelected && IsShoeSketchSelected) &&
                 IsDirectoryExists();
 
             btnApply.Enabled = allFilled;
@@ -379,7 +385,7 @@ namespace ToolingStructureCreation.View
                 txtPunHolderThk,
                 txtBottomPltThk,
                 txtStripperPltThk,
-                txtMatThk               
+                txtMatThk
                 );
         }
 
@@ -481,6 +487,11 @@ namespace ToolingStructureCreation.View
                 label.Text = isShoeSketchSelected ? updateStatusText : NO_SKETCH_SELECTED;
                 label.ForeColor = isShoeSketchSelected ? Color.Green : Color.Red;
             }
+            else if (label == lblComPltSketchStatus)
+            {
+                label.Text = isComPltSketchSelected ? updateStatusText : NO_SKETCH_SELECTED;
+                label.ForeColor = isComPltSketchSelected ? Color.Green : Color.Red;
+            }
         }
 
         private void btnSelectShoeSketch_Click(object sender, EventArgs e)
@@ -509,6 +520,21 @@ namespace ToolingStructureCreation.View
         private void cboMachine_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateCommonPltThk(machine);
+            UpdateChkComPltSketSelection();
+        }
+
+        private void UpdateChkComPltSketSelection()
+        {
+            if (cboMachine.SelectedItem.ToString().Equals(Machine.MC1801) ||
+                cboMachine.SelectedItem.ToString().Equals(Machine.MC1202))
+            {
+                chkActiveComPltSkt.Enabled = true;
+            }
+            else
+            {
+                chkActiveComPltSkt.Enabled = false;
+                chkActiveComPltSkt.Checked = false; // Uncheck if not applicable
+            }
         }
 
         private void chkRetriveProjInfo_CheckedChanged(object sender, EventArgs e)
@@ -530,7 +556,7 @@ namespace ToolingStructureCreation.View
             string part = dictProjInfo[ProjectInfo.PART];
             string codePrefix = dictProjInfo[ProjectInfo.CODE_PREFIX];
             string designer = dictProjInfo[ProjectInfo.DESIGNER];
-            
+
             txtModel.Text = model;
             txtPart.Text = part;
             txtCodePrefix.Text = codePrefix;
@@ -553,10 +579,10 @@ namespace ToolingStructureCreation.View
         {
             if (IsProjectInfoFilled())
             {
-                List<string> info = new List<string>() { 
-                    GetModel, 
-                    GetPart, 
-                    GetCodePrefix, 
+                List<string> info = new List<string>() {
+                    GetModel,
+                    GetPart,
+                    GetCodePrefix,
                     GetDesginer };
                 if (showDebugMessage)
                 {
@@ -567,7 +593,7 @@ namespace ToolingStructureCreation.View
                     message += $"Designer: {GetDesginer}\n";
                     Guide.InfoWriteLine(message);
                 }
-                
+
                 ProjectInfo.WriteToFile(info);
             }
         }
@@ -599,5 +625,39 @@ namespace ToolingStructureCreation.View
         public string GetCodePrefix => txtCodePrefix.Text.Trim();
         public string GetDesginer => cboDesign.SelectedItem?.ToString() ?? cboDesign.Text;
 
+        private void chkActiveComPltSkt_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkActiveComPltSkt.Checked)
+            {
+                btnSelectComPltSketch.Enabled = true;
+            }
+            else
+            {
+                btnSelectComPltSketch.Enabled = false;
+            }
+        }
+
+        private void btnSelectComPltSketch_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+
+            NXDrawing xDrawing = control.GetDrawing;            
+            Model.SketchSelection comPltSketch = new Model.SketchSelection(xDrawing);
+            comPltTaggedObjects = comPltSketch.SelectSketch();
+            if (comPltTaggedObjects != null)
+            {
+                isComPltSketchSelected = true;
+                UpdateSketchStatus(COMPLATE, lblComPltSketchStatus);
+                comPlateSketchList = comPltSketch.AskListFromTaggedObjects(comPltTaggedObjects);
+            }
+            else
+            {
+                isComPltSketchSelected = false;
+                UpdateSketchStatus(COMPLATE, lblComPltSketchStatus);
+            }
+
+            //CheckInputAndEnableApply();
+            this.Show();
+        }
     }
 }

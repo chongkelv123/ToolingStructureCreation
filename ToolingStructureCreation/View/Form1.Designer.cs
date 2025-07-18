@@ -35,6 +35,7 @@
             this.txtPath = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.chkActiveComPltSkt = new System.Windows.Forms.CheckBox();
             this.cboMachine = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -91,6 +92,10 @@
             this.label19 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.lblComPltSketchStatus = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.btnSelectComPltSketch = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox8.SuspendLayout();
@@ -101,12 +106,13 @@
             this.groupBox6.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.groupBox9.SuspendLayout();
+            this.groupBox10.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(615, 606);
+            this.btnCancel.Location = new System.Drawing.Point(663, 659);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(117, 35);
             this.btnCancel.TabIndex = 0;
@@ -118,7 +124,7 @@
             // 
             this.btnApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnApply.Enabled = false;
-            this.btnApply.Location = new System.Drawing.Point(738, 606);
+            this.btnApply.Location = new System.Drawing.Point(786, 659);
             this.btnApply.Name = "btnApply";
             this.btnApply.Size = new System.Drawing.Size(117, 35);
             this.btnApply.TabIndex = 0;
@@ -134,7 +140,7 @@
             this.groupBox1.Controls.Add(this.txtPath);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(608, 71);
+            this.groupBox1.Size = new System.Drawing.Size(656, 71);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Where would you like the Tooling Assembly to be saved to? Copy and paste the addr" +
@@ -148,7 +154,7 @@
             this.txtPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtPath.Location = new System.Drawing.Point(6, 21);
             this.txtPath.Name = "txtPath";
-            this.txtPath.Size = new System.Drawing.Size(596, 22);
+            this.txtPath.Size = new System.Drawing.Size(644, 22);
             this.txtPath.TabIndex = 0;
             this.txtPath.TextChanged += new System.EventHandler(this.txtPath_TextChanged);
             // 
@@ -186,21 +192,34 @@
             this.groupBox2.Controls.Add(this.pictureBox1);
             this.groupBox2.Location = new System.Drawing.Point(13, 185);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(843, 368);
+            this.groupBox2.Size = new System.Drawing.Size(891, 368);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Tooling Structure: Assign Plate Thickness";
             // 
             // groupBox8
             // 
+            this.groupBox8.Controls.Add(this.chkActiveComPltSkt);
             this.groupBox8.Controls.Add(this.cboMachine);
             this.groupBox8.Controls.Add(this.label16);
             this.groupBox8.Location = new System.Drawing.Point(301, 274);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(236, 79);
+            this.groupBox8.Size = new System.Drawing.Size(236, 88);
             this.groupBox8.TabIndex = 13;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Choose machine for Common Plate";
+            // 
+            // chkActiveComPltSkt
+            // 
+            this.chkActiveComPltSkt.AutoSize = true;
+            this.chkActiveComPltSkt.Enabled = false;
+            this.chkActiveComPltSkt.Location = new System.Drawing.Point(13, 58);
+            this.chkActiveComPltSkt.Name = "chkActiveComPltSkt";
+            this.chkActiveComPltSkt.Size = new System.Drawing.Size(182, 20);
+            this.chkActiveComPltSkt.TabIndex = 16;
+            this.chkActiveComPltSkt.Text = "Activate ComPlt Selection";
+            this.chkActiveComPltSkt.UseVisualStyleBackColor = true;
+            this.chkActiveComPltSkt.CheckedChanged += new System.EventHandler(this.chkActiveComPltSkt_CheckedChanged);
             // 
             // cboMachine
             // 
@@ -565,22 +584,22 @@
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(558, 21);
+            this.pictureBox1.Location = new System.Drawing.Point(579, 21);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(278, 307);
+            this.pictureBox1.Size = new System.Drawing.Size(305, 307);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
             // groupBox6
             // 
-            this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox6.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.groupBox6.Controls.Add(this.lblPlateSketchStatus);
             this.groupBox6.Controls.Add(this.lblPlateSketchInstructions);
             this.groupBox6.Controls.Add(this.btnSelectPlateSketch);
-            this.groupBox6.Location = new System.Drawing.Point(12, 561);
+            this.groupBox6.Location = new System.Drawing.Point(12, 559);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(292, 80);
+            this.groupBox6.Size = new System.Drawing.Size(292, 90);
             this.groupBox6.TabIndex = 3;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Select Plate Sketch";
@@ -590,7 +609,7 @@
             this.lblPlateSketchStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblPlateSketchStatus.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPlateSketchStatus.ForeColor = System.Drawing.Color.Red;
-            this.lblPlateSketchStatus.Location = new System.Drawing.Point(147, 42);
+            this.lblPlateSketchStatus.Location = new System.Drawing.Point(147, 47);
             this.lblPlateSketchStatus.Name = "lblPlateSketchStatus";
             this.lblPlateSketchStatus.Size = new System.Drawing.Size(139, 28);
             this.lblPlateSketchStatus.TabIndex = 3;
@@ -601,7 +620,7 @@
             this.lblPlateSketchInstructions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblPlateSketchInstructions.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPlateSketchInstructions.Location = new System.Drawing.Point(6, 21);
+            this.lblPlateSketchInstructions.Location = new System.Drawing.Point(6, 26);
             this.lblPlateSketchInstructions.Name = "lblPlateSketchInstructions";
             this.lblPlateSketchInstructions.Size = new System.Drawing.Size(280, 21);
             this.lblPlateSketchInstructions.TabIndex = 4;
@@ -609,7 +628,7 @@
             // 
             // btnSelectPlateSketch
             // 
-            this.btnSelectPlateSketch.Location = new System.Drawing.Point(6, 42);
+            this.btnSelectPlateSketch.Location = new System.Drawing.Point(6, 47);
             this.btnSelectPlateSketch.Name = "btnSelectPlateSketch";
             this.btnSelectPlateSketch.Size = new System.Drawing.Size(133, 28);
             this.btnSelectPlateSketch.TabIndex = 0;
@@ -619,13 +638,13 @@
             // 
             // groupBox7
             // 
-            this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox7.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.groupBox7.Controls.Add(this.lblShoeSketchStatus);
             this.groupBox7.Controls.Add(this.label17);
             this.groupBox7.Controls.Add(this.btnSelectShoeSketch);
-            this.groupBox7.Location = new System.Drawing.Point(313, 561);
+            this.groupBox7.Location = new System.Drawing.Point(313, 559);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(292, 80);
+            this.groupBox7.Size = new System.Drawing.Size(292, 90);
             this.groupBox7.TabIndex = 5;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Select Shoe Sketch";
@@ -635,7 +654,7 @@
             this.lblShoeSketchStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblShoeSketchStatus.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblShoeSketchStatus.ForeColor = System.Drawing.Color.Red;
-            this.lblShoeSketchStatus.Location = new System.Drawing.Point(147, 42);
+            this.lblShoeSketchStatus.Location = new System.Drawing.Point(147, 47);
             this.lblShoeSketchStatus.Name = "lblShoeSketchStatus";
             this.lblShoeSketchStatus.Size = new System.Drawing.Size(139, 28);
             this.lblShoeSketchStatus.TabIndex = 3;
@@ -646,7 +665,7 @@
             this.label17.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label17.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(6, 21);
+            this.label17.Location = new System.Drawing.Point(6, 26);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(280, 21);
             this.label17.TabIndex = 4;
@@ -654,7 +673,7 @@
             // 
             // btnSelectShoeSketch
             // 
-            this.btnSelectShoeSketch.Location = new System.Drawing.Point(6, 42);
+            this.btnSelectShoeSketch.Location = new System.Drawing.Point(6, 47);
             this.btnSelectShoeSketch.Name = "btnSelectShoeSketch";
             this.btnSelectShoeSketch.Size = new System.Drawing.Size(133, 28);
             this.btnSelectShoeSketch.TabIndex = 0;
@@ -776,13 +795,60 @@
             this.label21.TabIndex = 0;
             this.label21.Text = "MODEL:";
             // 
+            // groupBox10
+            // 
+            this.groupBox10.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.groupBox10.Controls.Add(this.lblComPltSketchStatus);
+            this.groupBox10.Controls.Add(this.label23);
+            this.groupBox10.Controls.Add(this.btnSelectComPltSketch);
+            this.groupBox10.Location = new System.Drawing.Point(611, 559);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(292, 90);
+            this.groupBox10.TabIndex = 5;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Select Common Plate Sketch";
+            // 
+            // lblComPltSketchStatus
+            // 
+            this.lblComPltSketchStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblComPltSketchStatus.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblComPltSketchStatus.ForeColor = System.Drawing.Color.Red;
+            this.lblComPltSketchStatus.Location = new System.Drawing.Point(147, 47);
+            this.lblComPltSketchStatus.Name = "lblComPltSketchStatus";
+            this.lblComPltSketchStatus.Size = new System.Drawing.Size(139, 28);
+            this.lblComPltSketchStatus.TabIndex = 3;
+            this.lblComPltSketchStatus.Text = "No sketch selected";
+            // 
+            // label23
+            // 
+            this.label23.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label23.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label23.Location = new System.Drawing.Point(6, 26);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(280, 21);
+            this.label23.TabIndex = 4;
+            this.label23.Text = "Select a complt sketch from the NX model.";
+            // 
+            // btnSelectComPltSketch
+            // 
+            this.btnSelectComPltSketch.Enabled = false;
+            this.btnSelectComPltSketch.Location = new System.Drawing.Point(6, 47);
+            this.btnSelectComPltSketch.Name = "btnSelectComPltSketch";
+            this.btnSelectComPltSketch.Size = new System.Drawing.Size(133, 28);
+            this.btnSelectComPltSketch.TabIndex = 0;
+            this.btnSelectComPltSketch.Text = "Select Sketch...";
+            this.btnSelectComPltSketch.UseVisualStyleBackColor = true;
+            this.btnSelectComPltSketch.Click += new System.EventHandler(this.btnSelectComPltSketch_Click);
+            // 
             // formToolStructure
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(868, 653);
+            this.ClientSize = new System.Drawing.Size(916, 709);
             this.Controls.Add(this.groupBox9);
+            this.Controls.Add(this.groupBox10);
             this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox2);
@@ -809,6 +875,7 @@
             this.groupBox7.ResumeLayout(false);
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
+            this.groupBox10.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -877,5 +944,10 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.CheckBox chkRetriveProjInfo;
         private System.Windows.Forms.Button btnSaveProjInfo;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.Label lblComPltSketchStatus;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Button btnSelectComPltSketch;
+        private System.Windows.Forms.CheckBox chkActiveComPltSkt;
     }
 }
