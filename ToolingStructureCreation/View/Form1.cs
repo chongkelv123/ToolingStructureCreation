@@ -456,7 +456,7 @@ namespace ToolingStructureCreation.View
             NXDrawing xDrawing = control.GetDrawing;
             Model.SketchSelection plateSketch = new Model.SketchSelection(xDrawing);
             plateTaggedObjects = plateSketch.SelectSketch();
-            if (plateTaggedObjects != null)
+            if (plateTaggedObjects != null && plateTaggedObjects.Length > 0)
             {
                 isPlateSketchSelected = true;
                 UpdateSketchStatus(PLATE, lblPlateSketchStatus);
@@ -501,7 +501,7 @@ namespace ToolingStructureCreation.View
             NXDrawing xDrawing = control.GetDrawing;
             Model.SketchSelection shoeSketch = new Model.SketchSelection(xDrawing);
             shoeTaggedObjects = shoeSketch.SelectSketch();
-            if (shoeTaggedObjects != null)
+            if (shoeTaggedObjects != null && shoeTaggedObjects.Length > 0)
             {
                 isShoeSketchSelected = true;
                 UpdateSketchStatus(SHOE, lblShoeSketchStatus);
@@ -641,10 +641,10 @@ namespace ToolingStructureCreation.View
         {
             this.Hide();
 
-            NXDrawing xDrawing = control.GetDrawing;            
+            NXDrawing xDrawing = control.GetDrawing;
             Model.SketchSelection comPltSketch = new Model.SketchSelection(xDrawing);
             comPltTaggedObjects = comPltSketch.SelectSketch();
-            if (comPltTaggedObjects != null)
+            if (comPltTaggedObjects != null && comPltTaggedObjects.Length > 0)
             {
                 isComPltSketchSelected = true;
                 UpdateSketchStatus(COMPLATE, lblComPltSketchStatus);

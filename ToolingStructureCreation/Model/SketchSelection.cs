@@ -205,7 +205,18 @@ namespace ToolingStructureCreation.Model
                     sketchList.Add(sketch);
                 }
             }
-            return sketchList;
+            var sortedSketch = SortByStartLocationX(sketchList);
+            return sortedSketch;
+        }
+
+        public static List<Sketch> SortByStartLocationX(List<Sketch> sketchList)
+        {
+            if (sketchList == null || sketchList.Count == 0)
+            {
+                return new List<Sketch>();
+            }
+
+            return sketchList.OrderBy(s => s.StartLocation.X).ToList();
         }
     }
 }

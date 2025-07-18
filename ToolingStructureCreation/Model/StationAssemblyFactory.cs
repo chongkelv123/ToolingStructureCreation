@@ -94,7 +94,7 @@ namespace ToolingStructureCreation.Model
             ProjectInfo projectInfo = myForm.GetProjectInfo();
             for (int i = 0; i < ShoeSketchLists.Count; i++)
             {
-                shoeSketch = ShoeSketchLists[i];                
+                shoeSketch = ShoeSketchLists[i];
                 string uprShoeItemName = $"{Shoe.UPPER_SHOE}-{i + 1}";
                 ShoeCodeGeneratorService uprShoeGenerator = new ShoeCodeGeneratorService(control, projectInfo, uprShoeItemName);
                 string uprShoeFileNameWithoutExtension = uprShoeGenerator.AskFileName();
@@ -134,22 +134,37 @@ namespace ToolingStructureCreation.Model
                     Sketch comPltSketch = ComPltSketchLists[i];
                     ShoeCodeGeneratorService compCodeGenerator = new ShoeCodeGeneratorService(control, myForm.GetProjectInfo(), compPltItemName);
                     string compPlatefileName = compCodeGenerator.AskFileName();
-                    comPltComponentCollection.Add(compPlatefileName);                    
-                    CommonPlate commonPlate = new CommonPlate(comPltSketch.Length, comPltSketch.Width, myForm.CommonPltThk, compPlatefileName);
+                    comPltComponentCollection.Add(compPlatefileName);
+                    CommonPlateBase commonPlate;
+                    if (i == 0)
+                    {
+                        commonPlate = new CommonPlateLeft(
+                            comPltSketch.Length, 
+                            comPltSketch.Width, 
+                            myForm.CommonPltThk, 
+                            compPlatefileName);
+                    }
+                    else
+                    {
+                        commonPlate = new CommonPlateRight(
+                            comPltSketch.Length, 
+                            comPltSketch.Width, 
+                            myForm.CommonPltThk, 
+                            compPlatefileName);
+                    }
                     commonPlate.CreateNewCommonPlate(folderPath);
                 }
             }
             else
             {
                 // Create Common Plate (Single)
-                
                 ShoeCodeGeneratorService compCodeGenerator = new ShoeCodeGeneratorService(control, myForm.GetProjectInfo(), compPltItemName);
                 string compPlatefileName = compCodeGenerator.AskFileName();
-                comPltComponentCollection.Add(compPlatefileName);                
-                CommonPlate commonPlate = new CommonPlate(commonPltInfo.GetLength(), commonPltInfo.GetWidth(), myForm.CommonPltThk, compPlatefileName);
+                comPltComponentCollection.Add(compPlatefileName);
+                CommonPlateBase commonPlate = new CommonPlate(commonPltInfo.GetLength(), commonPltInfo.GetWidth(), myForm.CommonPltThk, compPlatefileName);
                 commonPlate.CreateNewCommonPlate(folderPath);
             }
-            
+
         }
 
         public void CreateToolAsmFactory()
@@ -253,7 +268,7 @@ namespace ToolingStructureCreation.Model
                 }
             }
 
-            // Insert Common Plate (Double Joint Tool)
+            // Insert Common Plate (Double Joint Tool)            
             for (int i = 0; i < ComPltSketchLists.Count; i++)
             {
                 Sketch comPltSketch = ComPltSketchLists[i];
