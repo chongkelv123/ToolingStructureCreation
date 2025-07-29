@@ -5,27 +5,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static NXOpen.Display.DecalBuilder;
+using static NXOpen.Motion.HydrodynamicBearingBuilder;
 
 namespace ToolingStructureCreation.Model
 {
     public class Shoe
     {
         private string fileNameWithExtension;
-        private double shoeLength;
-        private double shoeWidth;
-        private double shoeHeight;        
+        private double length;
+        private double width;
+        private double thickness;        
 
         public const string UPPER_SHOE = "UPPER_SHOE";
         public const string LOWER_SHOE = "LOWER_SHOE";
         public const string TEMPLATE_SHOE_NAME = "3DA_Template_SHOE-V00.prt";
         public const string SHOE = "Shoe";
 
-        public Shoe(string name, double length, double width, double height)
+        public Shoe(string name, double length, double width, double thickness)
         {
             this.fileNameWithExtension = name;
-            this.shoeLength = length;
-            this.shoeWidth = width;
-            this.shoeHeight = height;            
+            this.length = length;
+            this.width = width;
+            this.thickness = thickness;            
         }
 
         public string GetShoeName()
@@ -35,20 +37,20 @@ namespace ToolingStructureCreation.Model
 
         public double GetShoeLength()
         {
-            return shoeLength;
+            return length;
         }
 
         public double GetShoeWidth()
         {
-            return shoeWidth;
+            return width;
         }
 
         public double GetShoeHeight()
         {
-            return shoeHeight;
+            return thickness;
         }
 
-        public void CreateNewShoe(string folderPath)
+        public void CreateNewShoe(string folderPath, ProjectInfo projectInfo, string drawingCode, string itemName)
         {
             Session session = Session.GetSession();
             FileNew fileNew = session.Parts.FileNew();
@@ -115,6 +117,17 @@ namespace ToolingStructureCreation.Model
                     body.Color = (int)PlateColor.COMMONPLATE;
                 }
             }
+            
+            NXDrawing.UpdatePartProperties(
+                projectInfo,
+                drawingCode,
+                itemName,
+                length.ToString("F1"),
+                thickness.ToString("F2"),
+                width.ToString("F1"),
+                NXDrawing.HYPHEN,
+                NXDrawing.S50C,
+                PartProperties.SHOE);
 
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
             BasePart.CloseAfterSave close = BasePart.CloseAfterSave.True;

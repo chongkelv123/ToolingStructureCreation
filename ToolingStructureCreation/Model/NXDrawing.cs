@@ -56,6 +56,11 @@ namespace ToolingStructureCreation.Model
         public const string EXTENSION = ".prt";
         public const string MODEL_TEMPLATE = "ModelTemplate";
 
+        public const string FIFTYTWO_FIFTYFOUR = "52~54";
+        public const string GOA = "GOA";
+        public const string S50C = "S50C";
+        public const string HYPHEN = "-";
+
         bool showDebugMessages = false;
 
         public NXDrawing()
@@ -139,6 +144,33 @@ namespace ToolingStructureCreation.Model
                 Guide.InfoWriteLine($"Full path: {fullPath}");
             }
             return new StripLayout(fullPath, position);
+        }
+
+        public static void UpdatePartProperties(ProjectInfo projectInfo, string drawingCode, string itemName, string length, string thickness, string width, string hrc, string material, string partType)
+        {
+            Part workPart = Session.GetSession().Parts.Work;
+            TitleBlockProperties properties = new TitleBlockProperties(
+                workPart,
+                projectInfo.Designer,
+                drawingCode,
+                hrc,
+                itemName,
+                length,
+                thickness,
+                width,
+                material,
+                projectInfo.Model,
+                projectInfo.Part
+                );
+            var attrList = properties.AttributeInfoToList(PartProperties.CATEGORY_TITLE, properties.KeyValueInfo);
+            properties.SetAttributesByList(attrList);
+
+            NXObject.AttributeInformation info = new NXObject.AttributeInformation();
+            info.Category = PartProperties.CATEGORY_TOOL;
+            info.Title = PartProperties.PART_TYPE;
+            info.Type = NXObject.AttributeType.String;
+            info.StringValue = partType;
+            properties.SetAttribute(info);
         }
     }
 }

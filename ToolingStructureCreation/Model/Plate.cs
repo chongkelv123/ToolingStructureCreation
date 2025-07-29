@@ -1,5 +1,6 @@
 ﻿using NXOpen;
 using NXOpen.Assemblies;
+using NXOpen.Layout2d;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,20 +12,21 @@ namespace ToolingStructureCreation.Model
     public class Plate
     {
         private string fileName;
-        private double plateLength;
-        private double plateWidth;
-        private double plateThickness;        
+        private double length;
+        private double width;
+        private double thickness;        
 
         public const string TEMPLATE_PLATE_NAME = "3DA_Template_PLATE-V00.prt";                
         public const string PLATE = "Plate";
-        //NXDrawing drawing;
+        public const string HRC = "52~54";
+        public const string MATERIAL = "GOA";        
 
         public Plate(string fileName, double length, double width, double thickness)
         {
             this.fileName = fileName;
-            this.plateLength = length;
-            this.plateWidth = width;
-            this.plateThickness = thickness;            
+            this.length = length;
+            this.width = width;
+            this.thickness = thickness;            
         }
 
         public string GetPlateName()
@@ -34,20 +36,20 @@ namespace ToolingStructureCreation.Model
 
         public double GetPlateLength()
         {
-            return plateLength;
+            return length;
         }
 
         public double GetPlateWidth()
         {
-            return plateWidth;
+            return width;
         }
 
         public double GetPlateThickness()
         {
-            return plateThickness;
+            return thickness;
         }
 
-        public void CreateNewPlate(string folderPath)
+        public void CreateNewPlate(string folderPath, ProjectInfo projectInfo, string drawingCode, string itemName)
         {
             Session session = Session.GetSession();
             FileNew fileNew = session.Parts.FileNew();
@@ -129,12 +131,25 @@ namespace ToolingStructureCreation.Model
                 {
                     body.Color = (int)PlateColor.COMMONPLATE;
                 }
-            }
+            }            
+            
+            NXDrawing.UpdatePartProperties(
+                projectInfo, 
+                drawingCode, 
+                itemName, 
+                length.ToString("F1"), 
+                thickness.ToString("F2"), 
+                width.ToString("F1"), 
+                NXDrawing.FIFTYTWO_FIFTYFOUR, 
+                NXDrawing.GOA,
+                PartProperties.PLATE);         
 
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
             BasePart.CloseAfterSave close = BasePart.CloseAfterSave.True;
             workPart.Save(saveComponentParts, close);
         }
+
+        
 
         static public void InsertPlate(Part workAssy, string compName, double cumThk, string folderPath)
         {

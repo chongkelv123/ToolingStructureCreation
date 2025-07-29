@@ -1,4 +1,5 @@
 ﻿using NXOpen;
+using NXOpen.CAE.Optimization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using ToolingStructureCreation.Services;
 using ToolingStructureCreation.View;
+using static NXOpen.Display.DecalBuilder;
+using static NXOpen.Motion.HydrodynamicBearingBuilder;
 
 namespace ToolingStructureCreation.Model
 {
@@ -51,6 +54,7 @@ namespace ToolingStructureCreation.Model
 
         public void CreateStnAsmFactory()
         {
+            //System.Diagnostics.Debugger.Launch();
             if (PlateThicknesses == null)
             {
                 throw new InvalidOperationException("PlateThicknesses dictionary is not initialized. Please provide a valid dictionary of plate thicknesses.");
@@ -77,18 +81,28 @@ namespace ToolingStructureCreation.Model
                     string fileName = pltCodeGenerator.AskFileName();
                     pltLists.Add(fileName, plt.Value);
                     Plate plate = new Plate(fileName, stnSketch.Length, stnSketch.Width, plt.Value);
-                    plate.CreateNewPlate(folderPath);
+                    string itemName2 = plt.Key.Replace("_", " ");
+                    plate.CreateNewPlate(
+                        folderPath, 
+                        myForm.GetProjectInfo(), 
+                        pltCodeGenerator.AskDrawingCode(),
+                        itemName2);
                 }
 
                 string itemName = $"{stnNumber}-Assembly";
                 AsmCodeGeneratorServicecs asmCodeGenerator = new AsmCodeGeneratorServicecs(control, myForm.GetProjectInfo(), itemName);
                 string subAsmFileName = asmCodeGenerator.AskFileName();
                 subToolAsmCollection.Add(subAsmFileName);
-                CreateStationAssembly(pltLists, subAsmFileName, folderPath);
+                CreateStationAssembly(
+                    pltLists, 
+                    subAsmFileName, 
+                    folderPath, 
+                    myForm.GetProjectInfo(), 
+                    asmCodeGenerator.AskDrawingCode(), 
+                    itemName);
             }
 
             Sketch shoeSketch = null;
-
 
             // Create Shoe
             ProjectInfo projectInfo = myForm.GetProjectInfo();
@@ -100,14 +114,26 @@ namespace ToolingStructureCreation.Model
                 string uprShoeFileNameWithoutExtension = uprShoeGenerator.AskFileName();
                 uprShoeComponentCollection.Add(uprShoeFileNameWithoutExtension);
                 Shoe upperShoe = new Shoe(uprShoeFileNameWithoutExtension, shoeSketch.Length, shoeSketch.Width, myForm.UpperShoeThk);
-                upperShoe.CreateNewShoe(folderPath);
+                string itemName1 = Shoe.UPPER_SHOE.Replace("_", " ");
+                upperShoe.CreateNewShoe(
+                    folderPath,
+                    myForm.GetProjectInfo(),
+                    uprShoeGenerator.AskDrawingCode(),
+                    itemName1
+                    );
 
                 string lowShoeItemName = $"{Shoe.LOWER_SHOE}-{i + 1}";
                 ShoeCodeGeneratorService lowShoeGenerator = new ShoeCodeGeneratorService(control, projectInfo, lowShoeItemName);
                 string lowShoeFileNameWithoutExtension = lowShoeGenerator.AskFileName();
                 lowShoeComponentCollection.Add(lowShoeFileNameWithoutExtension);
                 Shoe lowerShoe = new Shoe(lowShoeFileNameWithoutExtension, shoeSketch.Length, shoeSketch.Width, myForm.LowerShoeThk);
-                lowerShoe.CreateNewShoe(folderPath);
+                string itemName2 = Shoe.LOWER_SHOE.Replace("_", " ");
+                lowerShoe.CreateNewShoe(
+                    folderPath,
+                    myForm.GetProjectInfo(),
+                    lowShoeGenerator.AskDrawingCode(),
+                    itemName2
+                    );
             }
 
             // Create Parallel Bar
@@ -118,11 +144,18 @@ namespace ToolingStructureCreation.Model
                 string fileName = pBarCodeGenerator.AskFileName();
                 pBarComponentCollection.Add(fileName);
                 ParallelBar parallelBar = new ParallelBar(fileName, PARALLEL_BAR_WIDTH, shoeSketch.Width - 85.0, myForm.ParallelBarThk);
-                parallelBar.CreateNewParallelBar(folderPath);
+                string itemName3 = pBarItemName.Replace("_", " ");
+                parallelBar.CreateNewParallelBar(
+                    folderPath,
+                    myForm.GetProjectInfo(),
+                    pBarCodeGenerator.AskDrawingCode(),
+                    itemName3
+                    );
             }
 
             // Create Common Plate
             string compPltItemName = CommonPlate.LOWER_COMMON_PLATE;
+            string itemName4 = compPltItemName.Replace("_", " ");
             Machine machine = myForm.GetMachine;
             var commonPltInfo = machine.GetCommonPlate(myForm.GetMachineName);
             if (ComPltSketchLists.Count > 0)
@@ -152,7 +185,13 @@ namespace ToolingStructureCreation.Model
                             myForm.CommonPltThk, 
                             compPlatefileName);
                     }
-                    commonPlate.CreateNewCommonPlate(folderPath);
+                    
+                    commonPlate.CreateNewCommonPlate(
+                        folderPath,
+                        myForm.GetProjectInfo(),
+                        compCodeGenerator.AskDrawingCode(),
+                        itemName4
+                        );
                 }
             }
             else
@@ -162,12 +201,17 @@ namespace ToolingStructureCreation.Model
                 string compPlatefileName = compCodeGenerator.AskFileName();
                 comPltComponentCollection.Add(compPlatefileName);
                 CommonPlateBase commonPlate = new CommonPlate(commonPltInfo.GetLength(), commonPltInfo.GetWidth(), myForm.CommonPltThk, compPlatefileName);
-                commonPlate.CreateNewCommonPlate(folderPath);
+                commonPlate.CreateNewCommonPlate(
+                    folderPath,
+                    myForm.GetProjectInfo(),
+                    compCodeGenerator.AskDrawingCode(),
+                    itemName4
+                    );
             }
 
         }
 
-        public void CreateToolAsmFactory()
+        public void CreateToolAsmFactory(ProjectInfo projectInfo, string drawingCode, string itemName)
         {
             Session session = Session.GetSession();
             FileNew fileNew = session.Parts.FileNew();
@@ -178,7 +222,7 @@ namespace ToolingStructureCreation.Model
             fileNew.TemplatePresentationName = ToolingAssembly.ASSEMBLY;
             fileNew.SetCanCreateAltrep(false);
 
-            string itemName = "MainToolAssembly";
+            //string itemName = "MainToolAssembly";
             AsmCodeGeneratorServicecs asmCodeGenerator = new AsmCodeGeneratorServicecs(control, myForm.GetProjectInfo(), itemName);
             string asmFileName = asmCodeGenerator.AskFileName();
             fileNew.NewFileName = $"{folderPath}{asmFileName}{NXDrawing.EXTENSION}";
@@ -285,6 +329,17 @@ namespace ToolingStructureCreation.Model
                 }
             }
 
+            NXDrawing.UpdatePartProperties(
+                projectInfo,
+                drawingCode,
+                itemName,
+                NXDrawing.HYPHEN,
+                NXDrawing.HYPHEN,
+                NXDrawing.HYPHEN,
+                NXDrawing.HYPHEN,
+                NXDrawing.HYPHEN,
+                PartProperties.ASM);
+
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
             BasePart.CloseAfterSave save = BasePart.CloseAfterSave.False;
             workAssy.Save(saveComponentParts, save);
@@ -292,7 +347,7 @@ namespace ToolingStructureCreation.Model
             workAssy.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
         }
 
-        public void CreateStationAssembly(Dictionary<string, double> plateList, string fileName, string folderPath)
+        public void CreateStationAssembly(Dictionary<string, double> plateList, string fileName, string folderPath, ProjectInfo projectInfo, string drawingCode, string itemName)
         {
             Session session = Session.GetSession();
             FileNew fileNew = session.Parts.FileNew();
@@ -328,6 +383,18 @@ namespace ToolingStructureCreation.Model
                 string fn = component.Key;
                 Plate.InsertPlate(workPart, fn, cumThk, folderPath);
             }
+            
+            NXDrawing.UpdatePartProperties(
+                projectInfo, 
+                drawingCode, 
+                itemName, 
+                NXDrawing.HYPHEN, 
+                NXDrawing.HYPHEN, 
+                NXDrawing.HYPHEN, 
+                NXDrawing.HYPHEN, 
+                NXDrawing.HYPHEN,
+                PartProperties.ASM);
+
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
             BasePart.CloseAfterSave save = BasePart.CloseAfterSave.True;
             workPart.Save(saveComponentParts, save);

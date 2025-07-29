@@ -5,17 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static NXOpen.Motion.HydrodynamicBearingBuilder;
 
 namespace ToolingStructureCreation.Model
 {
     public class ParallelBar
     {
         private string fileName;
-        private double parallelBarLength;
-        private double parallelBarWidth;
-        private double parallelBarThickness;
-        public int Quantity { get; set; }
-        //NXDrawing drawing;
+        private double length;
+        private double width;
+        private double thickness;
+        public int Quantity { get; set; }        
 
         public const string TEMPLATE_PARALLELBAR_NAME = "3DA_Template_PARALLELBAR-V00.prt";
         public const string PARALLELBAR = "ParallelBar";
@@ -25,26 +25,26 @@ namespace ToolingStructureCreation.Model
         public ParallelBar(string fileName, double length, double width, double thickness)
         {
             this.fileName = fileName;
-            this.parallelBarLength = length;
-            this.parallelBarWidth = width;
-            this.parallelBarThickness = thickness;
+            this.length = length;
+            this.width = width;
+            this.thickness = thickness;
         }
 
         public double GetParallelBarLength()
         {
-            return parallelBarLength;
+            return length;
         }
 
         public double GetParallelBarWidth()
         {
-            return parallelBarWidth;
+            return width;
         }
 
         public double GetParallelBarThickness()
         {
-            return parallelBarThickness;
+            return thickness;
         }
-        public void CreateNewParallelBar(string folderPath)
+        public void CreateNewParallelBar(string folderPath, ProjectInfo projectInfo, string drawingCode, string itemName)
         {
             Session session = Session.GetSession();
             FileNew fileNew = session.Parts.FileNew();
@@ -91,6 +91,17 @@ namespace ToolingStructureCreation.Model
 
             NXOpen.Session.UndoMarkId undoMark = session.SetUndoMark(Session.MarkVisibility.Invisible, "Create Parallel Bar");
             session.UpdateManager.DoUpdate(undoMark);
+
+            NXDrawing.UpdatePartProperties(
+                projectInfo,
+            drawingCode,
+                itemName,
+                length.ToString("F1"),
+                thickness.ToString("F2"),
+                width.ToString("F1"),
+                NXDrawing.HYPHEN,
+                NXDrawing.S50C,
+                PartProperties.SHOE);
 
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
             BasePart.CloseAfterSave close = BasePart.CloseAfterSave.True;

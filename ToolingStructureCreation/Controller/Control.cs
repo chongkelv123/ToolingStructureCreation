@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using ToolingStructureCreation.Model;
+using ToolingStructureCreation.Services;
 using ToolingStructureCreation.View;
 
 namespace ToolingStructureCreation.Controller
@@ -35,8 +37,10 @@ namespace ToolingStructureCreation.Controller
 
         public void Start(StationAssemblyFactory stnAsmFactory)
         {
+            string itemName = "MainToolAssembly";
+            AsmCodeGeneratorServicecs asmCodeGenerator = new AsmCodeGeneratorServicecs(this, myForm.GetProjectInfo(), itemName);
             stnAsmFactory.CreateStnAsmFactory();
-            stnAsmFactory.CreateToolAsmFactory();
+            stnAsmFactory.CreateToolAsmFactory(myForm.GetProjectInfo(), asmCodeGenerator.AskDrawingCode(), itemName);
         }
         public StripLayout GetStripLayout => stripLayout;
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static NXOpen.Motion.HydrodynamicBearingBuilder;
 
 namespace ToolingStructureCreation.Model
 {
@@ -18,7 +19,7 @@ namespace ToolingStructureCreation.Model
         {
         }
 
-        public override void CreateNewCommonPlate(string folderPath)
+        public override void CreateNewCommonPlate(string folderPath, ProjectInfo projectInfo, string drawingCode, string itemName)
         {
             Session session = Session.GetSession();
             FileNew fileNew = session.Parts.FileNew();
@@ -65,6 +66,17 @@ namespace ToolingStructureCreation.Model
 
             NXOpen.Session.UndoMarkId undoMark = session.SetUndoMark(Session.MarkVisibility.Invisible, "Create Low Common Plate");
             session.UpdateManager.DoUpdate(undoMark);
+
+            NXDrawing.UpdatePartProperties(
+            projectInfo,
+            drawingCode,
+            itemName,
+            GetLength().ToString("F1"),
+            GetThickness().ToString("F2"),
+            GetWidth().ToString("F1"),
+            NXDrawing.HYPHEN,
+            NXDrawing.S50C,
+            PartProperties.SHOE);
 
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
             BasePart.CloseAfterSave close = BasePart.CloseAfterSave.True;

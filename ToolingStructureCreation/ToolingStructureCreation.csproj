@@ -74,6 +74,7 @@
     <Compile Include="Model\Machine.cs" />
     <Compile Include="Model\NXDrawing.cs" />
     <Compile Include="Model\ParallelBar.cs" />
+    <Compile Include="Model\PartProperties.cs" />
     <Compile Include="Model\Plate.cs" />
     <Compile Include="Model\ProjectInfo.cs" />
     <Compile Include="Model\Sketch.cs" />
@@ -81,7 +82,9 @@
     <Compile Include="Model\Shoe.cs" />
     <Compile Include="Model\StationAssemblyFactory.cs" />
     <Compile Include="Model\StripLayout.cs" />
+    <Compile Include="Model\TitleBlockProperties.cs" />
     <Compile Include="Model\ToolingAssembly.cs" />
+    <Compile Include="Model\ToolProperties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource.Designer.cs">
       <AutoGen>True</AutoGen>
