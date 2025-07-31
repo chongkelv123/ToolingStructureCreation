@@ -64,13 +64,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\Control.cs" />
+    <Compile Include="Domain\Entities\CommonPlate.cs" />
+    <Compile Include="Domain\Entities\ParallelBar.cs" />
     <Compile Include="Domain\Entities\Plate.cs" />
     <Compile Include="Domain\Entities\Shoe.cs" />
+    <Compile Include="Domain\Enums\CommonPlateType.cs" />
     <Compile Include="Domain\Enums\PlateColor.cs" />
     <Compile Include="Domain\Enums\PlateType.cs" />
     <Compile Include="Domain\Enums\ShoeType.cs" />
     <Compile Include="Domain\ValueObjects\Dimensions.cs" />
     <Compile Include="Domain\ValueObjects\DrawingCode.cs" />
+    <Compile Include="Domain\ValueObjects\MachineSpecification.cs" />
     <Compile Include="Domain\ValueObjects\Position3D.cs" />
     <Compile Include="Main\MyProgram.cs" />
     <Compile Include="Main\Unload.cs" />
@@ -81,7 +85,7 @@
     <Compile Include="Model\Designer.cs" />
     <Compile Include="Model\Machine.cs" />
     <Compile Include="Model\NXDrawing.cs" />
-    <Compile Include="Model\ParallelBar.cs" />
+    <Compile Include="Model\ParallelBarLegacy.cs" />
     <Compile Include="Model\PartProperties.cs" />
     <Compile Include="Model\PlateLegacy.cs" />
     <Compile Include="Model\ProjectInfo.cs" />

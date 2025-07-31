@@ -71,10 +71,12 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Domain\Entities\ParallelBarTests.cs" />
     <Compile Include="Domain\Entities\PlateTests.cs" />
     <Compile Include="Domain\Entities\ShoeTests.cs" />
     <Compile Include="Domain\ValueObjects\DimensionsTests.cs" />
     <Compile Include="Domain\ValueObjects\DrawingCodeTests.cs" />
+    <Compile Include="Domain\ValueObjects\MachineSpecificationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CodeGeneratorServiceTests.cs" />
   </ItemGroup>

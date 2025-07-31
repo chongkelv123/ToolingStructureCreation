@@ -139,11 +139,11 @@ namespace ToolingStructureCreation.Model
             // Create Parallel Bar
             if (shoeSketch != null)
             {
-                string pBarItemName = ParallelBar.PARALLEL_BAR;
+                string pBarItemName = ParallelBarLegacy.PARALLEL_BAR;
                 ShoeCodeGeneratorService pBarCodeGenerator = new ShoeCodeGeneratorService(control, myForm.GetProjectInfo(), pBarItemName);
                 string fileName = pBarCodeGenerator.AskFileName();
                 pBarComponentCollection.Add(fileName);
-                ParallelBar parallelBar = new ParallelBar(fileName, PARALLEL_BAR_WIDTH, shoeSketch.Width - 85.0, myForm.ParallelBarThk);
+                ParallelBarLegacy parallelBar = new ParallelBarLegacy(fileName, PARALLEL_BAR_WIDTH, shoeSketch.Width - 85.0, myForm.ParallelBarThk);
                 string itemName3 = pBarItemName.Replace("_", " ");
                 parallelBar.CreateNewParallelBar(
                     folderPath,

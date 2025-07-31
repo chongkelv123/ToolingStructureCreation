@@ -9,7 +9,7 @@ using static NXOpen.Motion.HydrodynamicBearingBuilder;
 
 namespace ToolingStructureCreation.Model
 {
-    public class ParallelBar
+    public class ParallelBarLegacy
     {
         private string fileName;
         private double length;
@@ -22,7 +22,7 @@ namespace ToolingStructureCreation.Model
 
         public const string PARALLEL_BAR = "PARALLEL_BAR";
 
-        public ParallelBar(string fileName, double length, double width, double thickness)
+        public ParallelBarLegacy(string fileName, double length, double width, double thickness)
         {
             this.fileName = fileName;
             this.length = length;
