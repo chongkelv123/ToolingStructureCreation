@@ -71,7 +71,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Model\SketchSelectionTests.cs" />
+    <Compile Include="Domain\ValueObjects\DimensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CodeGeneratorServiceTests.cs" />
   </ItemGroup>
@@ -83,6 +83,9 @@
       <Project>{FD23D1A7-59D4-4707-AC32-1340750ED0EC}</Project>
       <Name>ToolingStructureCreation</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
