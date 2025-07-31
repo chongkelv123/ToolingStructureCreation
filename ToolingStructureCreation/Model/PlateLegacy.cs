@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ToolingStructureCreation.Model
 {
-    public class Plate
+    public class PlateLegacy
     {
         private string fileName;
         private double length;
@@ -21,7 +21,7 @@ namespace ToolingStructureCreation.Model
         public const string HRC = "52~54";
         public const string MATERIAL = "GOA";        
 
-        public Plate(string fileName, double length, double width, double thickness)
+        public PlateLegacy(string fileName, double length, double width, double thickness)
         {
             this.fileName = fileName;
             this.length = length;

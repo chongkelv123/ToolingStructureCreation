@@ -116,7 +116,7 @@ namespace ToolingStructureCreation.Model
                     continue; // Skip the material thickness entry
                 }                
                 string fileName = component.Key;
-                Plate.InsertPlate(workPart, fileName, cumThk, folderPath);
+                PlateLegacy.InsertPlate(workPart, fileName, cumThk, folderPath);
             }
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
             BasePart.CloseAfterSave save = BasePart.CloseAfterSave.True;

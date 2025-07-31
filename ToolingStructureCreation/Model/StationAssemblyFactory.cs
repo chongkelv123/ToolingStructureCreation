@@ -80,7 +80,7 @@ namespace ToolingStructureCreation.Model
                     pltCodeGenerator = new PlateCodeGeneratorService(control, myForm.GetProjectInfo(), type, stnNo);
                     string fileName = pltCodeGenerator.AskFileName();
                     pltLists.Add(fileName, plt.Value);
-                    Plate plate = new Plate(fileName, stnSketch.Length, stnSketch.Width, plt.Value);
+                    PlateLegacy plate = new PlateLegacy(fileName, stnSketch.Length, stnSketch.Width, plt.Value);
                     string itemName2 = plt.Key.Replace("_", " ");
                     plate.CreateNewPlate(
                         folderPath, 
@@ -381,7 +381,7 @@ namespace ToolingStructureCreation.Model
                     continue; // Skip the material thickness entry
                 }
                 string fn = component.Key;
-                Plate.InsertPlate(workPart, fn, cumThk, folderPath);
+                PlateLegacy.InsertPlate(workPart, fn, cumThk, folderPath);
             }
             
             NXDrawing.UpdatePartProperties(
