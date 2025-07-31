@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\Control.cs" />
+    <Compile Include="Domain\ValueObjects\Dimensions.cs" />
     <Compile Include="Main\MyProgram.cs" />
     <Compile Include="Main\Unload.cs" />
     <Compile Include="Model\CommonPlate.cs" />
@@ -114,6 +115,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ToolingStructure.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Domain\Entities\" />
+    <Folder Include="Domain\Enums\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
