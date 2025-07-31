@@ -65,9 +65,12 @@
   <ItemGroup>
     <Compile Include="Controller\Control.cs" />
     <Compile Include="Domain\Entities\Plate.cs" />
+    <Compile Include="Domain\Entities\Shoe.cs" />
     <Compile Include="Domain\Enums\PlateColor.cs" />
     <Compile Include="Domain\Enums\PlateType.cs" />
+    <Compile Include="Domain\Enums\ShoeType.cs" />
     <Compile Include="Domain\ValueObjects\Dimensions.cs" />
+    <Compile Include="Domain\ValueObjects\DrawingCode.cs" />
     <Compile Include="Domain\ValueObjects\Position3D.cs" />
     <Compile Include="Main\MyProgram.cs" />
     <Compile Include="Main\Unload.cs" />
@@ -84,7 +87,7 @@
     <Compile Include="Model\ProjectInfo.cs" />
     <Compile Include="Model\Sketch.cs" />
     <Compile Include="Model\SketchSelection.cs" />
-    <Compile Include="Model\Shoe.cs" />
+    <Compile Include="Model\ShoeLegacy.cs" />
     <Compile Include="Model\StationAssemblyFactory.cs" />
     <Compile Include="Model\StripLayout.cs" />
     <Compile Include="Model\TitleBlockProperties.cs" />

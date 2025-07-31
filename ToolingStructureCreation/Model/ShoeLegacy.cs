@@ -10,7 +10,7 @@ using static NXOpen.Motion.HydrodynamicBearingBuilder;
 
 namespace ToolingStructureCreation.Model
 {
-    public class Shoe
+    public class ShoeLegacy
     {
         private string fileNameWithExtension;
         private double length;
@@ -22,7 +22,7 @@ namespace ToolingStructureCreation.Model
         public const string TEMPLATE_SHOE_NAME = "3DA_Template_SHOE-V00.prt";
         public const string SHOE = "Shoe";
 
-        public Shoe(string name, double length, double width, double thickness)
+        public ShoeLegacy(string name, double length, double width, double thickness)
         {
             this.fileNameWithExtension = name;
             this.length = length;
@@ -152,7 +152,7 @@ namespace ToolingStructureCreation.Model
 
             string partToAdd = $"{folderPath}{compName}{NXDrawing.EXTENSION}";
 
-            if (compName.Equals(Shoe.LOWER_SHOE))
+            if (compName.Equals(ShoeLegacy.LOWER_SHOE))
             {
                 layer = 200;
             }

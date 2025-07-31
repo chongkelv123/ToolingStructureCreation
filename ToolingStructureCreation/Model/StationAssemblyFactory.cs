@@ -109,12 +109,12 @@ namespace ToolingStructureCreation.Model
             for (int i = 0; i < ShoeSketchLists.Count; i++)
             {
                 shoeSketch = ShoeSketchLists[i];
-                string uprShoeItemName = $"{Shoe.UPPER_SHOE}-{i + 1}";
+                string uprShoeItemName = $"{ShoeLegacy.UPPER_SHOE}-{i + 1}";
                 ShoeCodeGeneratorService uprShoeGenerator = new ShoeCodeGeneratorService(control, projectInfo, uprShoeItemName);
                 string uprShoeFileNameWithoutExtension = uprShoeGenerator.AskFileName();
                 uprShoeComponentCollection.Add(uprShoeFileNameWithoutExtension);
-                Shoe upperShoe = new Shoe(uprShoeFileNameWithoutExtension, shoeSketch.Length, shoeSketch.Width, myForm.UpperShoeThk);
-                string itemName1 = Shoe.UPPER_SHOE.Replace("_", " ");
+                ShoeLegacy upperShoe = new ShoeLegacy(uprShoeFileNameWithoutExtension, shoeSketch.Length, shoeSketch.Width, myForm.UpperShoeThk);
+                string itemName1 = ShoeLegacy.UPPER_SHOE.Replace("_", " ");
                 upperShoe.CreateNewShoe(
                     folderPath,
                     myForm.GetProjectInfo(),
@@ -122,12 +122,12 @@ namespace ToolingStructureCreation.Model
                     itemName1
                     );
 
-                string lowShoeItemName = $"{Shoe.LOWER_SHOE}-{i + 1}";
+                string lowShoeItemName = $"{ShoeLegacy.LOWER_SHOE}-{i + 1}";
                 ShoeCodeGeneratorService lowShoeGenerator = new ShoeCodeGeneratorService(control, projectInfo, lowShoeItemName);
                 string lowShoeFileNameWithoutExtension = lowShoeGenerator.AskFileName();
                 lowShoeComponentCollection.Add(lowShoeFileNameWithoutExtension);
-                Shoe lowerShoe = new Shoe(lowShoeFileNameWithoutExtension, shoeSketch.Length, shoeSketch.Width, myForm.LowerShoeThk);
-                string itemName2 = Shoe.LOWER_SHOE.Replace("_", " ");
+                ShoeLegacy lowerShoe = new ShoeLegacy(lowShoeFileNameWithoutExtension, shoeSketch.Length, shoeSketch.Width, myForm.LowerShoeThk);
+                string itemName2 = ShoeLegacy.LOWER_SHOE.Replace("_", " ");
                 lowerShoe.CreateNewShoe(
                     folderPath,
                     myForm.GetProjectInfo(),
@@ -240,7 +240,7 @@ namespace ToolingStructureCreation.Model
 
             // Insert Strip Layout
             StripLayout stripLayout = control.GetStripLayout;
-            Shoe.Insert(workAssy, stripLayout.GetFileNameWithoutExtension, stripLayout.GetPosition, folderPath);
+            ShoeLegacy.Insert(workAssy, stripLayout.GetFileNameWithoutExtension, stripLayout.GetPosition, folderPath);
 
             // Orient the work view to Isometric
             workAssy.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
@@ -268,12 +268,12 @@ namespace ToolingStructureCreation.Model
                 double lowShoeZPosition = myForm.GetDiePlt_LowPadThk() * -1;
                 string uprShoeCompName = uprShoeComponentCollection[i];
                 string lowShoeCompName = lowShoeComponentCollection[i];
-                Shoe.Insert(
+                ShoeLegacy.Insert(
                         workAssy,
                         uprShoeCompName,
                         new Point3d(shoeSketch.StartLocation.X, Y_POSITION, uprShoeZPosition),
                         folderPath);
-                Shoe.Insert(
+                ShoeLegacy.Insert(
                         workAssy,
                         lowShoeCompName,
                         new Point3d(shoeSketch.StartLocation.X, Y_POSITION, lowShoeZPosition),
@@ -286,14 +286,14 @@ namespace ToolingStructureCreation.Model
                     double distBetweenFirstLastPBars = (lastParallelBarXPosition - firstParallelBarXPosition);
                     const double DIST_BETWEEN_PBAR = 330.0;
                     int numberOfParallelBars = (int)Math.Ceiling(distBetweenFirstLastPBars / DIST_BETWEEN_PBAR);
-                    Shoe.Insert(workAssy, compName, new Point3d(firstParallelBarXPosition, Y_POSITION, myForm.GetParallelBarZPosition()), folderPath);
-                    Shoe.Insert(workAssy, compName, new Point3d(lastParallelBarXPosition, Y_POSITION, myForm.GetParallelBarZPosition()), folderPath);
+                    ShoeLegacy.Insert(workAssy, compName, new Point3d(firstParallelBarXPosition, Y_POSITION, myForm.GetParallelBarZPosition()), folderPath);
+                    ShoeLegacy.Insert(workAssy, compName, new Point3d(lastParallelBarXPosition, Y_POSITION, myForm.GetParallelBarZPosition()), folderPath);
 
                     for (int j = 0; j < numberOfParallelBars - 2; j++)
                     {
                         double dist = distBetweenFirstLastPBars / (numberOfParallelBars - 1);
                         double xPosition = firstParallelBarXPosition + (j + 1) * dist;
-                        Shoe.Insert(workAssy, compName, new Point3d(xPosition, Y_POSITION, myForm.GetParallelBarZPosition()), folderPath);
+                        ShoeLegacy.Insert(workAssy, compName, new Point3d(xPosition, Y_POSITION, myForm.GetParallelBarZPosition()), folderPath);
                     }
                 }
 
@@ -303,7 +303,7 @@ namespace ToolingStructureCreation.Model
                     {
                         string comPltCompName = comPltComponentCollection[i];
 
-                        Shoe.Insert(
+                        ShoeLegacy.Insert(
                             workAssy,
                             comPltCompName,
                             new Point3d(shoeSketch.MidPoint.X, Y_POSITION, myForm.GetCommonPlateZPosition()),
@@ -321,7 +321,7 @@ namespace ToolingStructureCreation.Model
                 {
                     string comPltCompName = comPltComponentCollection[i];
                     double comPltZPosition = myForm.GetCommonPlateZPosition();
-                    Shoe.Insert(
+                    ShoeLegacy.Insert(
                         workAssy,
                         comPltCompName,
                         new Point3d(comPltSketch.MidPoint.X, Y_POSITION, comPltZPosition),
