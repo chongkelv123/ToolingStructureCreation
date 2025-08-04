@@ -37,19 +37,19 @@ namespace ToolingStructureCreation.Domain.Entities
             // Business rule: Thickness constraints by plate type
             switch (Type)
             {
-                case PlateType.UpperPad:
+                case PlateType.Upper_Pad:
                     if (Dimensions.Thickness < 15 || Dimensions.Thickness > 50)
                         throw new ArgumentException($"Upper pad thickness must be between 15-50mm, got {Dimensions.Thickness}mm");
                     break;
-                case PlateType.PunchHolder:
+                case PlateType.Punch_Holder:
                     if (Dimensions.Thickness < 20 || Dimensions.Thickness > 60)
                         throw new ArgumentException($"Punch holder thickness must be between 20-60mm, got {Dimensions.Thickness}mm");
                     break;
-                case PlateType.DiePlate:
+                case PlateType.Die_Plate:
                     if (Dimensions.Thickness < 25 || Dimensions.Thickness > 80)
                         throw new ArgumentException($"Die plate thickness must be between 25-80mm, got {Dimensions.Thickness}mm");
                     break;
-                case PlateType.LowerPad:
+                case PlateType.Lower_Pad:
                     if (Dimensions.Thickness < 15 || Dimensions.Thickness > 40)
                         throw new ArgumentException($"Lower pad thickness must be between 15-40mm, got {Dimensions.Thickness}mm");
                     break;
@@ -64,17 +64,17 @@ namespace ToolingStructureCreation.Domain.Entities
         {
             switch (type)
             {
-                case PlateType.UpperPad:
+                case PlateType.Upper_Pad:
                     return PlateColor.UpperPad;
-                case PlateType.PunchHolder:
+                case PlateType.Punch_Holder:
                     return PlateColor.PunchHolder;
-                case PlateType.BottomingPlate:
+                case PlateType.Bottoming_Plate:
                     return PlateColor.BottomingPlate;
-                case PlateType.StripperPlate:
+                case PlateType.Stripper_Plate:
                     return PlateColor.StripperPlate;
-                case PlateType.DiePlate:
+                case PlateType.Die_Plate:
                     return PlateColor.DiePlate;
-                case PlateType.LowerPad:
+                case PlateType.Lower_Pad:
                     return PlateColor.LowerPad;
                 default:
                     return PlateColor.CommonPlate;

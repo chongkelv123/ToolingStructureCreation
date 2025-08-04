@@ -45,7 +45,7 @@ namespace ToolingStructureCreation.Domain.Entities.Tests
         {
             // Arrange
             var shoe = new Shoe("SHOE", new Dimensions(500, 200, 70), ShoeType.Upper);
-            var plate = new Plate("PLATE", new Dimensions(400, 150, 25), PlateType.DiePlate);
+            var plate = new Plate("PLATE", new Dimensions(400, 150, 25), PlateType.Die_Plate);
 
             // Act & Assert
             Assert.IsTrue(shoe.CanAccommodatePlate(plate));
@@ -56,7 +56,7 @@ namespace ToolingStructureCreation.Domain.Entities.Tests
         {
             // Arrange
             var shoe = new Shoe("SHOE", new Dimensions(500, 200, 70), ShoeType.Upper);
-            var plate = new Plate("PLATE", new Dimensions(600, 250, 25), PlateType.DiePlate);
+            var plate = new Plate("PLATE", new Dimensions(600, 250, 25), PlateType.Die_Plate);
 
             // Act & Assert
             Assert.IsFalse(shoe.CanAccommodatePlate(plate));

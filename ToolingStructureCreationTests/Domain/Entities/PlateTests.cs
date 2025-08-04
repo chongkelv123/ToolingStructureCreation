@@ -20,12 +20,12 @@ namespace ToolingStructureCreation.Domain.Entities.Tests
             var dimensions = new Dimensions(100, 50, 25);
 
             // Act
-            var plate = new Plate("TEST_PLATE", dimensions, PlateType.DiePlate);
+            var plate = new Plate("TEST_PLATE", dimensions, PlateType.Die_Plate);
 
             // Assert
             Assert.AreEqual("TEST_PLATE", plate.Name);
             Assert.AreEqual(dimensions, plate.Dimensions);
-            Assert.AreEqual(PlateType.DiePlate, plate.Type);
+            Assert.AreEqual(PlateType.Die_Plate, plate.Type);
             Assert.AreEqual(PlateColor.DiePlate, plate.Color);
         }
 
@@ -37,7 +37,7 @@ namespace ToolingStructureCreation.Domain.Entities.Tests
 
             // Act & Assert
             Assert.ThrowsException<ArgumentException>(() =>
-                new Plate("TEST", dimensions, PlateType.UpperPad));
+                new Plate("TEST", dimensions, PlateType.Upper_Pad));
         }
 
         [TestMethod()]
@@ -48,7 +48,7 @@ namespace ToolingStructureCreation.Domain.Entities.Tests
 
             // Act & Assert
             Assert.ThrowsException<ArgumentException>(() =>
-                new Plate("TEST", dimensions, PlateType.DiePlate));
+                new Plate("TEST", dimensions, PlateType.Die_Plate));
         }
 
         [TestMethod()]
@@ -56,7 +56,7 @@ namespace ToolingStructureCreation.Domain.Entities.Tests
         {
             // Arrange
             var dimensions = new Dimensions(100, 100, 25); // 100,000 mm³
-            var plate = new Plate("TEST", dimensions, PlateType.DiePlate);
+            var plate = new Plate("TEST", dimensions, PlateType.Die_Plate);
 
             // Act
             var weight = plate.Weight;
@@ -70,8 +70,8 @@ namespace ToolingStructureCreation.Domain.Entities.Tests
         public void IsThickerThan_WithThickerPlate_ReturnsTrue()
         {
             // Arrange
-            var thickPlate = new Plate("THICK", new Dimensions(100, 50, 30), PlateType.DiePlate);
-            var thinPlate = new Plate("THIN", new Dimensions(100, 50, 20), PlateType.UpperPad);
+            var thickPlate = new Plate("THICK", new Dimensions(100, 50, 30), PlateType.Die_Plate);
+            var thinPlate = new Plate("THIN", new Dimensions(100, 50, 20), PlateType.Upper_Pad);
 
             // Act & Assert
             Assert.IsTrue(thickPlate.IsThickerThan(thinPlate));

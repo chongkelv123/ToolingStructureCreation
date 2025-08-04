@@ -292,9 +292,9 @@ namespace ToolingStructureCreation.Services.Tests
         {
             // Arrange
             var type = ToolingStructureType.SHOE;
-            var dirPath = "C:\\CreateFolder\\Testing-Tooling-Structure";
+            var dirPath = "C:\\CreateFolder\\Testing-Tooling-Structure\\test_runNumber";
             var codePrefix = "40XC00-2401-";
-            var expected = "40XC00-2401-0002";
+            var expected = "40XC00-2401-0004";
 
             //Act
             var result = CodeGeneratorService.GenerateDrawingCode(type, dirPath, codePrefix);
@@ -308,10 +308,10 @@ namespace ToolingStructureCreation.Services.Tests
         {
             // Arrange
             var type = ToolingStructureType.SHOE;
-            var dirPath = "C:\\CreateFolder\\Testing-Tooling-Structure";
+            var dirPath = "C:\\CreateFolder\\Testing-Tooling-Structure\\test_runNumber";
             var codePrefix = "40XC00-2401-";
             var itemName = ShoeLegacy.UPPER_SHOE;
-            var expected = $"40XC00-2401-0002_{itemName}-V00";
+            var expected = $"40XC00-2401-0004_{itemName}-V00";
             // Act
             var result = CodeGeneratorService.GenerateFileName(type, dirPath, codePrefix, itemName);
             // Assert

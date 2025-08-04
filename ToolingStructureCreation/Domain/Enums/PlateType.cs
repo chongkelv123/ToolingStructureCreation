@@ -8,11 +8,11 @@ namespace ToolingStructureCreation.Domain.Enums
 {
     public enum PlateType
     {
-        UpperPad,
-        PunchHolder,
-        BottomingPlate,
-        StripperPlate,
-        DiePlate,
-        LowerPad
+        Upper_Pad,
+        Punch_Holder,
+        Bottoming_Plate,
+        Stripper_Plate,
+        Die_Plate,
+        Lower_Pad
     }
 }

@@ -72,6 +72,17 @@
     <Compile Include="Domain\Enums\PlateColor.cs" />
     <Compile Include="Domain\Enums\PlateType.cs" />
     <Compile Include="Domain\Enums\ShoeType.cs" />
+    <Compile Include="Domain\Services\ClearanceAnalysis.cs" />
+    <Compile Include="Domain\Services\ComponentNaming.cs" />
+    <Compile Include="Domain\Services\NamingConventionService.cs" />
+    <Compile Include="Domain\Services\ParallelBarPlacement.cs" />
+    <Compile Include="Domain\Services\PlatePosition.cs" />
+    <Compile Include="Domain\Services\PlateThicknessCalculator.cs" />
+    <Compile Include="Domain\Services\PositionCalculator.cs" />
+    <Compile Include="Domain\Services\SketchGeometry.cs" />
+    <Compile Include="Domain\Services\SketchValidationResult.cs" />
+    <Compile Include="Domain\Services\ToolingGeometryService.cs" />
+    <Compile Include="Domain\Services\ToolingThicknessSummary.cs" />
     <Compile Include="Domain\ValueObjects\Dimensions.cs" />
     <Compile Include="Domain\ValueObjects\DrawingCode.cs" />
     <Compile Include="Domain\ValueObjects\MachineSpecification.cs" />
