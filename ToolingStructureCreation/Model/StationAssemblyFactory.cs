@@ -8,8 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using ToolingStructureCreation.Services;
 using ToolingStructureCreation.View;
-using static NXOpen.Display.DecalBuilder;
-using static NXOpen.Motion.HydrodynamicBearingBuilder;
 
 namespace ToolingStructureCreation.Model
 {

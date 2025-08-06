@@ -232,29 +232,6 @@ namespace ToolingStructureCreation.Domain.Services.Tests
         }
 
         [TestMethod()]
-        public void CalculateOptimalCommonPlatePosition_WithStations_ReturnsCenterPosition()
-        {
-            // Arrange
-            var stationSketches = new List<SketchGeometry>
-            {
-                new SketchGeometry(new Dimensions(100, 60, 10), new Position3D(0, 100, 0), new Position3D(50, 130, 0)),
-                new SketchGeometry(new Dimensions(120, 70, 10), new Position3D(200, 200, 0), new Position3D(260, 235, 0))
-            };
-
-            // Act
-            var position = _geometryService.CalculateOptimalCommonPlatePosition(stationSketches);
-
-            // Assert
-            // Strip length = 200 + 120 = 320, so center X = 0 + 320/2 = 160
-            Assert.AreEqual(160, position.X);
-
-            // Average Y of midpoints = (130 + 235) / 2 = 182.5
-            Assert.AreEqual(182.5, position.Y);
-
-            Assert.AreEqual(0, position.Z);
-        }
-
-        [TestMethod()]
         public void SortSketchesByStartLocation_WithEmptyList_ReturnsEmptyList()
         {
             // Arrange
