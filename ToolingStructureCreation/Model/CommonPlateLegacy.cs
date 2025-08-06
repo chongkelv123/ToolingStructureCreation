@@ -8,13 +8,13 @@ using static NXOpen.Motion.HydrodynamicBearingBuilder;
 
 namespace ToolingStructureCreation.Model
 {
-    public class CommonPlate: CommonPlateBase
+    public class CommonPlateLegacy: CommonPlateBase
     {
         public const string TEMPLATE_LOWCOMPLT_NAME = "3DA_Template_LOWCOMPLT-V00.prt";
         public const string LOWCOMPLT = "LowCommonPlate";
         public const string LOWER_COMMON_PLATE = "LOWER_COMMON_PLATE";
 
-        public CommonPlate(double length, double width, double thickness, string fileName = null) : 
+        public CommonPlateLegacy(double length, double width, double thickness, string fileName = null) : 
             base(length, width, thickness, fileName)
         {
         }

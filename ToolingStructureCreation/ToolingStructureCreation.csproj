@@ -64,6 +64,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\Control.cs" />
+    <Compile Include="Domain\Aggregates\CommonPlatePositioning.cs" />
+    <Compile Include="Domain\Aggregates\StationAggregate.cs" />
+    <Compile Include="Domain\Aggregates\StationSummary.cs" />
+    <Compile Include="Domain\Aggregates\ToolingStructureSummary.cs" />
+    <Compile Include="Domain\Aggregates\ToolingStructureValidationResult.cs" />
     <Compile Include="Domain\Entities\CommonPlate.cs" />
     <Compile Include="Domain\Entities\ParallelBar.cs" />
     <Compile Include="Domain\Entities\Plate.cs" />
@@ -72,6 +77,12 @@
     <Compile Include="Domain\Enums\PlateColor.cs" />
     <Compile Include="Domain\Enums\PlateType.cs" />
     <Compile Include="Domain\Enums\ShoeType.cs" />
+    <Compile Include="Domain\Repositories\IProjectRepository.cs" />
+    <Compile Include="Domain\Repositories\ISketchRepository.cs" />
+    <Compile Include="Domain\Repositories\ITemplateRepository.cs" />
+    <Compile Include="Domain\Repositories\IToolingStructureRepository.cs" />
+    <Compile Include="Domain\Repositories\ProjectInfo.cs" />
+    <Compile Include="Domain\Repositories\SketchInfo.cs" />
     <Compile Include="Domain\Services\ClearanceAnalysis.cs" />
     <Compile Include="Domain\Services\ComponentNaming.cs" />
     <Compile Include="Domain\Services\NamingConventionService.cs" />
@@ -89,7 +100,7 @@
     <Compile Include="Domain\ValueObjects\Position3D.cs" />
     <Compile Include="Main\MyProgram.cs" />
     <Compile Include="Main\Unload.cs" />
-    <Compile Include="Model\CommonPlate.cs" />
+    <Compile Include="Model\CommonPlateLegacy.cs" />
     <Compile Include="Model\CommonPlateBase.cs" />
     <Compile Include="Model\CommonPlateLeft.cs" />
     <Compile Include="Model\CommonPlateRight.cs" />
@@ -136,6 +147,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Aggregates\ToolingStructureAggregate.cs" />
     <None Include="Resources\ToolingStructure.jpg" />
   </ItemGroup>
   <ItemGroup />

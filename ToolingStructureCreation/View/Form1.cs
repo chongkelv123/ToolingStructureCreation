@@ -89,7 +89,7 @@ namespace ToolingStructureCreation.View
             {
                 return;
             }
-            CommonPlate commonPlate = machine.GetCommonPlate(GetMachineName);
+            CommonPlateLegacy commonPlate = machine.GetCommonPlate(GetMachineName);
 
             txtCommonPltThk.Text = commonPlate.GetThickness().ToString();
         }

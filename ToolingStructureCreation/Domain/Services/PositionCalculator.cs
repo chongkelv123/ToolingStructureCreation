@@ -47,6 +47,7 @@ namespace ToolingStructureCreation.Domain.Services
         {
             if (basePosition == null)
                 throw new ArgumentNullException(nameof(basePosition));
+            
             var zOffet = -(_thicknessCalculator.GetLowerDieSetThickness() +
                 _parallelBarThickness + _commonPlateThickness);
             return basePosition.WithZ(zOffet);

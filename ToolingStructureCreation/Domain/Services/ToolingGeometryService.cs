@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ToolingStructureCreation.Domain.Aggregates;
 using ToolingStructureCreation.Domain.Entities;
+using ToolingStructureCreation.Domain.Enums;
 using ToolingStructureCreation.Domain.ValueObjects;
 
 namespace ToolingStructureCreation.Domain.Services
@@ -19,7 +21,6 @@ namespace ToolingStructureCreation.Domain.Services
             // Sort points to find bounding rectangle
             var sortedByX = sketchPoints.OrderBy(p => p.X).ToList();
             var sortedByY = sketchPoints.OrderBy(p => p.Y).ToList();
-
             var minX = sortedByX.First().X;
             var maxX = sortedByX.Last().X;
             var minY = sortedByY.First().Y;
@@ -28,19 +29,16 @@ namespace ToolingStructureCreation.Domain.Services
             // Validate we have a proper rectangle (not degenerate)
             var length = Math.Abs(maxX - minX);
             var width = Math.Abs(maxY - minY);
-
             if (length < 0.1 || width < 0.1)
                 return SketchValidationResult.Invalid("Rectangle dimensions too small (minimum 0.1mm).");
 
             try
             {
                 var dimensions = new Dimensions(length, width, 1.0); // Thickness will be set later
-
                 var midY = (minY + maxY) / 2.0;
                 var startLocation = new Position3D(minX, midY, sketchPoints.First().Z);
                 var midX = (minX + maxX) / 2.0;
                 var midPoint = new Position3D(midX, midY, sketchPoints.First().Z);
-
                 var sketchInfo = new SketchGeometry(dimensions, startLocation, midPoint);
                 return SketchValidationResult.Valid(sketchInfo);
             }
@@ -94,8 +92,8 @@ namespace ToolingStructureCreation.Domain.Services
             }
 
             // Business rule: Check for minimum clearances between operational plates
-            var punchHolder = plates.FirstOrDefault(p => p.Type == Domain.Enums.PlateType.Punch_Holder);
-            var stripperPlate = plates.FirstOrDefault(p => p.Type == Domain.Enums.PlateType.Stripper_Plate);
+            var punchHolder = plates.FirstOrDefault(p => p.Type == PlateType.PunchHolder);
+            var stripperPlate = plates.FirstOrDefault(p => p.Type == PlateType.StripperPlate);
 
             if (punchHolder != null && stripperPlate != null)
             {
@@ -128,19 +126,69 @@ namespace ToolingStructureCreation.Domain.Services
             return Math.Abs(endX - startX);
         }
 
-        public Position3D CalculateOptimalCommonPlatePosition (List<SketchGeometry> stationSketches)
+        public Position3D CalculateSingleCommonPlatePosition(SketchGeometry shoeSketch, PositionCalculator positionCalculator)
         {
-            if (stationSketches == null || !stationSketches.Any())
-                return Position3D.Origin;
+            if (shoeSketch == null)
+                throw new ArgumentNullException(nameof(shoeSketch));
+            if (positionCalculator == null)
+                throw new ArgumentNullException(nameof(positionCalculator));
 
-            // Business rule: Center common plate under all stations
-            var totalLength = CalculateStripLength(stationSketches);
-            var firstStation = SortSketchesByStartLocation(stationSketches).First();
-
-            var centerX = firstStation.StartLocation.X + (totalLength / 2);
-            var centerY = stationSketches.Average(s => s.MidPoint.Y);
-
-            return new Position3D(centerX, centerY, 0);
+            // Original logic: X,Y from shoe sketch midpoint, Z from position calculator
+            var xyPosition = new Position3D(shoeSketch.MidPoint.X, 0, 0);
+            return positionCalculator.CalculateCommonPlatePosition(xyPosition);
         }
+
+        public Position3D CalculateDoubleJointCommonPlatePosition(SketchGeometry commonPlateSketch, PositionCalculator positionCalculator)
+        {
+            if (commonPlateSketch == null)
+                throw new ArgumentNullException(nameof(commonPlateSketch));
+            if (positionCalculator == null)
+                throw new ArgumentNullException(nameof(positionCalculator));
+
+            // Original logic: X,Y from common plate sketch midpoint, Z from position calculator  
+            var xyPosition = new Position3D(commonPlateSketch.MidPoint.X, 0, 0);
+            return positionCalculator.CalculateCommonPlatePosition(xyPosition);
+        }
+
+        public List<CommonPlatePositioning> CalculateCommonPlatePositions(SketchGeometry shoeSketch,
+            PositionCalculator positionCalculator, List<SketchGeometry> commonPlateSketchesOrNull = null)
+        {
+            if (shoeSketch == null)
+                throw new ArgumentNullException(nameof(shoeSketch));
+            if (positionCalculator == null)
+                throw new ArgumentNullException(nameof(positionCalculator));
+
+            var positions = new List<CommonPlatePositioning>();
+
+            // Original logic: If no common plate sketches selected, use single common plate
+            if (commonPlateSketchesOrNull == null || !commonPlateSketchesOrNull.Any())
+            {
+                var singlePosition = CalculateSingleCommonPlatePosition(shoeSketch, positionCalculator);
+                positions.Add(new CommonPlatePositioning(
+                    CommonPlateType.Single,
+                    singlePosition,
+                    1,
+                    "Single common plate at shoe center"));
+            }
+            else
+            {
+                // Original logic: Double joint - each common plate at its own sketch position
+                for (int i = 0; i < commonPlateSketchesOrNull.Count; i++)
+                {
+                    var commonPlateSketch = commonPlateSketchesOrNull[i];
+                    var plateType = i == 0 ? CommonPlateType.DoubleLeft : CommonPlateType.DoubleRight;
+                    var position = CalculateDoubleJointCommonPlatePosition(commonPlateSketch, positionCalculator);
+
+                    positions.Add(new CommonPlatePositioning(
+                        plateType,
+                        position,
+                        i + 1,
+                        $"Double joint plate {i + 1} at own sketch center"));
+                }
+            }
+
+            return positions;
+        }
+
     }
 }

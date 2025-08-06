@@ -39,7 +39,7 @@ namespace ToolingStructureCreation.Model
             return machines;
         }
 
-        public CommonPlate GetCommonPlate(string machineName)
+        public CommonPlateLegacy GetCommonPlate(string machineName)
         {
             if (string.IsNullOrEmpty(machineName) || !machines.Contains(machineName))
             {
@@ -101,7 +101,7 @@ namespace ToolingStructureCreation.Model
                     throw new ArgumentException("Invalid machine name provided.");                    
             }
 
-            return new CommonPlate(length, width, thickness);
+            return new CommonPlateLegacy(length, width, thickness);
         }
 
     }

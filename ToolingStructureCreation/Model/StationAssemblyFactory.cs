@@ -154,7 +154,7 @@ namespace ToolingStructureCreation.Model
             }
 
             // Create Common Plate
-            string compPltItemName = CommonPlate.LOWER_COMMON_PLATE;
+            string compPltItemName = CommonPlateLegacy.LOWER_COMMON_PLATE;
             string itemName4 = compPltItemName.Replace("_", " ");
             Machine machine = myForm.GetMachine;
             var commonPltInfo = machine.GetCommonPlate(myForm.GetMachineName);
@@ -163,7 +163,7 @@ namespace ToolingStructureCreation.Model
                 // Create Common Plate (Double Joint Tool)
                 for (int i = 0; i < ComPltSketchLists.Count; i++)
                 {
-                    compPltItemName = $"{CommonPlate.LOWER_COMMON_PLATE}-{i + 1}";
+                    compPltItemName = $"{CommonPlateLegacy.LOWER_COMMON_PLATE}-{i + 1}";
                     Sketch comPltSketch = ComPltSketchLists[i];
                     ShoeCodeGeneratorService compCodeGenerator = new ShoeCodeGeneratorService(control, myForm.GetProjectInfo(), compPltItemName);
                     string compPlatefileName = compCodeGenerator.AskFileName();
@@ -200,7 +200,7 @@ namespace ToolingStructureCreation.Model
                 ShoeCodeGeneratorService compCodeGenerator = new ShoeCodeGeneratorService(control, myForm.GetProjectInfo(), compPltItemName);
                 string compPlatefileName = compCodeGenerator.AskFileName();
                 comPltComponentCollection.Add(compPlatefileName);
-                CommonPlateBase commonPlate = new CommonPlate(commonPltInfo.GetLength(), commonPltInfo.GetWidth(), myForm.CommonPltThk, compPlatefileName);
+                CommonPlateBase commonPlate = new CommonPlateLegacy(commonPltInfo.GetLength(), commonPltInfo.GetWidth(), myForm.CommonPltThk, compPlatefileName);
                 commonPlate.CreateNewCommonPlate(
                     folderPath,
                     myForm.GetProjectInfo(),
