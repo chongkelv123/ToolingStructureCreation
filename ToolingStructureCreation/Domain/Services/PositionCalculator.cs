@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ToolingStructureCreation.Domain.Aggregates;
 using ToolingStructureCreation.Domain.Enums;
 using ToolingStructureCreation.Domain.ValueObjects;
 
@@ -22,7 +23,7 @@ namespace ToolingStructureCreation.Domain.Services
         }
         public Position3D CalculateUpperShoePosition(Position3D basePosition)
         {
-            if (basePosition == null) 
+            if (basePosition == null)
                 throw new ArgumentNullException(nameof(basePosition));
             var zOffset = _thicknessCalculator.GetTotalDieHeight() - _thicknessCalculator.GetLowerDieSetThickness();
             return basePosition.WithZ(zOffset);
@@ -47,7 +48,7 @@ namespace ToolingStructureCreation.Domain.Services
         {
             if (basePosition == null)
                 throw new ArgumentNullException(nameof(basePosition));
-            
+
             var zOffet = -(_thicknessCalculator.GetLowerDieSetThickness() +
                 _parallelBarThickness + _commonPlateThickness);
             return basePosition.WithZ(zOffet);
@@ -87,7 +88,7 @@ namespace ToolingStructureCreation.Domain.Services
             if (numberOfBars > 2)
             {
                 var spacing = distanceBetweenEnds / (numberOfBars - 1);
-                for (int i = 1; i < numberOfBars -1; i++)
+                for (int i = 1; i < numberOfBars - 1; i++)
                 {
                     var xPosition = firstBarX + (i * spacing);
                     placements.Add(new ParallelBarPlacement(
@@ -131,6 +132,70 @@ namespace ToolingStructureCreation.Domain.Services
             }
 
             return position;
+        }
+
+        public Position3D CalculateSingleCommonPlatePosition(SketchGeometry shoeSketch, PositionCalculator positionCalculator)
+        {
+            if (shoeSketch == null)
+                throw new ArgumentNullException(nameof(shoeSketch));
+            if (positionCalculator == null)
+                throw new ArgumentNullException(nameof(positionCalculator));
+
+            // Original logic: X,Y from shoe sketch midpoint, Z from position calculator
+            var xyPosition = new Position3D(shoeSketch.MidPoint.X, 0, 0);
+            return positionCalculator.CalculateCommonPlatePosition(xyPosition);
+        }
+
+        public Position3D CalculateDoubleJointCommonPlatePosition(SketchGeometry commonPlateSketch, PositionCalculator positionCalculator)
+        {
+            if (commonPlateSketch == null)
+                throw new ArgumentNullException(nameof(commonPlateSketch));
+            if (positionCalculator == null)
+                throw new ArgumentNullException(nameof(positionCalculator));
+
+            // Original logic: X,Y from common plate sketch midpoint, Z from position calculator  
+            var xyPosition = new Position3D(commonPlateSketch.MidPoint.X, 0, 0);
+            return positionCalculator.CalculateCommonPlatePosition(xyPosition);
+        }
+
+        public List<CommonPlatePositioning> CalculateCommonPlatePositions(SketchGeometry shoeSketch,
+            PositionCalculator positionCalculator, List<SketchGeometry> commonPlateSketchesOrNull = null)
+        {
+            if (shoeSketch == null)
+                throw new ArgumentNullException(nameof(shoeSketch));
+            if (positionCalculator == null)
+                throw new ArgumentNullException(nameof(positionCalculator));
+
+            var positions = new List<CommonPlatePositioning>();
+
+            // Original logic: If no common plate sketches selected, use single common plate
+            if (commonPlateSketchesOrNull == null || !commonPlateSketchesOrNull.Any())
+            {
+                var singlePosition = CalculateSingleCommonPlatePosition(shoeSketch, positionCalculator);
+                positions.Add(new CommonPlatePositioning(
+                    CommonPlateType.Single,
+                    singlePosition,
+                    1,
+                    "Single common plate at shoe center"));
+            }
+            else
+            {
+                // Original logic: Double joint - each common plate at its own sketch position
+                for (int i = 0; i < commonPlateSketchesOrNull.Count; i++)
+                {
+                    var commonPlateSketch = commonPlateSketchesOrNull[i];
+                    var plateType = i == 0 ? CommonPlateType.DoubleLeft : CommonPlateType.DoubleRight;
+                    var position = CalculateDoubleJointCommonPlatePosition(commonPlateSketch, positionCalculator);
+
+                    positions.Add(new CommonPlatePositioning(
+                        plateType,
+                        position,
+                        i + 1,
+                        $"Double joint plate {i + 1} at own sketch center"));
+                }
+            }
+
+            return positions;
         }
     }
 }
