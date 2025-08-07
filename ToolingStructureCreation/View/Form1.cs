@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToolingStructureCreation.Controller;
 using ToolingStructureCreation.Model;
+using static NXOpen.CAM.BoundaryTurnMemberFineFinishCorner;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ToolingStructureCreation.View
@@ -55,6 +56,57 @@ namespace ToolingStructureCreation.View
         List<Model.Sketch> shoeSketchLists;
         List<Model.Sketch> comPlateSketchList;
         Machine machine;
+
+        // INTEGRATION: Expose private sketch lists for clean architecture
+        public List<Model.Sketch> StationSketchLists => stationSketchLists ?? new List<Model.Sketch>();
+        public List<Model.Sketch> ShoeSketchLists => shoeSketchLists ?? new List<Model.Sketch>();
+        public List<Model.Sketch> ComPlateSketchList => comPlateSketchList ?? new List<Model.Sketch>();
+
+        // INTEGRATION: Optional clean architecture button (add to designer if desired)
+        private async void btnApplyCleanArchitecture_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                btnApply.Enabled = false;
+                btnApply.Text = "Processing...";
+
+                var success = await control.StartWithCleanArchitectureAsync();
+
+                if (success)
+                {
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to create tooling structure using clean architecture",
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btnApply.Enabled = true;
+                btnApply.Text = "Apply";
+            }
+        }
+
+        // INTEGRATION: Validation helper for clean architecture
+        public bool IsReadyForCleanArchitecture()
+        {
+            return ShoeSketchLists.Count > 0 &&
+                   !string.IsNullOrWhiteSpace(GetPath) &&
+                   ValidateThicknesses();
+        }
+
+        private bool ValidateThicknesses()
+        {
+            return UpperPadThk > 0 && PunHolderThk > 0 && BottomPltThk > 0 &&
+                   StripperPltThk > 0 && DiePltThk > 0 && LowerPadThk > 0 && MatThk > 0;
+        }
 
         public formToolStructure(Controller.Control control)
         {

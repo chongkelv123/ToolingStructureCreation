@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NXOpen">
       <HintPath>C:\tool\NX2212\NXBIN\managed\NXOpen.dll</HintPath>
       <Private>False</Private>
@@ -63,6 +66,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\UseCases\CreateToolingStructureRequest.cs" />
+    <Compile Include="Application\UseCases\CreateToolingStructureResult.cs" />
+    <Compile Include="Application\UseCases\CreateToolingStructureUseCase.cs" />
     <Compile Include="Controller\Control.cs" />
     <Compile Include="Domain\Aggregates\CommonPlatePositioning.cs" />
     <Compile Include="Domain\Aggregates\StationAggregate.cs" />
@@ -99,6 +105,12 @@
     <Compile Include="Domain\ValueObjects\DrawingCode.cs" />
     <Compile Include="Domain\ValueObjects\MachineSpecification.cs" />
     <Compile Include="Domain\ValueObjects\Position3D.cs" />
+    <Compile Include="Infrastructure\FileSystem\FileSystemService.cs" />
+    <Compile Include="Infrastructure\NX\NXModelFactory.cs" />
+    <Compile Include="Infrastructure\NX\NXSessionManager.cs" />
+    <Compile Include="Infrastructure\Repositories\ToolingStructureRepository .cs" />
+    <Compile Include="Integration\ToolingCreationResult.cs" />
+    <Compile Include="Integration\ToolingIntegrationController.cs" />
     <Compile Include="Main\MyProgram.cs" />
     <Compile Include="Main\Unload.cs" />
     <Compile Include="Model\CommonPlateLegacy.cs" />
@@ -149,8 +161,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\Aggregates\ToolingStructureAggregate.cs" />
+    <None Include="packages.config" />
     <None Include="Resources\ToolingStructure.jpg" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
