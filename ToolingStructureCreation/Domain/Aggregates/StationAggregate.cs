@@ -142,7 +142,8 @@ namespace ToolingStructureCreation.Domain.Aggregates
         public bool HasRequiredPlates()
         {
             // Business rule: Minimum required plates for functional station
-            var requiredPlates = new[] {
+            var requiredPlates = new[] 
+            {
                 PlateType.Upper_Pad,
                 PlateType.Punch_Holder,
                 PlateType.Bottoming_Plate,
