@@ -91,6 +91,18 @@ namespace ToolingStructureCreation.Integration
             _sessionManager.ValidateSession();
         }
 
+        private MachineSpecification CreateMachineSpecification(formToolStructure form)
+        {
+            var machineName = form.GetMachineName ?? "MC304";
+            return MachineSpecification.GetByName(machineName);
+        }
+
+        private DrawingCode CreateDrawingCode(formToolStructure form)
+        {
+            var codePrefix = form.GetCodePrefix ?? "3DA";
+            return new DrawingCode(codePrefix);
+        }
+
         /// <summary>
         /// Factory method to create configured controller
         /// </summary>

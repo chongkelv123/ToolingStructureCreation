@@ -33,7 +33,7 @@ namespace ToolingStructureCreation.Infrastructure.NX
             _sessionManager.ValidateSession();
 
             var templatePath = GetPlateTemplatePath(plate.Type);
-            var fileName = GeneratePlateFilename(plate, projectCode);
+            var fileName = GeneratePlateFileName(plate, projectCode);
             var fullPath = Path.Combine(outputDirectory, fileName);
 
             var part = CreatePartFromTemplate(templatePath, fullPath, plate.Name);
@@ -218,7 +218,7 @@ namespace ToolingStructureCreation.Infrastructure.NX
         private string GetPlateTemplatePath(PlateType plateType)
         {
             return Path.Combine(_templateBasePath, "3DA_Template_STP-V00.prt");
-        }
+        }        
 
         private string GetShoeTemplatePath(ShoeType shoeType)
         {

@@ -56,7 +56,7 @@ namespace ToolingStructureCreation.Application.UseCases
 
                 // 3. Create domain aggregate
                 var toolingStructure = new ToolingStructureAggregate(request.ToolingParameters);
-                toolingStructure.GenerateToolingStructure(
+                toolingStructure.GenerateCompleteToolingStructure(
                     request.StationSketches,
                     request.ShoeSketches,
                     request.CommonPlateSketches);

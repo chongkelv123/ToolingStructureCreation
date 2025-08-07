@@ -15,7 +15,7 @@ namespace ToolingStructureCreation.Infrastructure.FileSystem
         /// <summary>
         /// Create project directory structure
         /// </summary>
-        public string CreateProjectStructure(string baseDirectory, string projectName)
+        public string CreateProjectDirectory(string baseDirectory, string projectName)
         {
             if (string.IsNullOrWhiteSpace(baseDirectory))
                 throw new ArgumentException("Base directory cannot be empty", nameof(baseDirectory));
