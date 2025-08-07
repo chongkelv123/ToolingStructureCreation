@@ -19,6 +19,7 @@ namespace ToolingStructureCreation.Domain.Aggregates
         private readonly List<Shoe> _shoes;
         private readonly List<ParallelBar> _parallelBars;
         private readonly List<CommonPlate> _commonPlates;
+        private readonly ToolingParameters _toolingParameters;
 
         public DrawingCode BaseDrawingCode { get; }
         public MachineSpecification MachineSpec { get; }
@@ -31,19 +32,27 @@ namespace ToolingStructureCreation.Domain.Aggregates
         public IReadOnlyList<ParallelBar> ParallelBars => _parallelBars.AsReadOnly();
         public IReadOnlyList<CommonPlate> CommonPlates => _commonPlates.AsReadOnly();
 
-        public ToolingStructureAggregate(DrawingCode baseDrawingCode, MachineSpecification machineSpec,
-            double materialThickness, string projectName, string designer)
+        public ToolingStructureAggregate(ToolingParameters parameters)
         {
-            BaseDrawingCode = baseDrawingCode ?? throw new ArgumentNullException(nameof(baseDrawingCode));
-            MachineSpec = machineSpec ?? throw new ArgumentNullException(nameof(machineSpec));
-            MaterialThickness = materialThickness > 0 ? materialThickness : throw new ArgumentException("Material thickness must be greater than zero.");
-            ProjectName = string.IsNullOrWhiteSpace(projectName) ? throw new ArgumentException("Project name cannot be null or empty.") : projectName.Trim();
-            Designer = string.IsNullOrWhiteSpace(designer) ? throw new ArgumentException("Designer cannot be null or empty.") : designer.Trim();
+            BaseDrawingCode = parameters.BaseDrawingCode ?? throw new ArgumentNullException(nameof(parameters.BaseDrawingCode));
+            MachineSpec = parameters.MachineSpec ?? throw new ArgumentNullException(nameof(parameters.MachineSpec));
+            MaterialThickness = parameters.MaterialThickness <= 0 
+                ? throw new ArgumentException("Material thickness must be more than zero.", nameof(parameters.MaterialThickness)) 
+                : parameters.MaterialThickness;
+            ProjectName = string.IsNullOrWhiteSpace(parameters.ProjectName) 
+                ? throw new ArgumentException("Project name can not be empty.",nameof(parameters.ProjectName)) 
+                : parameters.ProjectName.Trim();
+            Designer = string.IsNullOrWhiteSpace(parameters.Designer) 
+                ? throw new ArgumentException("Designer can not empty.", nameof(parameters.Designer)) 
+                : parameters.Designer.Trim();
 
             _stations = new List<StationAggregate>();
             _shoes = new List<Shoe>();
             _parallelBars = new List<ParallelBar>();
             _commonPlates = new List<CommonPlate>();
+
+            // Store parameters for later use
+            _toolingParameters = parameters;
         }
 
         public void AddStation(StationAggregate station)
@@ -120,7 +129,7 @@ namespace ToolingStructureCreation.Domain.Aggregates
             var endX = lastStation.StartLocation.X + lastStation.Dimensions.Length;
 
             return Math.Abs(endX - startX);
-        }        
+        }
 
         public ToolingStructureValidationResult ValidateStructure()
         {
@@ -180,6 +189,160 @@ namespace ToolingStructureCreation.Domain.Aggregates
                 stripLength,
                 MaterialThickness,
                 isValid);
+        }
+
+        public void GenerateCompleteToolingStructure(List<SketchGeometry> stationSketches,
+    List<SketchGeometry> shoeSketches, List<SketchGeometry> commonPlateSketches = null)
+        {
+            if (stationSketches == null || !stationSketches.Any())
+                throw new ArgumentException("At least one station sketch is required.");
+
+            if (shoeSketches == null || !shoeSketches.Any())
+                throw new ArgumentException("At least one shoe sketch is required.");
+
+            // Generate stations with user-specified thicknesses
+            GenerateStations(stationSketches);
+
+            // Generate shoes with user-specified thicknesses
+            GenerateShoes(shoeSketches);
+
+            // Generate parallel bars with user-specified thickness
+            GenerateParallelBars(shoeSketches);
+
+            // Generate common plates with user-specified thickness
+            GenerateCommonPlates(shoeSketches, commonPlateSketches);
+        }
+
+        private void GenerateCommonPlates(List<SketchGeometry> shoeSketches, List<SketchGeometry> commonPlateSketches)
+        {
+            if (commonPlateSketches == null || !commonPlateSketches.Any())
+            {
+                // Single common plate using form-specified thickness
+                var commonPlate = new CommonPlate(
+                    "LOWER_COMMON_PLATE",
+                    new Dimensions(
+                        MachineSpec.CommonPlateDimensions.Length,
+                        MachineSpec.CommonPlateDimensions.Width,
+                        _toolingParameters.CommonPlateThickness
+                    ),
+                    CommonPlateType.Single,
+                    MachineSpec
+                );
+                AddCommonPlate(commonPlate);
+            }
+            else
+            {
+                // Double joint common plates using form-specified thickness
+                for (int i = 0; i < commonPlateSketches.Count; i++)
+                {
+                    var plateType = i == 0 ? CommonPlateType.DoubleLeft : CommonPlateType.DoubleRight;
+                    var sketch = commonPlateSketches[i];
+
+                    var commonPlate = new CommonPlate(
+                        $"LOWER_COMMON_PLATE-{i + 1}",
+                        new Dimensions(
+                            sketch.Dimensions.Length,
+                            sketch.Dimensions.Width,
+                            _toolingParameters.CommonPlateThickness
+                        ),
+                        plateType,
+                        MachineSpec
+                    );
+                    AddCommonPlate(commonPlate);
+                }
+            }
+        }
+
+        private void GenerateStations(List<SketchGeometry> stationSketches)
+        {
+            var geometryService = new ToolingGeometryService();
+            var thicknessCalculator = new PlateThicknessCalculator(_toolingParameters.PlateThicknesses, _toolingParameters.MaterialThickness);
+
+            for (int i = 0; i < stationSketches.Count; i++)
+            {
+                var station = new StationAggregate(i + 1, stationSketches[i], geometryService);
+
+                // Create plates using form-specified thicknesses
+                var plates = CreateCompleteePlateSet(stationSketches[i], i + 1, _toolingParameters.PlateThicknesses);
+                foreach (var plate in plates)
+                {
+                    station.AddPlate(plate);
+                }
+
+                AddStation(station);
+            }
+        }
+
+        private void GenerateShoes(List<SketchGeometry> shoeSketches)
+        {
+            for (int i = 0; i < shoeSketches.Count; i++)
+            {
+                var shoeSketch = shoeSketches[i];
+
+                // Use form-specified shoe thicknesses
+                var upperShoe = new Shoe(
+                    $"UPPER_SHOE-{i + 1}",
+                    new Dimensions(shoeSketch.Dimensions.Length, shoeSketch.Dimensions.Width, _toolingParameters.UpperShoeThickness),
+                    ShoeType.Upper
+                );
+
+                var lowerShoe = new Shoe(
+                    $"LOWER_SHOE-{i + 1}",
+                    new Dimensions(shoeSketch.Dimensions.Length, shoeSketch.Dimensions.Width, _toolingParameters.LowerShoeThickness),
+                    ShoeType.Lower
+                );
+
+                AddShoe(upperShoe);
+                AddShoe(lowerShoe);
+            }
+        }
+
+        private void GenerateParallelBars(List<SketchGeometry> shoeSketches)
+        {
+            for (int i = 0; i < shoeSketches.Count; i++)
+            {
+                var shoeSketch = shoeSketches[i];
+
+                // Use form-specified parallel bar thickness
+                var parallelBar = ParallelBar.CreateFromShoeSketch(
+                    $"PARALLEL_BAR-{i + 1}",
+                    shoeSketch,
+                    _toolingParameters.ParallelBarThickness
+                );
+
+                AddParallelBar(parallelBar);
+            }
+        }
+
+        private List<Plate> CreateCompleteePlateSet(SketchGeometry stationSketch, int stationNumber, Dictionary<PlateType, double> plateThicknesses)
+        {
+            var plates = new List<Plate>();
+
+            var plateTypes = new[]
+            {
+                PlateType.Upper_Pad,
+                PlateType.Punch_Holder,
+                PlateType.Bottoming_Plate,
+                PlateType.Stripper_Plate,
+                PlateType.Die_Plate,
+                PlateType.Lower_Pad
+            };
+
+            foreach (var plateType in plateTypes)
+            {
+                // Use form-specified thickness, not hardcoded
+                var thickness = plateThicknesses[plateType];
+                var dimensions = new Dimensions(
+                    stationSketch.Dimensions.Length,
+                    stationSketch.Dimensions.Width,
+                    thickness
+                );
+
+                var plateName = $"STN{stationNumber:D2}_{plateType}";
+                plates.Add(new Plate(plateName, dimensions, plateType));
+            }
+
+            return plates;
         }
 
         public override string ToString()

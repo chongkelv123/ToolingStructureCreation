@@ -30,7 +30,7 @@ namespace ToolingStructureCreation.Domain.Services.Tests
             };
 
             _thicknessCalculator = new PlateThicknessCalculator(thicknesses, 1.55);
-            _positionCalculator = new PositionCalculator(_thicknessCalculator, 155.0, 60.0);
+            _positionCalculator = new PositionCalculator(_thicknessCalculator, 155.0, 60.0, 70.0, 70.0);
         }
 
         [TestMethod()]
@@ -45,7 +45,7 @@ namespace ToolingStructureCreation.Domain.Services.Tests
             // Assert
             Assert.AreEqual(100, upperShoePosition.X);
             Assert.AreEqual(0, upperShoePosition.Y);
-            Assert.IsTrue(upperShoePosition.Z > 100); // Should be well above base
+            Assert.AreEqual(174.55, upperShoePosition.Z);
         }
 
         [TestMethod()]
@@ -60,7 +60,7 @@ namespace ToolingStructureCreation.Domain.Services.Tests
             // Assert
             Assert.AreEqual(100, lowerShoePosition.X);
             Assert.AreEqual(0, lowerShoePosition.Y);
-            Assert.IsTrue(lowerShoePosition.Z < 0); // Should be below base
+            Assert.AreEqual(-60, lowerShoePosition.Z);
         }
 
         [TestMethod()]
@@ -91,6 +91,36 @@ namespace ToolingStructureCreation.Domain.Services.Tests
             // Assert
             Assert.IsTrue(feedHeight > liftHeight); // Must be higher than lift height
             Assert.IsTrue(feedHeight > 200); // Should include all lower thicknesses
+        }
+
+        [TestMethod()]
+        public void CalculateParallelBarPositionTest_ReturnsNegativeZ()
+        {
+            // Arrange
+            var basePosition = new Position3D(100, 0, 0);
+
+            // Act
+            var parallelBarPosition = _positionCalculator.CalculateParallelBarPosition(basePosition);
+
+            // Assert
+            Assert.AreEqual(100, parallelBarPosition.X);
+            Assert.AreEqual(0, parallelBarPosition.Y);
+            Assert.AreEqual(-130, parallelBarPosition.Z);
+        }
+
+        [TestMethod()]
+        public void CalculateCommonPlatePositionTest_ReturnsNegativeZ()
+        {
+            // Arrange
+            var basePosition = new Position3D(100, 0, 0);
+
+            // Act
+            var parallelBarPosition = _positionCalculator.CalculateCommonPlatePosition(basePosition);
+
+            // Assert
+            Assert.AreEqual(100, parallelBarPosition.X);
+            Assert.AreEqual(0, parallelBarPosition.Y);
+            Assert.AreEqual(-285, parallelBarPosition.Z);
         }
     }
 }

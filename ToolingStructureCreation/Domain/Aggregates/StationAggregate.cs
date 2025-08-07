@@ -51,7 +51,7 @@ namespace ToolingStructureCreation.Domain.Aggregates
         public void RemovePlate(PlateType plateType)
         {
             var plate = _plates.FirstOrDefault(p => p.Type == plateType);
-            if(plate != null)
+            if (plate != null)
             {
                 _plates.Remove(plate);
             }
@@ -85,7 +85,7 @@ namespace ToolingStructureCreation.Domain.Aggregates
 
         public List<PlatePosition> CalculatePlatePosition(PlateThicknessCalculator thicknessCalculator)
         {
-            if(thicknessCalculator == null)
+            if (thicknessCalculator == null)
                 throw new ArgumentNullException(nameof(thicknessCalculator));
 
             var positions = new List<PlatePosition>();
@@ -100,7 +100,7 @@ namespace ToolingStructureCreation.Domain.Aggregates
             };
 
             double cumulativeZ = 0;
-            foreach( var plateType in plateOrder )
+            foreach (var plateType in plateOrder)
             {
                 var plate = GetPlate(plateType);
                 if (plate != null)
@@ -142,7 +142,15 @@ namespace ToolingStructureCreation.Domain.Aggregates
         public bool HasRequiredPlates()
         {
             // Business rule: Minimum required plates for functional station
-            var requiredPlates = new[] { PlateType.Die_Plate, PlateType.Stripper_Plate };
+            var requiredPlates = new[] {
+                PlateType.Upper_Pad,
+                PlateType.Punch_Holder,
+                PlateType.Bottoming_Plate,
+                PlateType.Stripper_Plate,
+                PlateType.Die_Plate,
+                PlateType.Lower_Pad
+            };
+
             return requiredPlates.All(HasPlate);
         }
 

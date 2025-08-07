@@ -12,20 +12,38 @@ namespace ToolingStructureCreation.Domain.Services
     public class PositionCalculator
     {
         private readonly PlateThicknessCalculator _thicknessCalculator;
-        private readonly double _parallelBarThickness;
+        private readonly double _parallelBarThickness;        
+        private readonly double _upperShoeThickness;
+        private readonly double _lowerShoeThickness;
         private readonly double _commonPlateThickness;
 
-        public PositionCalculator(PlateThicknessCalculator plateThicknessCalculator, double parallelBarThickness, double commonPlateThickness)
+        public const double Y_POSITION = 0.0;
+
+        public PositionCalculator(
+            PlateThicknessCalculator plateThicknessCalculator, 
+            double parallelBarThickness,             
+            double upperShoeThickness,
+            double lowerShoeThickness,
+            double commonPlateThickness)
         {
             _thicknessCalculator = plateThicknessCalculator ?? throw new ArgumentNullException(nameof(plateThicknessCalculator));
-            _parallelBarThickness = parallelBarThickness;
-            _commonPlateThickness = commonPlateThickness;
+            _parallelBarThickness = parallelBarThickness;            
+            _upperShoeThickness = upperShoeThickness;
+            _lowerShoeThickness = lowerShoeThickness;
+            _lowerShoeThickness = commonPlateThickness;
         }
+
+        // FIX: Corrected Z-position calculations using form values
         public Position3D CalculateUpperShoePosition(Position3D basePosition)
         {
             if (basePosition == null)
                 throw new ArgumentNullException(nameof(basePosition));
-            var zOffset = _thicknessCalculator.GetTotalDieHeight() - _thicknessCalculator.GetLowerDieSetThickness();
+
+            var zOffset = 
+                _thicknessCalculator.GetTotalDieHeight() - 
+                _thicknessCalculator.GetLowerDieSetThickness() + 
+                _upperShoeThickness;
+
             return basePosition.WithZ(zOffset);
         }
         public Position3D CalculateLowerShoePosition(Position3D basePosition)
@@ -33,6 +51,7 @@ namespace ToolingStructureCreation.Domain.Services
             if (basePosition == null)
                 throw new ArgumentNullException(nameof(basePosition));
             var zOffset = -_thicknessCalculator.GetLowerDieSetThickness();
+
             return basePosition.WithZ(zOffset);
         }
 
@@ -40,7 +59,10 @@ namespace ToolingStructureCreation.Domain.Services
         {
             if (basePosition == null)
                 throw new ArgumentNullException(nameof(basePosition));
-            var zOffest = -(_thicknessCalculator.GetLowerDieSetThickness() + _parallelBarThickness);
+            var zOffest = -(_thicknessCalculator.GetLowerDieSetThickness() +                 
+                _lowerShoeThickness
+                );
+
             return basePosition.WithZ(zOffest);
         }
 
@@ -50,7 +72,10 @@ namespace ToolingStructureCreation.Domain.Services
                 throw new ArgumentNullException(nameof(basePosition));
 
             var zOffet = -(_thicknessCalculator.GetLowerDieSetThickness() +
-                _parallelBarThickness + _commonPlateThickness);
+                _parallelBarThickness + 
+                _lowerShoeThickness
+                );
+
             return basePosition.WithZ(zOffet);
         }
 
@@ -59,6 +84,7 @@ namespace ToolingStructureCreation.Domain.Services
             if (basePosition == null)
                 throw new ArgumentNullException(nameof(basePosition));
             var zOffset = _thicknessCalculator.GetLowerDieSetThickness();
+
             return basePosition.WithZ(zOffset);
         }
 
@@ -95,12 +121,14 @@ namespace ToolingStructureCreation.Domain.Services
                         new Position3D(xPosition, startPosition.Y, baseZ.Z), i + 1));
                 }
             }
+
             return placements.OrderBy(p => p.Position.X).ToList();
         }
 
         public double CalculateFeedHeight(double liftHeight)
         {
             var lowerDieSetThickness = _thicknessCalculator.GetLowerDieSetThickness();
+
             return liftHeight + lowerDieSetThickness + _parallelBarThickness + _commonPlateThickness;
         }
 
@@ -143,6 +171,7 @@ namespace ToolingStructureCreation.Domain.Services
 
             // Original logic: X,Y from shoe sketch midpoint, Z from position calculator
             var xyPosition = new Position3D(shoeSketch.MidPoint.X, 0, 0);
+
             return positionCalculator.CalculateCommonPlatePosition(xyPosition);
         }
 
@@ -155,6 +184,7 @@ namespace ToolingStructureCreation.Domain.Services
 
             // Original logic: X,Y from common plate sketch midpoint, Z from position calculator  
             var xyPosition = new Position3D(commonPlateSketch.MidPoint.X, 0, 0);
+
             return positionCalculator.CalculateCommonPlatePosition(xyPosition);
         }
 

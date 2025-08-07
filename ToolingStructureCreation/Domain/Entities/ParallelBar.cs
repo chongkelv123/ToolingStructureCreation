@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ToolingStructureCreation.Domain.Services;
 using ToolingStructureCreation.Domain.ValueObjects;
 
 namespace ToolingStructureCreation.Domain.Entities
@@ -62,6 +63,28 @@ namespace ToolingStructureCreation.Domain.Entities
             var volumeInCm3 = Volume / 1000; // Convert mm³ to cm³
             return volumeInCm3 * steelDensity; // Weight in grams
         }
+
+        public static ParallelBar CreateFromShoeSketch(string name, SketchGeometry shoeSketch, double thickness, int quantity = 1)
+        {
+            if (shoeSketch == null)
+                throw new ArgumentNullException(nameof(shoeSketch));
+
+            // Business rule: Length derived from shoe sketch width minus clearance
+            var parallelBarLength = shoeSketch.Dimensions.Width - 85.0;
+
+            // Create dimensions based on the shoe sketch
+            var dimensions = new Dimensions(
+                60.0,                    // Fixed width
+                parallelBarLength,       // Calculated length
+                thickness               // User specified thickness
+                );
+
+            return new ParallelBar(name, dimensions, "S50C", quantity);
+        }
+
+        // ADD: Parallel bar spacing business rule
+        public static double GetStandardSpacing() => 330.0;
+
         public bool CanSupportLoad(double loadInKg)
         {
             // Business rule: Basic load capacity estimation

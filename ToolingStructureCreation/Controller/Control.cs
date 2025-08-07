@@ -5,6 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ToolingStructureCreation.Domain.Aggregates;
+using ToolingStructureCreation.Domain.Services;
+using ToolingStructureCreation.Domain.ValueObjects;
 using ToolingStructureCreation.Model;
 using ToolingStructureCreation.Services;
 using ToolingStructureCreation.View;
@@ -20,7 +23,7 @@ namespace ToolingStructureCreation.Controller
         public NXDrawing GetDrawing => drawing;
         public formToolStructure GetForm => myForm;
 
-        Dictionary<string, double> plateThicknesses = new Dictionary<string, double>();        
+        Dictionary<string, double> plateThicknesses = new Dictionary<string, double>();
 
 
         public Control()
@@ -43,6 +46,29 @@ namespace ToolingStructureCreation.Controller
             stnAsmFactory.CreateToolAsmFactory(myForm.GetProjectInfo(), asmCodeGenerator.AskDrawingCode(), itemName);
         }
         public StripLayout GetStripLayout => stripLayout;
+
+        public void StartWithDomainLayer()
+        {
+            // Get form values (no hardcoding)
+            var toolingParams = ToolingParameters.FromForm(
+                myForm,
+                MachineSpecification.GetByName(myForm.GetMachineName),
+                new DrawingCode(myForm.GetCodePrefix),
+                myForm.GetModel,
+                myForm.GetDesginer
+                );
+
+            // Create domain aggregate using form values
+            var toolingStructure = new ToolingStructureAggregate(toolingParams);
+
+            // Generate complete structure using user inputs
+            /*toolingStructure.GenerateCompleteToolingStructure(
+                stationSketches,    // From sketch selection
+                shoeSketches,       // From sketch selection  
+                commonPlateSketches // From sketch selection (optional)
+            );*/
+
+        }
 
     }
 }

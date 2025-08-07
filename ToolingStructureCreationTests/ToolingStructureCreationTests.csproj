@@ -71,6 +71,8 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Domain\Aggregates\StationAggregateTests.cs" />
+    <Compile Include="Domain\Aggregates\ToolingStructureAggregateTests.cs" />
     <Compile Include="Domain\Entities\ParallelBarTests.cs" />
     <Compile Include="Domain\Entities\PlateTests.cs" />
     <Compile Include="Domain\Entities\ShoeTests.cs" />
