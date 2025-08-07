@@ -108,7 +108,7 @@
     <Compile Include="Infrastructure\FileSystem\FileSystemService.cs" />
     <Compile Include="Infrastructure\NX\NXModelFactory.cs" />
     <Compile Include="Infrastructure\NX\NXSessionManager.cs" />
-    <Compile Include="Infrastructure\Repositories\ToolingStructureRepository .cs" />
+    <Compile Include="Infrastructure\Repositories\ToolingStructureRepository.cs" />
     <Compile Include="Integration\ToolingCreationResult.cs" />
     <Compile Include="Integration\ToolingIntegrationController.cs" />
     <Compile Include="Main\MyProgram.cs" />
