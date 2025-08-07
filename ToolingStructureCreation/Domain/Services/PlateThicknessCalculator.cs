@@ -131,9 +131,14 @@ namespace ToolingStructureCreation.Domain.Services
             return suitableLength > 0 ? suitableLength : standardLengths.Last();
         }
 
-        private double GetThickness(PlateType plateType)
+        public double GetThickness(PlateType plateType)
         {
             return _plateThicknesses.TryGetValue(plateType, out var thickness) ? thickness : 0;
+        }
+
+        public double GetMaterialThickness()
+        {
+            return _materialThickness;
         }
 
         public ToolingThicknessSummary GetThicknessSummary()

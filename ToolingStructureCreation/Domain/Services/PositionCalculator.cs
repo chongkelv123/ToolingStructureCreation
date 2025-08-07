@@ -30,7 +30,7 @@ namespace ToolingStructureCreation.Domain.Services
             _parallelBarThickness = parallelBarThickness;            
             _upperShoeThickness = upperShoeThickness;
             _lowerShoeThickness = lowerShoeThickness;
-            _lowerShoeThickness = commonPlateThickness;
+            _commonPlateThickness = commonPlateThickness;
         }
 
         // FIX: Corrected Z-position calculations using form values
