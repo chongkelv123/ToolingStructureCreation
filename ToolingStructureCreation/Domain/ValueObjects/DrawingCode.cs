@@ -10,7 +10,7 @@ namespace ToolingStructureCreation.Domain.ValueObjects
 {
     public sealed class DrawingCode: IEquatable<DrawingCode>
     {
-        private static readonly Regex DrawingCodePattern = new Regex(@"^([A-Z0-9]{6})-(\d{4})-(\d{4})$", RegexOptions.Compiled);
+        private static readonly Regex DrawingCodePattern = new Regex(@"^([A-Z0-9]+)-(\d{4})-(\d{4})?", RegexOptions.Compiled);
         public string Prefix { get; }
         public string Suffix { get; }
         public string Code { get; }

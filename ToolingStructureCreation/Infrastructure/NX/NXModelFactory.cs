@@ -4,10 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using NXOpen;
 using ToolingStructureCreation.Domain.Aggregates;
 using ToolingStructureCreation.Domain.Entities;
 using ToolingStructureCreation.Domain.Enums;
+
 
 namespace ToolingStructureCreation.Infrastructure.NX
 {
@@ -19,6 +21,15 @@ namespace ToolingStructureCreation.Infrastructure.NX
         private readonly NXSessionManager _sessionManager;
         private readonly string _templateBasePath;
 
+        // Template constants
+        private const string TEMPLATE_PLATE_NAME = "3DA_Template_PLATE-V00.prt";
+        private const string TEMPLATE_SHOE_NAME = "3DA_Template_SHOE-V00.prt";
+        private const string TEMPLATE_PARALLELBAR_NAME = "3DA_Template_PARALLELBAR-V00.prt";
+        private const string TEMPLATE_LOWCOMPLT_NAME = "3DA_Template_LOWCOMPLT-V00.prt";
+        private const string TEMPLATE_LOWCOMPLTLEFT_NAME = "3DA_Template_LOWCOMPLT_LEFT-V00.prt";
+        private const string TEMPLATE_LOWCOMPLTRIGHT_NAME = "3DA_Template_LOWCOMPLT_RIGHT-V00.prt";
+        private const string TEMPLATE_STP_NAME = "3DA_Template_STP-V00.prt";
+
         public NXModelFactory(NXSessionManager sessionManager, string templateBasePath)
         {
             _sessionManager = sessionManager ?? throw new ArgumentNullException(nameof(sessionManager));
@@ -26,233 +37,353 @@ namespace ToolingStructureCreation.Infrastructure.NX
         }
 
         /// <summary>
-        /// Create NX part from plate entity
+        /// Create NX part from plate entity following PlateLegacy.CreateNewPlate logic
         /// </summary>
         public Part CreatePlate(Plate plate, string outputDirectory, string projectCode)
         {
             _sessionManager.ValidateSession();
 
-            var templatePath = GetPlateTemplatePath(plate.Type);
+            var session = Session.GetSession();
             var fileName = GeneratePlateFileName(plate, projectCode);
             var fullPath = Path.Combine(outputDirectory, fileName);
+            Debug.WriteLine(fullPath);
 
-            var part = CreatePartFromTemplate(templatePath, fullPath, plate.Name);
-            UpdatePlateDimensions(part, plate);
-            ApplyPlateColor(part, plate.Type);
+            // Create part from template following PlateLegacy pattern
+            FileNew fileNew = session.Parts.FileNew();
+            fileNew.TemplateFileName = TEMPLATE_PLATE_NAME;
+            fileNew.UseBlankTemplate = false;
+            fileNew.ApplicationName = "ModelTemplate";
+            fileNew.Units = Part.Units.Millimeters;
+            fileNew.TemplatePresentationName = "Plate";
+            fileNew.SetCanCreateAltrep(false);
+            fileNew.NewFileName = fullPath + ".prt";
+            fileNew.MakeDisplayedPart = true;
+            fileNew.DisplayPartOption = DisplayPartOption.AllowAdditional;
 
-            return part;
+            var plateObject = fileNew.Commit();
+            var workPart = session.Parts.Work;
+            fileNew.Destroy();
+
+            session.ApplicationSwitchImmediate("UG_APP_MODELING");
+
+            // Update plate dimensions following existing pattern
+            UpdatePlateExpressions(workPart, plate);
+
+            // Apply color based on plate type
+            ApplyPlateColor(workPart, plate.Type, fileName);
+
+            // Update and save
+            var undoMark = session.SetUndoMark(Session.MarkVisibility.Invisible, "Create New Plate");
+            session.UpdateManager.DoUpdate(undoMark);
+
+            // Update part properties (simplified - no ProjectInfo available in clean architecture)
+            SaveAndClosePart(workPart);
+
+            return workPart;
         }
 
         // <summary>
-        /// Create NX part from shoe entity
+        /// Create NX part from shoe entity following ShoeLegacy.CreateNewShoe logic
         /// </summary>
         public Part CreateShoe(Shoe shoe, string outputDirectory, string projectCode)
         {
             _sessionManager.ValidateSession();
 
-            var templatePath = GetShoeTemplatePath(shoe.Type);
+            var session = _sessionManager.NXSession;
             var fileName = GenerateShoeFileName(shoe, projectCode);
             var fullPath = Path.Combine(outputDirectory, fileName);
 
-            var part = CreatePartFromTemplate(templatePath, fullPath, shoe.Name);
-            UpdateShoeDimensions(part, shoe);
+            // Create part from template following ShoeLegacy pattern
+            FileNew fileNew = session.Parts.FileNew();
+            fileNew.TemplateFileName = TEMPLATE_SHOE_NAME;
+            fileNew.UseBlankTemplate = false;
+            fileNew.ApplicationName = "UG_APP_MODELING";
+            fileNew.Units = Part.Units.Millimeters;
+            fileNew.TemplatePresentationName = "Shoe";
+            fileNew.SetCanCreateAltrep(false);
+            fileNew.NewFileName = fullPath + ".prt";
+            fileNew.MakeDisplayedPart = true;
+            fileNew.DisplayPartOption = DisplayPartOption.AllowAdditional;
 
-            return part;
+            var shoeObject = fileNew.Commit();
+            var workPart = session.Parts.Work;
+            fileNew.Destroy();
+
+            session.ApplicationSwitchImmediate("UG_APP_MODELING");
+
+            // Update shoe dimensions following existing pattern
+            UpdateShoeExpressions(workPart, shoe);
+
+            // Update and save
+            var undoMark = session.SetUndoMark(Session.MarkVisibility.Invisible, "Create New Shoe");
+            session.UpdateManager.DoUpdate(undoMark);
+
+            SaveAndClosePart(workPart);
+
+            return workPart;
         }
 
         /// <summary>
-        /// Create NX part from parallel bar entity
+        /// Create NX part from parallel bar entity following ParallelBarLegacy.CreateNewParallelBar logic
         /// </summary>
         public Part CreateParallelBar(ParallelBar parallelBar, string outputDirectory, string projectCode)
         {
             _sessionManager.ValidateSession();
 
-            var templatePath = GetParallelBarTemplatePath();
+            var session = _sessionManager.NXSession;
             var fileName = GenerateParallelBarFileName(parallelBar, projectCode);
             var fullPath = Path.Combine(outputDirectory, fileName);
 
-            var part = CreatePartFromTemplate(templatePath, fullPath, parallelBar.Name);
-            UpdateParallelBarDimensions(part, parallelBar);
+            // Create part from template following ParallelBarLegacy pattern
+            FileNew fileNew = session.Parts.FileNew();
+            fileNew.TemplateFileName = TEMPLATE_PARALLELBAR_NAME;
+            fileNew.UseBlankTemplate = false;
+            fileNew.ApplicationName = "UG_APP_MODELING";
+            fileNew.Units = Part.Units.Millimeters;
+            fileNew.TemplatePresentationName = "ParallelBar";
+            fileNew.SetCanCreateAltrep(false);
+            fileNew.NewFileName = fullPath + ".prt";
+            fileNew.MakeDisplayedPart = true;
+            fileNew.DisplayPartOption = DisplayPartOption.AllowAdditional;
 
-            return part;
+            var parallelBarObject = fileNew.Commit();
+            var workPart = session.Parts.Work;
+            fileNew.Destroy();
+
+            session.ApplicationSwitchImmediate("UG_APP_MODELING");
+
+            // Update parallel bar dimensions following existing pattern
+            UpdateParallelBarExpressions(workPart, parallelBar);
+
+            // Update and save
+            var undoMark = session.SetUndoMark(Session.MarkVisibility.Invisible, "Create Parallel Bar");
+            session.UpdateManager.DoUpdate(undoMark);
+
+            SaveAndClosePart(workPart);
+
+            return workPart;
         }
 
         /// <summary>
-        /// Create NX part from common plate entity
+        /// Create NX part from common plate entity following CommonPlateLegacy logic
         /// </summary>
         public Part CreateCommonPlate(CommonPlate commonPlate, string outputDirectory, string projectCode)
         {
             _sessionManager.ValidateSession();
 
-            var templatePath = GetCommonPlateTemplatePath(commonPlate.Type);
+            var session = _sessionManager.NXSession;
             var fileName = GenerateCommonPlateFileName(commonPlate, projectCode);
             var fullPath = Path.Combine(outputDirectory, fileName);
 
-            var part = CreatePartFromTemplate(templatePath, fullPath, commonPlate.Name);
-            UpdateCommonPlateDimensions(part, commonPlate);
+            // Select template based on common plate type
+            string templateName = GetCommonPlateTemplate(commonPlate.Type);
+            string presentationName = GetCommonPlatePresentationName(commonPlate.Type);
 
-            return part;
+            // Create part from template following CommonPlateLegacy pattern
+            FileNew fileNew = session.Parts.FileNew();
+            fileNew.TemplateFileName = templateName;
+            fileNew.UseBlankTemplate = false;
+            fileNew.ApplicationName = "UG_APP_MODELING";
+            fileNew.Units = Part.Units.Millimeters;
+            fileNew.TemplatePresentationName = presentationName;
+            fileNew.SetCanCreateAltrep(false);
+            fileNew.NewFileName = fullPath + ".prt";
+            fileNew.MakeDisplayedPart = true;
+            fileNew.DisplayPartOption = DisplayPartOption.AllowAdditional;
+
+            var commonPlateObject = fileNew.Commit();
+            var workPart = session.Parts.Work;
+            fileNew.Destroy();
+
+            session.ApplicationSwitchImmediate("UG_APP_MODELING");
+
+            // Update common plate dimensions following existing pattern
+            UpdateCommonPlateExpressions(workPart, commonPlate);
+
+            // Update and save
+            var undoMark = session.SetUndoMark(Session.MarkVisibility.Invisible, "Create Low Common Plate");
+            session.UpdateManager.DoUpdate(undoMark);
+
+            SaveAndClosePart(workPart);
+
+            return workPart;
         }
 
         /// <summary>
-        /// Create station assembly from StationAggregate
+        /// Create station assembly from StationAggregate following StationAssemblyFactory logic
         /// </summary>
         public Part CreateStationAssembly(StationAggregate station, string outputDirectory, string projectCode)
         {
             _sessionManager.ValidateSession();
 
+            var session = _sessionManager.NXSession;
             var assemblyName = $"STATION_{station.StationNumber:D2}";
-            var fileName = $"{projectCode}_{assemblyName}.prt";
+            var fileName = $"{projectCode}_{assemblyName}";
             var fullPath = Path.Combine(outputDirectory, fileName);
 
-            // Create assembly part
-            var undoMark = _sessionManager.CreateUndoMark("Create Station Assembly");
+            // Create assembly part following StationAssemblyFactory pattern
+            FileNew fileNew = session.Parts.FileNew();
+            fileNew.TemplateFileName = TEMPLATE_STP_NAME;
+            fileNew.UseBlankTemplate = false;
+            fileNew.ApplicationName = "UG_APP_ASM";
+            fileNew.Units = Part.Units.Millimeters;
+            fileNew.TemplatePresentationName = "Assembly";
+            fileNew.SetCanCreateAltrep(false);
+            fileNew.NewFileName = fullPath + ".prt";
+            fileNew.MakeDisplayedPart = true;
+            fileNew.DisplayPartOption = DisplayPartOption.AllowAdditional;
 
-            var session = _sessionManager.NXSession;
-            var newPart = session.Parts.NewDisplay(fullPath, Part.Units.Millimeters);
+            var assemblyObject = fileNew.Commit();
+            var workPart = session.Parts.Work;
+            fileNew.Destroy();
 
-            // Convert to assembly
             session.ApplicationSwitchImmediate("UG_APP_MODELING");
 
-            _sessionManager.UpdateModel(undoMark);
+            // Orient to isometric view
+            workPart.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
 
-            return newPart;
+            SaveAndClosePart(workPart);
+
+            return workPart;
         }
 
-        private Part CreatePartFromTemplate(string templatePath, string outputPath, string partName)
+        private void UpdatePlateExpressions(Part workPart, Plate plate)
         {
-            if (!File.Exists(templatePath))
-                throw new FileNotFoundException($"Template not found: {templatePath}");
+            var expressionWidth = workPart.Expressions.FindObject("Width");
+            var expressionLength = workPart.Expressions.FindObject("Length");
+            var expressionThk = workPart.Expressions.FindObject("Thk");
 
-            var undoMark = _sessionManager.CreateUndoMark($"Create part from template: {partName}");
-            var session = _sessionManager.NXSession;
+            if (expressionWidth != null)
+                workPart.Expressions.EditExpression(expressionWidth, plate.Dimensions.Width.ToString());
+            if (expressionLength != null)
+                workPart.Expressions.EditExpression(expressionLength, plate.Dimensions.Length.ToString());
+            if (expressionThk != null)
+                workPart.Expressions.EditExpression(expressionThk, plate.Dimensions.Thickness.ToString());
+        }
 
-            // Copy template to new location
-            File.Copy(templatePath, outputPath, true);
+        private void UpdateShoeExpressions(Part workPart, Shoe shoe)
+        {
+            // Follow ShoeLegacy pattern for expression names
+            var expressionWidth = workPart.Expressions.FindObject("ShoeWidth") as Expression;
+            var expressionLength = workPart.Expressions.FindObject("ShoeLength") as Expression;
+            var expressionThk = workPart.Expressions.FindObject("ShoeThk") as Expression;
 
-            // Open the copied part
-            var part = session.Parts.OpenActiveDisplay(outputPath, DisplayPartOption.AllowAdditional, out var status);
+            if (expressionWidth != null)
+                workPart.Expressions.EditExpression(expressionWidth, shoe.Dimensions.Width.ToString());
+            if (expressionLength != null)
+                workPart.Expressions.EditExpression(expressionLength, shoe.Dimensions.Length.ToString());
+            if (expressionThk != null)
+                workPart.Expressions.EditExpression(expressionThk, shoe.Dimensions.Thickness.ToString());
+        }
 
-            if (status != null)
+        private void UpdateParallelBarExpressions(Part workPart, ParallelBar parallelBar)
+        {
+            // Follow ParallelBarLegacy pattern for expression names
+            var expressionWidth = workPart.Expressions.FindObject("Width") as Expression;
+            var expressionLength = workPart.Expressions.FindObject("Length") as Expression;
+            var expressionThk = workPart.Expressions.FindObject("Thk") as Expression;
+
+            if (expressionWidth != null)
+                workPart.Expressions.EditExpression(expressionWidth, parallelBar.Dimensions.Width.ToString());
+            if (expressionLength != null)
+                workPart.Expressions.EditExpression(expressionLength, parallelBar.Dimensions.Length.ToString());
+            if (expressionThk != null)
+                workPart.Expressions.EditExpression(expressionThk, parallelBar.Dimensions.Thickness.ToString());
+        }
+
+        private void UpdateCommonPlateExpressions(Part workPart, CommonPlate commonPlate)
+        {
+            // Follow CommonPlateLegacy pattern for expression names
+            var expressionWidth = workPart.Expressions.FindObject("Width") as Expression;
+            var expressionLength = workPart.Expressions.FindObject("Length") as Expression;
+            var expressionThk = workPart.Expressions.FindObject("Thk") as Expression;
+
+            if (expressionWidth != null)
+                workPart.Expressions.EditExpression(expressionWidth, commonPlate.Dimensions.Width.ToString());
+            if (expressionLength != null)
+                workPart.Expressions.EditExpression(expressionLength, commonPlate.Dimensions.Length.ToString());
+            if (expressionThk != null)
+                workPart.Expressions.EditExpression(expressionThk, commonPlate.Dimensions.Thickness.ToString());
+        }
+
+        private void ApplyPlateColor(Part workPart, PlateType plateType, string fileName)
+        {
+            // Follow PlateLegacy color assignment logic
+            foreach (Body body in workPart.Bodies)
             {
-                // Update part
-                _sessionManager.UpdateModel(undoMark);
-            }
-
-            return part as Part;
-        }
-
-        private void UpdatePlateDimensions(Part part, Plate plate)
-        {
-            var expressions = part.Expressions;
-
-            // Update standard plate expressions
-            UpdateExpression(expressions, "Length", plate.Dimensions.Length);
-            UpdateExpression(expressions, "Width", plate.Dimensions.Width);
-            UpdateExpression(expressions, "Thk", plate.Dimensions.Thickness);
-        }
-
-        private void UpdateShoeDimensions(Part part, Shoe shoe)
-        {
-            var expressions = part.Expressions;
-
-            UpdateExpression(expressions, "Length", shoe.Dimensions.Length);
-            UpdateExpression(expressions, "Width", shoe.Dimensions.Width);
-            UpdateExpression(expressions, "Thk", shoe.Dimensions.Thickness);
-        }
-
-        private void UpdateParallelBarDimensions(Part part, ParallelBar parallelBar)
-        {
-            var expressions = part.Expressions;
-
-            UpdateExpression(expressions, "Length", parallelBar.Dimensions.Length);
-            UpdateExpression(expressions, "Width", parallelBar.Dimensions.Width);
-            UpdateExpression(expressions, "Thk", parallelBar.Dimensions.Thickness);
-        }
-
-        private void UpdateCommonPlateDimensions(Part part, CommonPlate commonPlate)
-        {
-            var expressions = part.Expressions;
-
-            UpdateExpression(expressions, "Length", commonPlate.Dimensions.Length);
-            UpdateExpression(expressions, "Width", commonPlate.Dimensions.Width);
-            UpdateExpression(expressions, "Thk", commonPlate.Dimensions.Thickness);
-        }
-
-        private void UpdateExpression(ExpressionCollection expressions, string name, double value)
-        {
-            var expression = expressions.FindObject(name);
-            if (expression != null)
-            {
-                expressions.EditExpression(expression, value.ToString("F3"));
-            }
-        }
-
-        private void ApplyPlateColor(Part part, PlateType plateType)
-        {
-            // Color mapping based on business rules
-            var colorMap = new Dictionary<PlateType, int>
-            {
-                { PlateType.Upper_Pad, 186 },        // Light Blue
-                { PlateType.Punch_Holder, 78 },      // Orange
-                { PlateType.Bottoming_Plate, 211 },  // Yellow
-                { PlateType.Stripper_Plate, 36 },    // Green
-                { PlateType.Die_Plate, 125 },        // Red
-                { PlateType.Lower_Pad, 198 }         // Purple
-            };
-
-            if (colorMap.TryGetValue(plateType, out var colorId))
-            {
-                // Apply color to part bodies
-                foreach (Body body in part.Bodies)
-                {
-                    var displayModification = _sessionManager.NXSession.DisplayManager.NewDisplayModification();
-                    displayModification.ApplyToAllFaces = true;
-                    displayModification.NewColor = colorId;
-                    displayModification.Apply(new DisplayableObject[] { body });
-                    displayModification.Dispose();
-                }
+                if (fileName.Contains("UPPER_PAD"))
+                    body.Color = 186; // Light Blue
+                else if (fileName.Contains("PUNCH_HOLDER"))
+                    body.Color = 78;  // Orange
+                else if (fileName.Contains("BOTTOMING_PLATE"))
+                    body.Color = 211; // Yellow
+                else if (fileName.Contains("STRIPPER_PLATE"))
+                    body.Color = 36;  // Green
+                else if (fileName.Contains("DIE_PLATE"))
+                    body.Color = 125; // Red
+                else if (fileName.Contains("LOWER_PAD"))
+                    body.Color = 198; // Purple
+                else
+                    body.Color = 1;   // Default
             }
         }
 
-        private string GetPlateTemplatePath(PlateType plateType)
+        private void SaveAndClosePart(Part workPart)
         {
-            return Path.Combine(_templateBasePath, "3DA_Template_STP-V00.prt");
-        }        
-
-        private string GetShoeTemplatePath(ShoeType shoeType)
-        {
-            return Path.Combine(_templateBasePath, "3DA_Template_STP-V00.prt");
+            // Follow existing save pattern
+            var saveComponents = BasePart.SaveComponents.True;
+            var closeAfterSave = BasePart.CloseAfterSave.True;
+            workPart.Save(saveComponents, closeAfterSave);
         }
 
-        private string GetParallelBarTemplatePath()
+        private string GetCommonPlateTemplate(CommonPlateType plateType)
         {
-            return Path.Combine(_templateBasePath, "3DA_Template_STP-V00.prt");
+            switch (plateType)
+            {
+                case CommonPlateType.Single:
+                    return TEMPLATE_LOWCOMPLT_NAME;
+                case CommonPlateType.DoubleLeft:
+                    return TEMPLATE_LOWCOMPLTLEFT_NAME;
+                case CommonPlateType.DoubleRight:
+                    return TEMPLATE_LOWCOMPLTRIGHT_NAME;
+                default:
+                    return TEMPLATE_LOWCOMPLT_NAME;
+            }
         }
 
-        private string GetCommonPlateTemplatePath(CommonPlateType plateType)
+        private string GetCommonPlatePresentationName(CommonPlateType plateType)
         {
-            return Path.Combine(_templateBasePath, "3DA_Template_STP-V00.prt");
+            switch (plateType)
+            {
+                case CommonPlateType.Single:
+                    return "LowCommonPlate";
+                case CommonPlateType.DoubleLeft:
+                    return "LowCommonPlateLeft";
+                case CommonPlateType.DoubleRight:
+                    return "LowCommonPlateRight";
+                default:
+                    return "LowCommonPlate";
+            }
         }
 
         private string GeneratePlateFileName(Plate plate, string projectCode)
         {
-            return $"{projectCode}_{plate.Name}.prt";
+            return $"{projectCode}_{plate.Name}";
         }
 
         private string GenerateShoeFileName(Shoe shoe, string projectCode)
         {
-            return $"{projectCode}_{shoe.Name}.prt";
+            return $"{projectCode}_{shoe.Name}";
         }
 
         private string GenerateParallelBarFileName(ParallelBar parallelBar, string projectCode)
         {
-            return $"{projectCode}_{parallelBar.Name}.prt";
+            return $"{projectCode}_{parallelBar.Name}";
         }
 
         private string GenerateCommonPlateFileName(CommonPlate commonPlate, string projectCode)
         {
-            return $"{projectCode}_{commonPlate.Name}.prt";
+            return $"{projectCode}_{commonPlate.Name}";
         }
     }
 }

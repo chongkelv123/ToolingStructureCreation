@@ -151,7 +151,7 @@ namespace ToolingStructureCreation.View
             this.Close();
         }
 
-        private void btnApply_Click(object sender, EventArgs e)
+        private void btnApplyLegacy_Click(object sender, EventArgs e)
         {
 
             StationAssemblyFactory stnAsmFactory = new StationAssemblyFactory(
@@ -710,6 +710,33 @@ namespace ToolingStructureCreation.View
 
             //CheckInputAndEnableApply();
             this.Show();
+        }
+
+        private async void btnApply_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Debugger.Launch();
+            try
+            {
+                btnApply.Enabled = false;
+                btnApply.Text = "Processing...";
+
+                var success = await control.StartWithCleanArchitectureAsync();
+
+                if (success)
+                {
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to create tooling structure", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            finally
+            {
+                btnApply.Enabled = true;
+                btnApply.Text = "Apply";
+            }
         }
     }
 }

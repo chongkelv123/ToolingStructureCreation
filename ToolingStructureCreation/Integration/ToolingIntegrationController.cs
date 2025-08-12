@@ -17,17 +17,20 @@ namespace ToolingStructureCreation.Integration
     {
         private readonly CreateToolingStructureUseCase _createToolingUseCase;
         private readonly NXSessionManager _sessionManager;
+        private readonly Controller.Control _controller;
 
         public ToolingIntegrationController(
             CreateToolingStructureUseCase createToolingUseCase,
-            NXSessionManager sessionManager)
+            NXSessionManager sessionManager,
+            Controller.Control control)
         {
             _createToolingUseCase = createToolingUseCase ?? throw new ArgumentNullException(nameof(createToolingUseCase));
             _sessionManager = sessionManager ?? throw new ArgumentNullException(nameof(sessionManager));
+            _controller = control ?? throw new ArgumentNullException(nameof(control));
         }
 
         // <summary>
-        /// Create tooling structure from Form1 data
+        /// Create tooling structure using existing form properties and domain naming service
         /// </summary>
         public async Task<ToolingCreationResult> CreateToolingStructureAsync(
             formToolStructure form,
@@ -37,25 +40,30 @@ namespace ToolingStructureCreation.Integration
         {
             try
             {
-                // Convert form data to domain objects
-                var machineSpec = CreateMachineSpecification(form);
-                var drawingCode = CreateDrawingCode(form);
+                // Create base drawing code from form using domain layer
+                var baseDrawingCode = CreateBaseDrawingCode(form);
+
+                // Use domain naming service for proper code generation
+                var namingService = new NamingConventionService(baseDrawingCode, form.GetPath);
+                var mainAssemblyNaming = namingService.GenerateAssemblyNaming("Main Tool Assembly");
+
+                // Use existing form methods - same as Control.StartWithDomainLayer()
+                var machineSpec = MachineSpecification.GetByName(form.GetMachineName);
                 var toolingParameters = ToolingParameters.FromForm(
                     form,
                     machineSpec,
-                    drawingCode,
-                    form.GetModel ?? "Default_Project",
-                    form.GetDesginer ?? "unknown_Designer"
-                    );
+                    mainAssemblyNaming.DrawingCode,  // Use generated drawing code
+                    form.GetModel,
+                    form.GetDesginer);
 
-                // Create request
+                // Create request using existing form structure
                 var request = new CreateToolingStructureRequest
                 {
                     ToolingParameters = toolingParameters,
                     StationSketches = stationSketches ?? new List<SketchGeometry>(),
                     ShoeSketches = shoeSketches ?? new List<SketchGeometry>(),
                     CommonPlateSketches = commonPlateSketches ?? new List<SketchGeometry>(),
-                    OutputDirectory = form.GetPath ?? @"C:\CreateFolder"
+                    OutputDirectory = form.GetPath  // Use existing GetPath property
                 };
 
                 // Execute use case
