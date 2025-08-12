@@ -71,9 +71,9 @@ namespace ToolingStructureCreation.Model
 
             session.ApplicationSwitchImmediate(NXDrawing.UG_APP_MODELING);
 
-            NXOpen.Expression expressionShoeWidth = ((NXOpen.Expression)workPart.Expressions.FindObject("ShoeWidth"));
-            NXOpen.Expression expressionShoeLength = ((NXOpen.Expression)workPart.Expressions.FindObject("ShoeLength"));
-            NXOpen.Expression expressionShoeThk = ((NXOpen.Expression)workPart.Expressions.FindObject("ShoeThk"));
+            NXOpen.Expression expressionShoeWidth = ((NXOpen.Expression)workPart.Expressions.FindObject("Width"));
+            NXOpen.Expression expressionShoeLength = ((NXOpen.Expression)workPart.Expressions.FindObject("Length"));
+            NXOpen.Expression expressionShoeThk = ((NXOpen.Expression)workPart.Expressions.FindObject("Thk"));
             if (expressionShoeWidth == null)
             {
                 NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'ShoeWidth' not found.");
