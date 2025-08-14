@@ -82,7 +82,7 @@ namespace ToolingStructureCreation.Model
             CreateStationAssembly(PlateThicknesses, GetStationNumber(), folderPath);
         }*/
 
-        public static void CreateStationAssembly(Dictionary<string, double> plateList, string stationNumber, string folderPath)
+        /*public static void CreateStationAssembly(Dictionary<string, double> plateList, string stationNumber, string folderPath)
         {
             Session session = Session.GetSession();
             FileNew fileNew = session.Parts.FileNew();
@@ -121,7 +121,7 @@ namespace ToolingStructureCreation.Model
             BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
             BasePart.CloseAfterSave save = BasePart.CloseAfterSave.True;
             workPart.Save(saveComponentParts, save);
-        }
+        }*/
         /*static public void CreateToolAssembly(string folderPath)
         {
             FileNew fileNew = session.Parts.FileNew();

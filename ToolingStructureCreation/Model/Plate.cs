@@ -62,95 +62,131 @@ namespace ToolingStructureCreation.Model
             fileNew.NewFileName = $"{folderPath}{fileName}{NXDrawing.EXTENSION}";
             fileNew.MakeDisplayedPart = true;
             fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
-            NXObject plateObject;
-            plateObject = fileNew.Commit();
 
-            Part workPart = session.Parts.Work;
-            Part displayPart = session.Parts.Display;
-
-            fileNew.Destroy();
-
-            session.ApplicationSwitchImmediate(NXDrawing.UG_APP_MODELING);
-
-            NXOpen.Expression expressionPlateWidth = ((NXOpen.Expression)workPart.Expressions.FindObject("Width"));
-            NXOpen.Expression expressionPlateLength = ((NXOpen.Expression)workPart.Expressions.FindObject("Length"));
-            NXOpen.Expression expressionPlateThk = ((NXOpen.Expression)workPart.Expressions.FindObject("Thk"));
-            if (expressionPlateWidth == null)
+            try
             {
-                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'PlateWidth' not found.");
-                return;
+                NXObject plateObject = fileNew.Commit();
+
+                Part workPart = session.Parts.Work;
+                Part displayPart = session.Parts.Display;
+
+                fileNew.Destroy();
+
+                session.ApplicationSwitchImmediate(NXDrawing.UG_APP_MODELING);
+
+                NXOpen.Expression expressionPlateWidth = ((NXOpen.Expression)workPart.Expressions.FindObject("Width"));
+                NXOpen.Expression expressionPlateLength = ((NXOpen.Expression)workPart.Expressions.FindObject("Length"));
+                NXOpen.Expression expressionPlateThk = ((NXOpen.Expression)workPart.Expressions.FindObject("Thk"));
+                if (expressionPlateWidth == null)
+                {
+                    NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'PlateWidth' not found.");
+                    return;
+                }
+                else if (expressionPlateLength == null)
+                {
+                    NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'PlateLength' not found.");
+                    return;
+                }
+                else if (expressionPlateThk == null)
+                {
+                    NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'PlateThk' not found.");
+                    return;
+                }
+                workPart.Expressions.EditExpression(expressionPlateWidth, GetPlateWidth().ToString());
+                workPart.Expressions.EditExpression(expressionPlateLength, GetPlateLength().ToString());
+                workPart.Expressions.EditExpression(expressionPlateThk, GetPlateThickness().ToString());
+
+                NXOpen.Session.UndoMarkId undoMark = session.SetUndoMark(Session.MarkVisibility.Invisible, "Create New Plate");
+                session.UpdateManager.DoUpdate(undoMark);
+
+                /*
+                 * Change Color
+                 */
+                NXOpen.BodyCollection bodyCollection = workPart.Bodies;
+                foreach (NXOpen.Body body in bodyCollection)
+                {
+                    if (fileName.Contains(NXDrawing.UPPER_PAD))
+                    {
+                        body.Color = (int)PlateColor.UPPERPAD;
+                    }
+                    else if (fileName.Contains(NXDrawing.PUNCH_HOLDER))
+                    {
+                        body.Color = (int)PlateColor.PUNCHHOLDER;
+                    }
+                    else if (fileName.Contains(NXDrawing.BOTTOMING_PLATE))
+                    {
+                        body.Color = (int)PlateColor.BOTTOMINGPLATE;
+                    }
+                    else if (fileName.Contains(NXDrawing.STRIPPER_PLATE))
+                    {
+                        body.Color = (int)PlateColor.STRIPPERPLATE;
+                    }
+                    else if (fileName.Contains(NXDrawing.DIE_PLATE))
+                    {
+                        body.Color = (int)PlateColor.DIEPLATE;
+                    }
+                    else if (fileName.Contains(NXDrawing.LOWER_PAD))
+                    {
+                        body.Color = (int)PlateColor.LOWERPAD;
+                    }
+                    else
+                    {
+                        body.Color = (int)PlateColor.COMMONPLATE;
+                    }
+                }
+
+                NXDrawing.UpdatePartProperties(
+                    projectInfo,
+                    drawingCode,
+                    itemName,
+                    length.ToString("F1"),
+                    thickness.ToString("F2"),
+                    width.ToString("F1"),
+                    NXDrawing.FIFTYTWO_FIFTYFOUR,
+                    NXDrawing.GOA,
+                    PartProperties.PLATE);
+
+                BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
+                BasePart.CloseAfterSave close = BasePart.CloseAfterSave.True;
+                workPart.Save(saveComponentParts, close);
             }
-            else if (expressionPlateLength == null)
-            {
-                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'PlateLength' not found.");
-                return;
-            }
-            else if (expressionPlateThk == null)
-            {
-                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'PlateThk' not found.");
-                return;
-            }
-            workPart.Expressions.EditExpression(expressionPlateWidth, GetPlateWidth().ToString());
-            workPart.Expressions.EditExpression(expressionPlateLength, GetPlateLength().ToString());
-            workPart.Expressions.EditExpression(expressionPlateThk, GetPlateThickness().ToString());
+            catch (NXOpen.NXException nxEx) when (nxEx.Message.Contains("File already exists"))
+            {                
+                // User-friendly error handling
+                string message = $"File already exists: {fileName}{NXDrawing.EXTENSION}\n\n" +
+                                $"Location: {folderPath}\n\n" +
+                                "Please:\n" +
+                                "• Delete the existing file, or\n" +
+                                "• Choose a different output directory, or\n" +
+                                "• Modify the project code prefix";
 
-            NXOpen.Session.UndoMarkId undoMark = session.SetUndoMark(Session.MarkVisibility.Invisible, "Create New Plate");
-            session.UpdateManager.DoUpdate(undoMark);
+                string title = "File Conflict";
+                NXDrawing.ShowMessageBox(title, NXOpen.NXMessageBox.DialogType.Warning, message);
 
-            /*
-             * Change Color
-             */
-            NXOpen.BodyCollection bodyCollection = workPart.Bodies;
-            foreach (NXOpen.Body body in bodyCollection)
-            {
-                if (fileName.Contains(NXDrawing.UPPER_PAD))
-                {
-                    body.Color = (int)PlateColor.UPPERPAD;
-                }
-                else if (fileName.Contains(NXDrawing.PUNCH_HOLDER))
-                {
-                    body.Color = (int)PlateColor.PUNCHHOLDER;
-                }
-                else if (fileName.Contains(NXDrawing.BOTTOMING_PLATE))
-                {
-                    body.Color = (int)PlateColor.BOTTOMINGPLATE;
-                }
-                else if (fileName.Contains(NXDrawing.STRIPPER_PLATE))
-                {
-                    body.Color = (int)PlateColor.STRIPPERPLATE;
-                }
-                else if (fileName.Contains(NXDrawing.DIE_PLATE))
-                {
-                    body.Color = (int)PlateColor.DIEPLATE;
-                }
-                else if (fileName.Contains(NXDrawing.LOWER_PAD))
-                {
-                    body.Color = (int)PlateColor.LOWERPAD;
-                }
-                else
-                {
-                    body.Color = (int)PlateColor.COMMONPLATE;
-                }
-            }            
+                // Re-throw to stop the creation process
+                throw new InvalidOperationException($"Cannot create plate '{fileName}' - file already exists", nxEx);
+            }
+            catch (NXOpen.NXException nxEx)
+            {                
+                // Handle other NX-specific errors
+                string message = $"NX Error creating plate '{fileName}':\n{nxEx.Message}";
+                string title = "NX Operation Error";
+                NXDrawing.ShowMessageBox(title, NXOpen.NXMessageBox.DialogType.Error, message);
+
+                throw new InvalidOperationException($"Failed to create plate '{fileName}'", nxEx);
+            }
+            catch (Exception ex)
+            {                
+                // Handle unexpected errors
+                string message = $"Unexpected error creating plate '{fileName}':\n{ex.Message}";
+                string title = "Unexpected Error";
+                NXDrawing.ShowMessageBox(title, NXOpen.NXMessageBox.DialogType.Error, message);
+
+                throw;
+            }
             
-            NXDrawing.UpdatePartProperties(
-                projectInfo, 
-                drawingCode, 
-                itemName, 
-                length.ToString("F1"), 
-                thickness.ToString("F2"), 
-                width.ToString("F1"), 
-                NXDrawing.FIFTYTWO_FIFTYFOUR, 
-                NXDrawing.GOA,
-                PartProperties.PLATE);         
-
-            BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
-            BasePart.CloseAfterSave close = BasePart.CloseAfterSave.True;
-            workPart.Save(saveComponentParts, close);
         }
-
         
-
         static public void InsertPlate(Part workAssy, string compName, double cumThk, string folderPath)
         {
             ComponentAssembly compAssy = workAssy.ComponentAssembly;

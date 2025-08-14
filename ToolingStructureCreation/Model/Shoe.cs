@@ -12,10 +12,10 @@ namespace ToolingStructureCreation.Model
 {
     public class Shoe
     {
-        private string fileNameWithExtension;
+        private string fileName;
         private double length;
         private double width;
-        private double thickness;        
+        private double thickness;
 
         public const string UPPER_SHOE = "UPPER_SHOE";
         public const string LOWER_SHOE = "LOWER_SHOE";
@@ -24,15 +24,15 @@ namespace ToolingStructureCreation.Model
 
         public Shoe(string name, double length, double width, double thickness)
         {
-            this.fileNameWithExtension = name;
+            this.fileName = name;
             this.length = length;
             this.width = width;
-            this.thickness = thickness;            
+            this.thickness = thickness;
         }
 
         public string GetShoeName()
         {
-            return fileNameWithExtension;
+            return fileName;
         }
 
         public double GetShoeLength()
@@ -60,78 +60,122 @@ namespace ToolingStructureCreation.Model
             fileNew.Units = Part.Units.Millimeters;
             fileNew.TemplatePresentationName = SHOE;
             fileNew.SetCanCreateAltrep(false);
-            fileNew.NewFileName = $"{folderPath}{fileNameWithExtension}{NXDrawing.EXTENSION}";
+            fileNew.NewFileName = $"{folderPath}{fileName}{NXDrawing.EXTENSION}";
             fileNew.MakeDisplayedPart = true;
             fileNew.DisplayPartOption = NXOpen.DisplayPartOption.AllowAdditional;
-            NXObject shoeObject;
-            shoeObject = fileNew.Commit();
 
-            Part workPart = session.Parts.Work;
-            Part displayPart = session.Parts.Display;
-
-            fileNew.Destroy();
-
-            session.ApplicationSwitchImmediate(NXDrawing.UG_APP_MODELING);
-
-            NXOpen.Expression expressionShoeWidth = ((NXOpen.Expression)workPart.Expressions.FindObject("Width"));
-            NXOpen.Expression expressionShoeLength = ((NXOpen.Expression)workPart.Expressions.FindObject("Length"));
-            NXOpen.Expression expressionShoeThk = ((NXOpen.Expression)workPart.Expressions.FindObject("Thk"));
-            if (expressionShoeWidth == null)
+            try
             {
-                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'ShoeWidth' not found.");
-                return;
-            }
-            else if (expressionShoeLength == null)
-            {
-                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'ShoeLength' not found.");
-                return;
-            }
-            else if (expressionShoeThk == null)
-            {
-                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'ShoeThk' not found.");
-                return;
-            }
-            workPart.Expressions.EditExpression(expressionShoeWidth, GetShoeWidth().ToString());
-            workPart.Expressions.EditExpression(expressionShoeLength, GetShoeLength().ToString());
-            workPart.Expressions.EditExpression(expressionShoeThk, GetShoeHeight().ToString());
+                NXObject shoeObject = fileNew.Commit();
 
-            NXOpen.Session.UndoMarkId undoMark = session.SetUndoMark(Session.MarkVisibility.Invisible, "Create New Shoe");
-            session.UpdateManager.DoUpdate(undoMark);
+                Part workPart = session.Parts.Work;
+                Part displayPart = session.Parts.Display;
 
-            /*
-             * Change Color
-             */
-            NXOpen.BodyCollection bodyCollection = workPart.Bodies;
-            foreach (NXOpen.Body body in bodyCollection)
-            {
-                if (fileNameWithExtension.Contains(UPPER_SHOE))
+                fileNew.Destroy();
+
+                session.ApplicationSwitchImmediate(NXDrawing.UG_APP_MODELING);
+
+                NXOpen.Expression expressionShoeWidth = ((NXOpen.Expression)workPart.Expressions.FindObject("Width"));
+                NXOpen.Expression expressionShoeLength = ((NXOpen.Expression)workPart.Expressions.FindObject("Length"));
+                NXOpen.Expression expressionShoeThk = ((NXOpen.Expression)workPart.Expressions.FindObject("Thk"));
+                if (expressionShoeWidth == null)
                 {
-                    body.Color = (int)PlateColor.UPPERSHOE;
+                    NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'ShoeWidth' not found.");
+                    return;
                 }
-                else if (fileNameWithExtension.Contains(LOWER_SHOE))
+                else if (expressionShoeLength == null)
                 {
-                    body.Color = (int)PlateColor.LOWERSHOE;
-                }                
-                else
-                {
-                    body.Color = (int)PlateColor.COMMONPLATE;
+                    NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'ShoeLength' not found.");
+                    return;
                 }
-            }
-            
-            NXDrawing.UpdatePartProperties(
-                projectInfo,
-                drawingCode,
-                itemName,
-                length.ToString("F1"),
-                thickness.ToString("F2"),
-                width.ToString("F1"),
-                NXDrawing.HYPHEN,
-                NXDrawing.S50C,
-                PartProperties.SHOE);
+                else if (expressionShoeThk == null)
+                {
+                    NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'ShoeThk' not found.");
+                    return;
+                }
+                workPart.Expressions.EditExpression(expressionShoeWidth, GetShoeWidth().ToString());
+                workPart.Expressions.EditExpression(expressionShoeLength, GetShoeLength().ToString());
+                workPart.Expressions.EditExpression(expressionShoeThk, GetShoeHeight().ToString());
 
-            BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
-            BasePart.CloseAfterSave close = BasePart.CloseAfterSave.True;
-            workPart.Save(saveComponentParts, close);
+                NXOpen.Session.UndoMarkId undoMark = session.SetUndoMark(Session.MarkVisibility.Invisible, "Create New Shoe");
+                session.UpdateManager.DoUpdate(undoMark);
+
+                /*
+                 * Change Color
+                 */
+                NXOpen.BodyCollection bodyCollection = workPart.Bodies;
+                foreach (NXOpen.Body body in bodyCollection)
+                {
+                    if (fileName.Contains(UPPER_SHOE))
+                    {
+                        body.Color = (int)PlateColor.UPPERSHOE;
+                    }
+                    else if (fileName.Contains(LOWER_SHOE))
+                    {
+                        body.Color = (int)PlateColor.LOWERSHOE;
+                    }
+                    else
+                    {
+                        body.Color = (int)PlateColor.COMMONPLATE;
+                    }
+                }
+
+                NXDrawing.UpdatePartProperties(
+                    projectInfo,
+                    drawingCode,
+                    itemName,
+                    length.ToString("F1"),
+                    thickness.ToString("F2"),
+                    width.ToString("F1"),
+                    NXDrawing.HYPHEN,
+                    NXDrawing.S50C,
+                    PartProperties.SHOE);
+
+                BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
+                BasePart.CloseAfterSave close = BasePart.CloseAfterSave.True;
+                workPart.Save(saveComponentParts, close);
+            }
+            catch (NXOpen.NXException nxEx) when (nxEx.Message.Contains("File already exists"))
+            {
+                fileNew.Destroy(); // Clean up
+
+                // User-friendly error handling
+                string message = $"File already exists: {fileName}{NXDrawing.EXTENSION}\n\n" +
+                                $"Location: {folderPath}\n\n" +
+                                "Please:\n" +
+                                "• Delete the existing file, or\n" +
+                                "• Choose a different output directory, or\n" +
+                                "• Modify the project code prefix";
+
+                string title = "File Conflict";
+                NXDrawing.ShowMessageBox(title, NXOpen.NXMessageBox.DialogType.Warning, message);
+
+                // Re-throw to stop the creation process
+                throw new InvalidOperationException($"Cannot create plate '{fileName}' - file already exists", nxEx);
+            }
+            catch (NXOpen.NXException nxEx)
+            {
+                fileNew.Destroy(); // Clean up
+
+                // Handle other NX-specific errors
+                string message = $"NX Error creating plate '{fileName}':\n{nxEx.Message}";
+                string title = "NX Operation Error";
+                NXDrawing.ShowMessageBox(title, NXOpen.NXMessageBox.DialogType.Error, message);
+
+                throw new InvalidOperationException($"Failed to create plate '{fileName}'", nxEx);
+            }
+            catch (Exception ex)
+            {
+                fileNew.Destroy(); // Clean up
+
+                // Handle unexpected errors
+                string message = $"Unexpected error creating plate '{fileName}':\n{ex.Message}";
+                string title = "Unexpected Error";
+                NXDrawing.ShowMessageBox(title, NXOpen.NXMessageBox.DialogType.Error, message);
+
+                throw;
+            }
+
         }
         static public void Insert(Part workAssy, string compName, Point3d basePoint, string folderPath)
         {

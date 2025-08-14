@@ -8,17 +8,18 @@ using System.Threading.Tasks;
 namespace ToolingStructureCreation.Model
 {
     public abstract class CommonPlateBase
-    {
-        private string fileName;
+    {        
         private double length;
         private double width;
         private double thickness;
+
+        public string FileName { get; }
 
         public const string LOWER_COMMON_PLATE = "LOWER_COMMON_PLATE";
 
         public CommonPlateBase(double length, double width, double thickness, string fileName = null)
         {
-            this.fileName = fileName;
+            this.FileName = fileName;
             this.length = length;
             this.width = width;
             this.thickness = thickness;
@@ -27,7 +28,7 @@ namespace ToolingStructureCreation.Model
 
         public double GetWidth() => width;
         public double GetThickness() => thickness;
-        public string GetFileName() => fileName;
+        public string GetFileName() => FileName;
 
         public abstract void CreateNewCommonPlate(string folderPath, ProjectInfo projectInfo, string drawingCode, string itemName);        
     }

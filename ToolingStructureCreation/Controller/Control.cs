@@ -38,9 +38,17 @@ namespace ToolingStructureCreation.Controller
         public void Start(StationAssemblyFactory stnAsmFactory)
         {
             string itemName = "MainToolAssembly";
-            AsmCodeGeneratorServicecs asmCodeGenerator = new AsmCodeGeneratorServicecs(this, myForm.GetProjectInfo(), itemName);
+
+            var asmCodeGenerator = UnifiedCodeGeneratorService.CreateForAssembly(
+                this, 
+                myForm.GetProjectInfo(), 
+                itemName);
+
             stnAsmFactory.CreateStnAsmFactory();
-            stnAsmFactory.CreateToolAsmFactory(myForm.GetProjectInfo(), asmCodeGenerator.AskDrawingCode(), itemName);
+            stnAsmFactory.CreateToolAsmFactory(
+                myForm.GetProjectInfo(), 
+                asmCodeGenerator.AskDrawingCode(), 
+                itemName);
         }
         public StripLayout GetStripLayout => stripLayout;
 
