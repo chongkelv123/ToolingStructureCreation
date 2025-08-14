@@ -91,13 +91,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
-    <Compile Include="Services\AsmCodeGeneratorServicecs.cs" />
     <Compile Include="Services\CodeGeneratorService.cs" />
     <Compile Include="Services\FormValidationData.cs" />
     <Compile Include="Services\FormValidator.cs" />
     <Compile Include="Services\ICodeGeneratorServices.cs" />
-    <Compile Include="Services\PlateCodeGeneratorService.cs" />
-    <Compile Include="Services\ShoeCodeGeneratorService.cs" />
     <Compile Include="Services\UnifiedCodeGeneratorService.cs" />
     <Compile Include="Services\ValidationResult.cs" />
     <Compile Include="View\Form1.cs">
