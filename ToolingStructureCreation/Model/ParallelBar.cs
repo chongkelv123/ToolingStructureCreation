@@ -18,7 +18,7 @@ namespace ToolingStructureCreation.Model
         public int Quantity { get; set; }
 
         public const string TEMPLATE_PARALLELBAR_NAME = "3DA_Template_PARALLELBAR-V00.prt";
-        public const string PARALLELBAR = "ParallelBar";
+        public const string PBAR_PRESENTATION_NAME = "ParallelBar";
 
         public const string PARALLEL_BAR = "PARALLEL_BAR";
 
@@ -52,7 +52,7 @@ namespace ToolingStructureCreation.Model
             fileNew.UseBlankTemplate = false;
             fileNew.ApplicationName = NXDrawing.MODEL_TEMPLATE;
             fileNew.Units = Part.Units.Millimeters;
-            fileNew.TemplatePresentationName = PARALLELBAR;
+            fileNew.TemplatePresentationName = PBAR_PRESENTATION_NAME;
             fileNew.SetCanCreateAltrep(false);
             fileNew.NewFileName = $"{folderPath}{fileName}{NXDrawing.EXTENSION}";
             fileNew.MakeDisplayedPart = true;

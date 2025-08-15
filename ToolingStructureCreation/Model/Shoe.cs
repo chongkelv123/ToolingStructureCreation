@@ -20,7 +20,7 @@ namespace ToolingStructureCreation.Model
         public const string UPPER_SHOE = "UPPER_SHOE";
         public const string LOWER_SHOE = "LOWER_SHOE";
         public const string TEMPLATE_SHOE_NAME = "3DA_Template_SHOE-V00.prt";
-        public const string SHOE = "Shoe";
+        public const string SHOE_PRESENTATION_NAME = "Shoe";
 
         public Shoe(string name, double length, double width, double thickness)
         {
@@ -58,7 +58,7 @@ namespace ToolingStructureCreation.Model
             fileNew.UseBlankTemplate = false;
             fileNew.ApplicationName = NXDrawing.MODEL_TEMPLATE;
             fileNew.Units = Part.Units.Millimeters;
-            fileNew.TemplatePresentationName = SHOE;
+            fileNew.TemplatePresentationName = SHOE_PRESENTATION_NAME;
             fileNew.SetCanCreateAltrep(false);
             fileNew.NewFileName = $"{folderPath}{fileName}{NXDrawing.EXTENSION}";
             fileNew.MakeDisplayedPart = true;

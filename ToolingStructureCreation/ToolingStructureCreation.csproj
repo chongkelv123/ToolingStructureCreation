@@ -92,6 +92,9 @@
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\CodeGeneratorService.cs" />
+    <Compile Include="Services\ComponentCreationConfig.cs" />
+    <Compile Include="Services\ComponentCreationConfigs.cs" />
+    <Compile Include="Services\ComponentCreationService.cs" />
     <Compile Include="Services\FormValidationData.cs" />
     <Compile Include="Services\FormValidator.cs" />
     <Compile Include="Services\ICodeGeneratorServices.cs" />

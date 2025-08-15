@@ -17,7 +17,7 @@ namespace ToolingStructureCreation.Model
         private double thickness;        
 
         public const string TEMPLATE_PLATE_NAME = "3DA_Template_PLATE-V00.prt";                
-        public const string PLATE = "Plate";
+        public const string PLATE_PRESENTATION_NAME = "Plate";
         public const string HRC = "52~54";
         public const string MATERIAL = "GOA";        
 
@@ -57,7 +57,7 @@ namespace ToolingStructureCreation.Model
             fileNew.UseBlankTemplate = false;
             fileNew.ApplicationName = NXDrawing.MODEL_TEMPLATE;
             fileNew.Units = Part.Units.Millimeters;
-            fileNew.TemplatePresentationName = PLATE;
+            fileNew.TemplatePresentationName = PLATE_PRESENTATION_NAME;
             fileNew.SetCanCreateAltrep(false);
             fileNew.NewFileName = $"{folderPath}{fileName}{NXDrawing.EXTENSION}";
             fileNew.MakeDisplayedPart = true;
