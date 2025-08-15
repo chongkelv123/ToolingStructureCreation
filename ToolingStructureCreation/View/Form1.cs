@@ -15,12 +15,16 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToolingStructureCreation.Controller;
 using ToolingStructureCreation.Model;
+using ToolingStructureCreation.Services;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ToolingStructureCreation.View
 {
     public partial class formToolStructure : System.Windows.Forms.Form
     {
+        private readonly ManufacturingCalculationService _calculationService;
+        private readonly FormValidator _validator;
+
         Controller.Control control;
         public string GetPath => txtPath.Text + "\\";
         public double UpperShoeThk => double.TryParse(txtUpperShoeThk.Text, out double value) ? value : 0.0;
@@ -61,7 +65,30 @@ namespace ToolingStructureCreation.View
             InitializeComponent();
             InitializeCboMachine();
             InitializeCboDesign();
+
             this.control = control;
+
+            UpdateAllCalculations();
+        }
+
+        // =============================================================================
+        // 2. Create helper method to get current thickness data
+        // =============================================================================
+        private ThicknessData GetCurrentThicknessData()
+        {
+            return ThicknessData.FromForm(
+                UpperShoeThk, UpperPadThk, PunHolderThk,
+                BottomPltThk, StripperPltThk, MatThk,
+                DiePltThk, LowerPadThk, LowerShoeThk,
+                ParallelBarThk, CommonPltThk
+            );
+        }
+
+        // =============================================================================
+        // 4. Consolidated calculation update method
+        // =============================================================================
+        private void UpdateAllCalculations()
+        {
             UpdateDieHeight();
             UpdatePunchLength();
             UpdatePenetration();
@@ -216,152 +243,153 @@ namespace ToolingStructureCreation.View
         private void txtUpperShoeThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
-            UpdateDieHeight();
+            UpdateAllCalculations();
         }
         private void CheckInputAndEnableApply()
         {
-            bool allFilled =
-                !string.IsNullOrWhiteSpace(txtUpperShoeThk.Text) &&
-                !string.IsNullOrWhiteSpace(txtUpperPadThk.Text) &&
-                !string.IsNullOrWhiteSpace(txtPunHolderThk.Text) &&
-                !string.IsNullOrWhiteSpace(txtBottomPltThk.Text) &&
-                !string.IsNullOrWhiteSpace(txtStripperPltThk.Text) &&
-                !string.IsNullOrWhiteSpace(txtMatThk.Text) &&
-                !string.IsNullOrWhiteSpace(txtDiePltThk.Text) &&
-                !string.IsNullOrWhiteSpace(txtLowerPadThk.Text) &&
-                !string.IsNullOrWhiteSpace(txtLowerShoeThk.Text) &&
-                !string.IsNullOrWhiteSpace(txtParallelBarThk.Text) &&
-                !string.IsNullOrWhiteSpace(txtCommonPltThk.Text) &&
-                (IsPlateSketchSelected && IsShoeSketchSelected) &&
-                IsDirectoryExists();
+            var validationData = new FormValidationData
+            {
+                Path = txtPath.Text,
+                UpperShoeThk = txtUpperShoeThk.Text,
+                UpperPadThk = txtUpperPadThk.Text,
+                PunHolderThk = txtPunHolderThk.Text,
+                BottomPltThk = txtBottomPltThk.Text,
+                StripperPltThk = txtStripperPltThk.Text,
+                MatThk = txtMatThk.Text,
+                DiePltThk = txtDiePltThk.Text,
+                LowerPadThk = txtLowerPadThk.Text,
+                LowerShoeThk = txtLowerShoeThk.Text,
+                ParallelBarThk = txtParallelBarThk.Text,
+                CommonPltThk = txtCommonPltThk.Text,
+                IsPlateSketchSelected = isPlateSketchSelected,
+                IsShoeSketchSelected = isShoeSketchSelected
+            };
 
-            btnApply.Enabled = allFilled;
+            var validationResult = _validator.ValidateForApply(validationData);
+            btnApply.Enabled = validationResult.IsValid;
+
+            // Optional: Show validation errors in status bar or tooltip
+            if (!validationResult.IsValid && showDebugMessage)
+            {
+                string errorMessage = string.Join("\n", validationResult.Errors);
+                // Display errors if needed
+            }
         }
 
         private void txtUpperPadThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
-            UpdateDieHeight();
+            UpdateAllCalculations();
         }
 
         private void txtPunHolderThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
-            UpdateDieHeight();
-            UpdatePunchLength();
-            UpdatePenetration();
+            UpdateAllCalculations();
         }
 
         private void txtBottomPltThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
-            UpdateDieHeight();
-            UpdatePunchLength();
-            UpdatePenetration();
+            UpdateAllCalculations();
         }
 
         private void txtStripperPlt_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
-            UpdateDieHeight();
-            UpdatePunchLength();
-            UpdatePenetration();
+            UpdateAllCalculations();
         }
 
         private void txtMatThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
-            UpdateDieHeight();
-            UpdatePunchLength();
-            UpdatePenetration();
+            UpdateAllCalculations();            
         }
 
         private void txtDiePltThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
-            UpdateDieHeight();
-            UpdateFeedHeight();
+            UpdateAllCalculations();            
         }
 
         private void txtLowerPadThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
-            UpdateDieHeight();
-            UpdateFeedHeight();
+            UpdateAllCalculations();            
         }
 
         private void txtLowerShoeThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
-            UpdateDieHeight();
-            UpdateFeedHeight();
+            UpdateAllCalculations();           
         }
 
         private void txtParallelBarThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
-            UpdateDieHeight();
-            UpdateFeedHeight();
+            UpdateAllCalculations();
         }
 
         private void txtCommonPltThk_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
-            UpdateDieHeight();
-            UpdateFeedHeight();
-        }
-
-        private double SumAllThickness(params System.Windows.Forms.TextBox[] textBoxes)
-        {
-            double sum = 0;
-            foreach (var tb in textBoxes)
-            {
-                if (double.TryParse(tb.Text, out double value))
-                {
-                    sum += value;
-                }
-            }
-            return sum;
-        }
-
-        private double SnapToNearestBand(double value, List<double> bands)
-        {
-            foreach (var band in bands.OrderByDescending(b => b))
-            {
-                if (value > band && value <= band + 10.0)
-                {
-                    return band + 10.0;
-                }
-                if (value == band)
-                {
-                    return band;
-                }
-            }
-            return value;
-        }
+            UpdateAllCalculations();            
+        }        
+        
 
         public double GetDiePlt_LowPadThk()
         {
-            return SumAllThickness(
-                txtDiePltThk, txtLowerPadThk
-                );
+            var thickness = GetCurrentThicknessData();
+            return _calculationService.CalculateDiePlt_LowPadThk(thickness);
+        }                
+
+        public double GetUpperShoeZPosition()
+        {
+            var thickness = GetCurrentThicknessData();
+            return _calculationService.CalculateUpperShoeZPosition(thickness);
         }
 
-        private double GetLowerDieSetThickness()
+        public double GetParallelBarZPosition()
         {
-            return SumAllThickness(
-                txtLowerShoeThk, txtLowerPadThk, txtDiePltThk,
-                txtParallelBarThk, txtCommonPltThk
-                );
+            var thickness = GetCurrentThicknessData();
+            return _calculationService.CalculateParallelBarZPosition(thickness);
         }
+
+        public double GetCommonPlateZPosition()
+        {
+            var thickness = GetCurrentThicknessData();
+            return _calculationService.CalculateCommonPlateZPosition(thickness);
+        }        
+
+        private void UpdatePunchLength()
+        {
+            var thickness = GetCurrentThicknessData();
+            double punchLength = _calculationService.CalculatePunchLength(thickness);
+            txtPunchLength.Text = punchLength.ToString("F1");
+        }
+
+        private void UpdatePenetration()
+        {
+            var thickness = GetCurrentThicknessData();
+            double penetration = _calculationService.CalculatePenetration(thickness);
+            txtPenetration.Text = penetration.ToString("F1");
+        }
+
+        private void UpdateDieHeight()
+        {
+            var thickness = GetCurrentThicknessData();
+            double dieHeight = _calculationService.CalculateDieHeight(thickness);
+            txtDieHeight.Text = dieHeight.ToString("F1");
+        }
+
         private void UpdateFeedHeight()
         {
-            bool IsLiftHeightFilled = !string.IsNullOrWhiteSpace(txtLiftHeight.Text);
-            if (IsLiftHeightFilled)
+            if (!string.IsNullOrWhiteSpace(txtLiftHeight.Text) &&
+            double.TryParse(txtLiftHeight.Text, out double liftHeight))
             {
-                double liftHeight = double.TryParse(txtLiftHeight.Text, out double value) ? value : 0.0;
-                double lowerDieSetThickness = GetLowerDieSetThickness();
-                txtFeedHeight.Text = (liftHeight + lowerDieSetThickness).ToString();
+                var thicknesses = GetCurrentThicknessData();
+                double feedHeight = _calculationService.CalculateFeedHeight(thicknesses, liftHeight);
+                txtFeedHeight.Text = feedHeight.ToString("F1");
             }
             else
             {
@@ -369,76 +397,7 @@ namespace ToolingStructureCreation.View
             }
         }
 
-        private double GetPHld_BPlt_SPlt_MatThk()
-        {
-            return SumAllThickness(
-                txtPunHolderThk,
-                txtBottomPltThk, txtStripperPltThk, txtMatThk
-                );
-        }
 
-        public double GetUpperShoeZPosition()
-        {
-            return SumAllThickness(
-                txtUpperShoeThk,
-                txtUpperPadThk,
-                txtPunHolderThk,
-                txtBottomPltThk,
-                txtStripperPltThk,
-                txtMatThk
-                );
-        }
-
-        public double GetParallelBarZPosition()
-        {
-            return SumAllThickness(
-                txtDiePltThk, txtLowerPadThk, txtLowerShoeThk
-                ) * -1;
-        }
-
-        public double GetCommonPlateZPosition()
-        {
-            return SumAllThickness(
-                txtDiePltThk,
-                txtLowerPadThk,
-                txtLowerShoeThk,
-                txtParallelBarThk
-                ) * -1;
-        }
-
-        private double GetPunchLength()
-        {
-            List<double> punchLengthList = new List<double>
-            {
-                50.0, 60.0, 70.0, 80.0
-            };
-
-            double value = GetPHld_BPlt_SPlt_MatThk();
-
-            return SnapToNearestBand(value, punchLengthList);
-        }
-
-        private void UpdatePunchLength()
-        {
-            txtPunchLength.Text = GetPunchLength().ToString();
-        }
-
-        private void UpdatePenetration()
-        {
-            double penetration = GetPunchLength() - GetPHld_BPlt_SPlt_MatThk();
-            txtPenetration.Text = penetration.ToString();
-        }
-
-        private void UpdateDieHeight()
-        {
-            double totalThickness = SumAllThickness(
-                txtUpperShoeThk, txtUpperPadThk, txtPunHolderThk,
-                txtBottomPltThk, txtStripperPltThk, txtMatThk,
-                txtDiePltThk, txtLowerPadThk, txtLowerShoeThk,
-                txtParallelBarThk, txtCommonPltThk);
-
-            txtDieHeight.Text = totalThickness.ToString();
-        }
 
         private void txtLiftHeight_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -447,6 +406,7 @@ namespace ToolingStructureCreation.View
 
         private void txtLiftHeight_TextChanged(object sender, EventArgs e)
         {
+            CheckInputAndEnableApply();
             UpdateFeedHeight();
         }
 

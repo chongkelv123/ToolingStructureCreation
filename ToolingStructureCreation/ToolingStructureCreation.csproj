@@ -98,6 +98,8 @@
     <Compile Include="Services\FormValidationData.cs" />
     <Compile Include="Services\FormValidator.cs" />
     <Compile Include="Services\ICodeGeneratorServices.cs" />
+    <Compile Include="Services\ManufacturingCalculationService.cs" />
+    <Compile Include="Services\ThicknessData.cs" />
     <Compile Include="Services\UnifiedCodeGeneratorService.cs" />
     <Compile Include="Services\ValidationResult.cs" />
     <Compile Include="View\Form1.cs">
