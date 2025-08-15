@@ -119,24 +119,42 @@ namespace ToolingStructureCreation.Services
 
         /// <summary>
         /// Snaps a value to the nearest standard band according to manufacturing rules
-        /// If value is within 10mm above a band, snap to band + 10mm
+        /// 1. Values below smallest band snap UP to that band
+        /// 2. Values between bands: if value > band && value <= band + 10, return band + 10
+        /// 3. Values exactly matching a band return that band
+        /// 4. Values above all bands return original value
         /// </summary>
         public double SnapToNearestBand(double value, List<double> bands)
         {
             if (bands == null || !bands.Any())
                 return value;
 
-            foreach (var band in bands.OrderByDescending(b => b))
+            // Sort bands in ascending order for proper logic
+            var sortedBands = bands.OrderBy(b => b).ToList();
+
+            // Case 1: Value is below the smallest band - snap UP to smallest band
+            if (value <= sortedBands.First())
             {
-                if (value > band && value <= band + 10.0)
-                {
-                    return band + 10.0;
-                }
+                return sortedBands.First();
+            }
+
+            // Case 2 & 3: Check each band for exact match or +10mm rule
+            foreach (var band in sortedBands)
+            {
+                // Exact match - return the band
                 if (value == band)
                 {
                     return band;
                 }
+
+                // Between band and band+10 - snap to band+10
+                if (value > band && value <= band + 10.0)
+                {
+                    return band + 10.0;
+                }
             }
+
+            // Case 4: Value is above all bands and their +10 ranges - return original
             return value;
         }
 
@@ -153,6 +171,18 @@ namespace ToolingStructureCreation.Services
                    thicknesses.DiePltThk >= 0 && thicknesses.LowerPadThk >= 0 &&
                    thicknesses.LowerShoeThk >= 0 && thicknesses.ParallelBarThk >= 0 &&
                    thicknesses.CommonPltThk >= 0;
+        }
+
+        /// <summary>
+        /// Validates that critical thickness values are greater than zero for manufacturing
+        /// </summary>
+        public bool ValidateCriticalThicknesses(ThicknessData thicknesses)
+        {
+            if (thicknesses == null) return false;
+
+            // These values must be > 0 for valid manufacturing
+            return thicknesses.UpperShoeThk > 0 && thicknesses.DiePltThk > 0 &&
+                   thicknesses.LowerShoeThk > 0 && thicknesses.MatThk > 0;
         }
 
         #endregion

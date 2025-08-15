@@ -66,6 +66,9 @@ namespace ToolingStructureCreation.View
             InitializeCboMachine();
             InitializeCboDesign();
 
+            _calculationService = new ManufacturingCalculationService();
+            _validator = new FormValidator();
+
             this.control = control;
 
             UpdateAllCalculations();

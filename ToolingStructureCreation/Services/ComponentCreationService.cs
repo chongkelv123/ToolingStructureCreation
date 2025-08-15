@@ -123,12 +123,14 @@ namespace ToolingStructureCreation.Services
 
         private void UpdatePartProperties(ComponentCreationConfig config)
         {
+            string thicknessFormat = config.PartPropertiesType == PartProperties.SHOE ? "F1" : "F2";
+
             NXDrawing.UpdatePartProperties(
                 config.ProjectInfo,
                 config.DrawingCode,
                 config.ItemName,
                 config.Length.ToString("F1"),
-                config.Thickness.ToString("F2"),
+                config.Thickness.ToString(thicknessFormat),
                 config.Width.ToString("F1"),
                 config.HardnessOrGrade,
                 config.Material,

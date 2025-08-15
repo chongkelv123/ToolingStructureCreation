@@ -88,9 +88,9 @@ namespace ToolingStructureCreation.Services.Tests
         #region Punch Length Calculation Tests
 
         [TestMethod]
-        public void CalculatePunchLength_RequiredLength45_Returns60()
+        public void CalculatePunchLength_RequiredLength45_Returns50()
         {
-            // Arrange - set values that sum to 45mm (between 50-60 band)
+            // Arrange - set values that sum to 45mm (below 50 band)
             var thicknesses = new ThicknessData
             {
                 PunHolderThk = 20.0,
@@ -255,7 +255,7 @@ namespace ToolingStructureCreation.Services.Tests
 
         #endregion
 
-        #region Position Calculation Tests
+        #region Z-Position Calculation Tests
 
         [TestMethod]
         public void CalculateUpperShoeZPosition_StandardValues_ReturnsCorrectSum()
@@ -270,13 +270,13 @@ namespace ToolingStructureCreation.Services.Tests
                 StripperPltThk = 20.0,
                 MatThk = 2.0
             };
-            var expected = 174.0; // Sum of upper components
+            var expected = 174.0; // UpperShoe + UpperPad + PunHolder + BottomPlt + StripperPlt + Mat (70+27+30+25+20+2)
 
             // Act
             var result = _service.CalculateUpperShoeZPosition(thicknesses);
 
             // Assert
-            Assert.AreEqual(expected, result, 0.01, "Upper shoe Z position should sum upper components");
+            Assert.AreEqual(expected, result, 0.01, "Upper shoe Z position should sum components above die plate");
         }
 
         [TestMethod]
@@ -295,7 +295,8 @@ namespace ToolingStructureCreation.Services.Tests
             var result = _service.CalculateParallelBarZPosition(thicknesses);
 
             // Assert
-            Assert.AreEqual(expected, result, 0.01, "Parallel bar Z position should be negative sum of lower components");
+            Assert.AreEqual(expected, result, 0.01, "Parallel bar Z position should be negative (below die plate)");
+            Assert.IsTrue(result < 0, "Parallel bar should be positioned below die plate");
         }
 
         [TestMethod]
@@ -315,12 +316,28 @@ namespace ToolingStructureCreation.Services.Tests
             var result = _service.CalculateCommonPlateZPosition(thicknesses);
 
             // Assert
-            Assert.AreEqual(expected, result, 0.01, "Common plate Z position should include parallel bar thickness");
+            Assert.AreEqual(expected, result, 0.01, "Common plate should be at bottom of assembly");
+            Assert.IsTrue(result < 0, "Common plate should be positioned below die plate");
         }
 
         #endregion
 
-        #region Sub-Calculation Tests
+        #region Helper Calculation Tests
+
+        [TestMethod]
+        public void CalculatePHld_BPlt_SPlt_MatThk_StandardValues_ReturnsCorrectSum()
+        {
+            // Arrange
+            var thicknesses = _standardTestData;
+            var expected = thicknesses.PunHolderThk + thicknesses.BottomPltThk +
+                          thicknesses.StripperPltThk + thicknesses.MatThk;
+
+            // Act
+            var result = _service.CalculatePHld_BPlt_SPlt_MatThk(thicknesses);
+
+            // Assert
+            Assert.AreEqual(expected, result, 0.01, "Should sum punch holder, bottom plate, stripper plate, and material thickness");
+        }
 
         [TestMethod]
         public void CalculateDiePlt_LowPadThk_ReturnsCorrectSum()
@@ -337,7 +354,7 @@ namespace ToolingStructureCreation.Services.Tests
             var result = _service.CalculateDiePlt_LowPadThk(thicknesses);
 
             // Assert
-            Assert.AreEqual(expected, result, 0.01, "Die plate + lower pad thickness should sum correctly");
+            Assert.AreEqual(expected, result, 0.01, "Should sum die plate and lower pad thickness");
         }
 
         [TestMethod]
@@ -358,12 +375,12 @@ namespace ToolingStructureCreation.Services.Tests
             var result = _service.CalculateLowerDieSetThickness(thicknesses);
 
             // Assert
-            Assert.AreEqual(expected, result, 0.01, "Lower die set thickness should sum all lower components");
+            Assert.AreEqual(expected, result, 0.01, "Should sum all lower die set components");
         }
 
         #endregion
 
-        #region Utility Method Tests
+        #region Band Snapping Utility Method Tests
 
         [TestMethod]
         public void SnapToNearestBand_Value45WithStandardBands_Returns50()
@@ -506,6 +523,33 @@ namespace ToolingStructureCreation.Services.Tests
             Assert.IsFalse(result, "Null thickness data should be invalid");
         }
 
+        [TestMethod]
+        public void ValidateCriticalThicknesses_AllCriticalPositive_ReturnsTrue()
+        {
+            // Arrange
+            var thicknesses = ThicknessData.CreateTestData(); // All positive values
+
+            // Act
+            var result = _service.ValidateCriticalThicknesses(thicknesses);
+
+            // Assert
+            Assert.IsTrue(result, "All positive critical thickness values should be valid");
+        }
+
+        [TestMethod]
+        public void ValidateCriticalThicknesses_ZeroCriticalValue_ReturnsFalse()
+        {
+            // Arrange
+            var thicknesses = ThicknessData.CreateTestData();
+            thicknesses.MatThk = 0.0; // Critical value set to zero
+
+            // Act
+            var result = _service.ValidateCriticalThicknesses(thicknesses);
+
+            // Assert
+            Assert.IsFalse(result, "Zero critical thickness values should be invalid");
+        }
+
         #endregion
 
         #region Integration Tests
@@ -563,6 +607,56 @@ namespace ToolingStructureCreation.Services.Tests
             Assert.IsTrue(penetration >= 0 && penetration <= 20, "Penetration should be reasonable");
             Assert.IsTrue(feedHeight > liftHeight, "Feed height should be greater than lift height");
             Assert.IsTrue(_service.ValidateThicknesses(thicknesses), "All thicknesses should be valid");
+        }
+
+        [TestMethod]
+        public void ZPositionRelationships_VerifyCorrectOrder()
+        {
+            // Arrange
+            var thicknesses = ThicknessData.CreateTestData();
+
+            // Act
+            var upperShoeZ = _service.CalculateUpperShoeZPosition(thicknesses);
+            var parallelBarZ = _service.CalculateParallelBarZPosition(thicknesses);
+            var commonPlateZ = _service.CalculateCommonPlateZPosition(thicknesses);
+
+            // Assert - Verify Z-position relationships
+            Assert.IsTrue(upperShoeZ > 0, "Upper shoe should be above die plate (positive Z)");
+            Assert.IsTrue(parallelBarZ < 0, "Parallel bar should be below die plate (negative Z)");
+            Assert.IsTrue(commonPlateZ < 0, "Common plate should be below die plate (negative Z)");
+            Assert.IsTrue(commonPlateZ < parallelBarZ, "Common plate should be below parallel bar");
+        }
+
+        [TestMethod]
+        public void EdgeCase_MinimumValidThicknesses()
+        {
+            // Arrange - Minimum valid manufacturing values
+            var thicknesses = new ThicknessData
+            {
+                UpperShoeThk = 25.0,
+                UpperPadThk = 5.0,
+                PunHolderThk = 15.0,
+                BottomPltThk = 10.0,
+                StripperPltThk = 8.0,
+                MatThk = 0.5,
+                DiePltThk = 20.0,
+                LowerPadThk = 8.0,
+                LowerShoeThk = 25.0,
+                ParallelBarThk = 5.0,
+                CommonPltThk = 15.0
+            };
+
+            // Act
+            var dieHeight = _service.CalculateDieHeight(thicknesses);
+            var punchLength = _service.CalculatePunchLength(thicknesses);
+            var penetration = _service.CalculatePenetration(thicknesses);
+
+            // Assert
+            Assert.IsTrue(dieHeight > 0, "Die height should be positive");
+            Assert.IsTrue(punchLength >= 50, "Punch length should meet minimum standard");
+            Assert.IsTrue(penetration >= 0, "Penetration should be non-negative");
+            Assert.IsTrue(_service.ValidateThicknesses(thicknesses), "Minimum values should be valid");
+            Assert.IsTrue(_service.ValidateCriticalThicknesses(thicknesses), "Critical minimum values should be valid");
         }
 
         #endregion
