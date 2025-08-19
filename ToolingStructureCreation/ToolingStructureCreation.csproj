@@ -69,6 +69,7 @@
     <Compile Include="Model\CommonPlate.cs" />
     <Compile Include="Model\CommonPlateBase.cs" />
     <Compile Include="Model\CommonPlateLeft.cs" />
+    <Compile Include="Model\CommonPlateNoClampSlot.cs" />
     <Compile Include="Model\CommonPlateRight.cs" />
     <Compile Include="Model\Designer.cs" />
     <Compile Include="Model\Machine.cs" />

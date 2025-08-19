@@ -130,9 +130,7 @@ namespace ToolingStructureCreation.Model
                 var uprShoeGenerator = UnifiedCodeGeneratorService.CreateForShoe(
                     control,
                     projectInfo,
-                    uprShoeItemName);
-
-                //ShoeCodeGeneratorService uprShoeGenerator = new ShoeCodeGeneratorService(control, projectInfo, uprShoeItemName);
+                    uprShoeItemName);                
 
                 string uprShoeFileNameWithoutExtension = uprShoeGenerator.AskFileName();
                 uprShoeComponentCollection.Add(uprShoeFileNameWithoutExtension);
@@ -159,7 +157,7 @@ namespace ToolingStructureCreation.Model
                     lowShoeGenerator.AskDrawingCode(),
                     itemName2
                     );
-            }
+            }            
 
             // Create Parallel Bar
             if (shoeSketch != null)
@@ -227,8 +225,9 @@ namespace ToolingStructureCreation.Model
                 var compCodeGenerator = UnifiedCodeGeneratorService.CreateForShoe(control, myForm.GetProjectInfo(), compPltItemName);
                 string compPlatefileName = compCodeGenerator.AskFileName();
                 comPltComponentCollection.Add(compPlatefileName);
-                CommonPlateBase commonPlate = new CommonPlate(commonPltInfo.GetLength(), commonPltInfo.GetWidth(), myForm.CommonPltThk, compPlatefileName);
-                commonPlate.CreateNewCommonPlate(
+                commonPltInfo.FileName = compPlatefileName;
+                //CommonPlateBase commonPlate = new CommonPlate(commonPltInfo.GetLength(), commonPltInfo.GetWidth(), myForm.CommonPltThk, compPlatefileName);
+                commonPltInfo.CreateNewCommonPlate(
                     folderPath,
                     myForm.GetProjectInfo(),
                     compCodeGenerator.AskDrawingCode(),

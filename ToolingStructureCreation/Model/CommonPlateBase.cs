@@ -13,7 +13,7 @@ namespace ToolingStructureCreation.Model
         private double width;
         private double thickness;
 
-        public string FileName { get; }
+        public string FileName { get; set; }
 
         public const string LOWER_COMMON_PLATE = "LOWER_COMMON_PLATE";
 

@@ -1,6 +1,7 @@
 ﻿using NXOpen.Layout2d;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace ToolingStructureCreation.Model
             return machines;
         }
 
-        public CommonPlate GetCommonPlate(string machineName)
+        public CommonPlateBase GetCommonPlate(string machineName)
         {
             if (string.IsNullOrEmpty(machineName) || !machines.Contains(machineName))
             {
@@ -56,52 +57,50 @@ namespace ToolingStructureCreation.Model
                     length = 2100;
                     width = 700;
                     thickness = 60;
-                    break;
+                    return new CommonPlateNoClampSlot(length, width, thickness);
                 case MC303:
                     length = 2100;
                     width = 700;
                     thickness = 60;
-                    break;
+                    return new CommonPlateNoClampSlot(length, width, thickness);
                 case MC254:
                     length = 2100;
                     width = 700;
                     thickness = 60;
-                    break;
+                    return new CommonPlateNoClampSlot(length, width, thickness);
                 case MC302:
                     length = 1800;
                     width = 700;
                     thickness = 60;
-                    break;
+                    return new CommonPlateNoClampSlot(length, width, thickness);
                 case MC602:
                     length = 2300;
                     width = 960;
                     thickness = 60;
-                    break;
+                    return new CommonPlate(length, width, thickness);
                 case MC403:
                     length = 2100;
                     width = 700;
                     thickness = 60;
-                    break;
+                    return new CommonPlateNoClampSlot(length, width, thickness);
                 case MC803:
                     length = 2300;
                     width = 960;
                     thickness = 60;
-                    break;
+                    return new CommonPlate(length, width, thickness);
                 case MC1801:
                     length = 2600;
                     width = 960;
                     thickness = 60;
-                    break;
+                    return new CommonPlate(length, width, thickness);
                 case MC1202:
                     length = 2600;
                     width = 960;
                     thickness = 60;
-                    break;
+                    return new CommonPlate(length, width, thickness);
                 default:
                     throw new ArgumentException("Invalid machine name provided.");
-            }
-
-            return new CommonPlate(length, width, thickness);
+            }            
         }
 
     }
