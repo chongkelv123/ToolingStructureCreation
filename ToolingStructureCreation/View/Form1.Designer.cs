@@ -28,12 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formToolStructure));
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnApply = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txtPath = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnCWidthPickDim = new System.Windows.Forms.Button();
+            this.btnMatPickDim = new System.Windows.Forms.Button();
+            this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.radPartialCoverage = new System.Windows.Forms.RadioButton();
+            this.radFullCoverage = new System.Windows.Forms.RadioButton();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.chkActiveComPltSkt = new System.Windows.Forms.CheckBox();
             this.cboMachine = new System.Windows.Forms.ComboBox();
@@ -50,6 +54,8 @@
             this.txtPunchLength = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.txtDieHeight = new System.Windows.Forms.TextBox();
+            this.txtCoilWidth = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
             this.txtCommonPltThk = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.txtParallelBarThk = new System.Windows.Forms.TextBox();
@@ -98,6 +104,7 @@
             this.btnSelectComPltSketch = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox12.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -156,17 +163,22 @@
             this.txtPath.Name = "txtPath";
             this.txtPath.Size = new System.Drawing.Size(644, 22);
             this.txtPath.TabIndex = 0;
-            this.txtPath.TextChanged += new System.EventHandler(this.txtPath_TextChanged);
+            this.txtPath.TextChanged += new System.EventHandler(this.txtBox_textChanged);
             // 
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupBox2.Controls.Add(this.btnCWidthPickDim);
+            this.groupBox2.Controls.Add(this.btnMatPickDim);
+            this.groupBox2.Controls.Add(this.groupBox12);
             this.groupBox2.Controls.Add(this.groupBox8);
             this.groupBox2.Controls.Add(this.groupBox5);
             this.groupBox2.Controls.Add(this.groupBox4);
             this.groupBox2.Controls.Add(this.groupBox3);
+            this.groupBox2.Controls.Add(this.txtCoilWidth);
+            this.groupBox2.Controls.Add(this.label22);
             this.groupBox2.Controls.Add(this.txtCommonPltThk);
             this.groupBox2.Controls.Add(this.label11);
             this.groupBox2.Controls.Add(this.txtParallelBarThk);
@@ -196,6 +208,61 @@
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Tooling Structure: Assign Plate Thickness";
+            // 
+            // btnCWidthPickDim
+            // 
+            this.btnCWidthPickDim.Location = new System.Drawing.Point(206, 336);
+            this.btnCWidthPickDim.Name = "btnCWidthPickDim";
+            this.btnCWidthPickDim.Size = new System.Drawing.Size(65, 22);
+            this.btnCWidthPickDim.TabIndex = 15;
+            this.btnCWidthPickDim.Text = "Pick";
+            this.btnCWidthPickDim.UseVisualStyleBackColor = true;
+            this.btnCWidthPickDim.Click += new System.EventHandler(this.btnCWidthPickDim_Click);
+            // 
+            // btnMatPickDim
+            // 
+            this.btnMatPickDim.Location = new System.Drawing.Point(206, 165);
+            this.btnMatPickDim.Name = "btnMatPickDim";
+            this.btnMatPickDim.Size = new System.Drawing.Size(65, 22);
+            this.btnMatPickDim.TabIndex = 15;
+            this.btnMatPickDim.Text = "Pick";
+            this.btnMatPickDim.UseVisualStyleBackColor = true;
+            this.btnMatPickDim.Click += new System.EventHandler(this.btnMatPickDim_Click);
+            // 
+            // groupBox12
+            // 
+            this.groupBox12.Controls.Add(this.radPartialCoverage);
+            this.groupBox12.Controls.Add(this.radFullCoverage);
+            this.groupBox12.Location = new System.Drawing.Point(549, 17);
+            this.groupBox12.Name = "groupBox12";
+            this.groupBox12.Size = new System.Drawing.Size(335, 65);
+            this.groupBox12.TabIndex = 14;
+            this.groupBox12.TabStop = false;
+            this.groupBox12.Text = "Material Guide Coverage Type";
+            // 
+            // radPartialCoverage
+            // 
+            this.radPartialCoverage.AutoSize = true;
+            this.radPartialCoverage.Checked = true;
+            this.radPartialCoverage.Location = new System.Drawing.Point(124, 27);
+            this.radPartialCoverage.Name = "radPartialCoverage";
+            this.radPartialCoverage.Size = new System.Drawing.Size(129, 20);
+            this.radPartialCoverage.TabIndex = 1;
+            this.radPartialCoverage.TabStop = true;
+            this.radPartialCoverage.Text = "Partial Coverage";
+            this.radPartialCoverage.UseVisualStyleBackColor = true;
+            // 
+            // radFullCoverage
+            // 
+            this.radFullCoverage.AutoSize = true;
+            this.radFullCoverage.Location = new System.Drawing.Point(6, 27);
+            this.radFullCoverage.Name = "radFullCoverage";
+            this.radFullCoverage.Size = new System.Drawing.Size(112, 20);
+            this.radFullCoverage.TabIndex = 0;
+            this.radFullCoverage.TabStop = true;
+            this.radFullCoverage.Text = "Full Coverage";
+            this.radFullCoverage.UseVisualStyleBackColor = true;
+            this.radFullCoverage.CheckedChanged += new System.EventHandler(this.MatGuideCoverType_CheckedChange);
             // 
             // groupBox8
             // 
@@ -287,8 +354,8 @@
             this.txtLiftHeight.Size = new System.Drawing.Size(108, 22);
             this.txtLiftHeight.TabIndex = 12;
             this.txtLiftHeight.Text = "5.0";
-            this.txtLiftHeight.TextChanged += new System.EventHandler(this.txtLiftHeight_TextChanged);
-            this.txtLiftHeight.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtLiftHeight_KeyPress);
+            this.txtLiftHeight.TextChanged += new System.EventHandler(this.txtBox_textChanged);
+            this.txtLiftHeight.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBox_KeyPress);
             // 
             // groupBox4
             // 
@@ -358,6 +425,25 @@
             this.txtDieHeight.Size = new System.Drawing.Size(108, 22);
             this.txtDieHeight.TabIndex = 7;
             // 
+            // txtCoilWidth
+            // 
+            this.txtCoilWidth.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtCoilWidth.Location = new System.Drawing.Point(121, 337);
+            this.txtCoilWidth.Name = "txtCoilWidth";
+            this.txtCoilWidth.Size = new System.Drawing.Size(79, 22);
+            this.txtCoilWidth.TabIndex = 12;
+            this.txtCoilWidth.TextChanged += new System.EventHandler(this.txtBox_textChanged);
+            this.txtCoilWidth.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBox_KeyPress);
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(6, 340);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(87, 16);
+            this.label22.TabIndex = 1;
+            this.label22.Text = "COIL WIDTH:";
+            // 
             // txtCommonPltThk
             // 
             this.txtCommonPltThk.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -367,8 +453,8 @@
             this.txtCommonPltThk.Size = new System.Drawing.Size(150, 22);
             this.txtCommonPltThk.TabIndex = 11;
             this.txtCommonPltThk.Text = "60.0";
-            this.txtCommonPltThk.TextChanged += new System.EventHandler(this.txtCommonPltThk_TextChanged);
-            this.txtCommonPltThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCommonPltThk_KeyPress);
+            this.txtCommonPltThk.TextChanged += new System.EventHandler(this.txtBox_textChanged);
+            this.txtCommonPltThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBox_textChanged);
             // 
             // label11
             // 
@@ -387,8 +473,8 @@
             this.txtParallelBarThk.Size = new System.Drawing.Size(150, 22);
             this.txtParallelBarThk.TabIndex = 10;
             this.txtParallelBarThk.Text = "155.0";
-            this.txtParallelBarThk.TextChanged += new System.EventHandler(this.txtParallelBarThk_TextChanged);
-            this.txtParallelBarThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtParallelBarThk_KeyPress);
+            this.txtParallelBarThk.TextChanged += new System.EventHandler(this.txtBox_textChanged);
+            this.txtParallelBarThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBox_textChanged);
             // 
             // label10
             // 
@@ -407,8 +493,8 @@
             this.txtLowerShoeThk.Size = new System.Drawing.Size(150, 22);
             this.txtLowerShoeThk.TabIndex = 9;
             this.txtLowerShoeThk.Text = "70.0";
-            this.txtLowerShoeThk.TextChanged += new System.EventHandler(this.txtLowerShoeThk_TextChanged);
-            this.txtLowerShoeThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtLowerShoeThk_KeyPress);
+            this.txtLowerShoeThk.TextChanged += new System.EventHandler(this.txtBox_textChanged);
+            this.txtLowerShoeThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBox_textChanged);
             // 
             // label9
             // 
@@ -427,8 +513,8 @@
             this.txtLowerPadThk.Size = new System.Drawing.Size(150, 22);
             this.txtLowerPadThk.TabIndex = 8;
             this.txtLowerPadThk.Text = "25.0";
-            this.txtLowerPadThk.TextChanged += new System.EventHandler(this.txtLowerPadThk_TextChanged);
-            this.txtLowerPadThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtLowerPadThk_KeyPress);
+            this.txtLowerPadThk.TextChanged += new System.EventHandler(this.txtBox_textChanged);
+            this.txtLowerPadThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBox_textChanged);
             // 
             // label7
             // 
@@ -447,8 +533,8 @@
             this.txtDiePltThk.Size = new System.Drawing.Size(150, 22);
             this.txtDiePltThk.TabIndex = 7;
             this.txtDiePltThk.Text = "35.0";
-            this.txtDiePltThk.TextChanged += new System.EventHandler(this.txtDiePltThk_TextChanged);
-            this.txtDiePltThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDiePltThk_KeyPress);
+            this.txtDiePltThk.TextChanged += new System.EventHandler(this.txtBox_textChanged);
+            this.txtDiePltThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBox_textChanged);
             // 
             // label6
             // 
@@ -464,11 +550,11 @@
             this.txtMatThk.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtMatThk.Location = new System.Drawing.Point(121, 165);
             this.txtMatThk.Name = "txtMatThk";
-            this.txtMatThk.Size = new System.Drawing.Size(150, 22);
+            this.txtMatThk.Size = new System.Drawing.Size(79, 22);
             this.txtMatThk.TabIndex = 6;
             this.txtMatThk.Text = "1.55";
-            this.txtMatThk.TextChanged += new System.EventHandler(this.txtMatThk_TextChanged);
-            this.txtMatThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtMatThk_KeyPress);
+            this.txtMatThk.TextChanged += new System.EventHandler(this.txtBox_textChanged);
+            this.txtMatThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBox_textChanged);
             // 
             // label5
             // 
@@ -487,8 +573,8 @@
             this.txtStripperPltThk.Size = new System.Drawing.Size(150, 22);
             this.txtStripperPltThk.TabIndex = 5;
             this.txtStripperPltThk.Text = "30.0";
-            this.txtStripperPltThk.TextChanged += new System.EventHandler(this.txtStripperPlt_TextChanged);
-            this.txtStripperPltThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtStripperPlt_KeyPress);
+            this.txtStripperPltThk.TextChanged += new System.EventHandler(this.txtBox_textChanged);
+            this.txtStripperPltThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBox_textChanged);
             // 
             // label4
             // 
@@ -507,8 +593,8 @@
             this.txtBottomPltThk.Size = new System.Drawing.Size(150, 22);
             this.txtBottomPltThk.TabIndex = 4;
             this.txtBottomPltThk.Text = "16.0";
-            this.txtBottomPltThk.TextChanged += new System.EventHandler(this.txtBottomPltThk_TextChanged);
-            this.txtBottomPltThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBottomPltThk_KeyPress);
+            this.txtBottomPltThk.TextChanged += new System.EventHandler(this.txtBox_textChanged);
+            this.txtBottomPltThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBox_textChanged);
             // 
             // label3
             // 
@@ -527,8 +613,8 @@
             this.txtPunHolderThk.Size = new System.Drawing.Size(150, 22);
             this.txtPunHolderThk.TabIndex = 3;
             this.txtPunHolderThk.Text = "30.0";
-            this.txtPunHolderThk.TextChanged += new System.EventHandler(this.txtPunHolderThk_TextChanged);
-            this.txtPunHolderThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtPunHolderThk_KeyPress);
+            this.txtPunHolderThk.TextChanged += new System.EventHandler(this.txtBox_textChanged);
+            this.txtPunHolderThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBox_textChanged);
             // 
             // label2
             // 
@@ -547,8 +633,8 @@
             this.txtUpperShoeThk.Size = new System.Drawing.Size(150, 22);
             this.txtUpperShoeThk.TabIndex = 1;
             this.txtUpperShoeThk.Text = "70.0";
-            this.txtUpperShoeThk.TextChanged += new System.EventHandler(this.txtUpperShoeThk_TextChanged);
-            this.txtUpperShoeThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtUpperShoeThk_KeyPress);
+            this.txtUpperShoeThk.TextChanged += new System.EventHandler(this.txtBox_textChanged);
+            this.txtUpperShoeThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBox_KeyPress);
             // 
             // label8
             // 
@@ -567,8 +653,8 @@
             this.txtUpperPadThk.Size = new System.Drawing.Size(150, 22);
             this.txtUpperPadThk.TabIndex = 2;
             this.txtUpperPadThk.Text = "27.0";
-            this.txtUpperPadThk.TextChanged += new System.EventHandler(this.txtUpperPadThk_TextChanged);
-            this.txtUpperPadThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtUpperPadThk_KeyPress);
+            this.txtUpperPadThk.TextChanged += new System.EventHandler(this.txtBox_textChanged);
+            this.txtUpperPadThk.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBox_KeyPress);
             // 
             // label1
             // 
@@ -583,11 +669,10 @@
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(579, 21);
+            this.pictureBox1.Location = new System.Drawing.Point(552, 92);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(305, 307);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.Size = new System.Drawing.Size(332, 267);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -862,6 +947,8 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox12.ResumeLayout(false);
+            this.groupBox12.PerformLayout();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
             this.groupBox5.ResumeLayout(false);
@@ -949,5 +1036,12 @@
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Button btnSelectComPltSketch;
         private System.Windows.Forms.CheckBox chkActiveComPltSkt;
+        private System.Windows.Forms.GroupBox groupBox12;
+        private System.Windows.Forms.RadioButton radPartialCoverage;
+        private System.Windows.Forms.RadioButton radFullCoverage;
+        private System.Windows.Forms.Button btnMatPickDim;
+        private System.Windows.Forms.TextBox txtCoilWidth;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Button btnCWidthPickDim;
     }
 }

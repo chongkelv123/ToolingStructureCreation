@@ -24,7 +24,8 @@ namespace ToolingStructureCreation.Services
             nameof(FormValidationData.LowerPadThk),
             nameof(FormValidationData.LowerShoeThk),
             nameof(FormValidationData.ParallelBarThk),
-            nameof(FormValidationData.CommonPltThk)
+            nameof(FormValidationData.CommonPltThk),
+            nameof(FormValidationData.CoilWidth)
         };
 
         /// <summary>

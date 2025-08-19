@@ -23,6 +23,7 @@ namespace ToolingStructureCreation.Services
         public string LowerShoeThk { get; set; }
         public string ParallelBarThk { get; set; }
         public string CommonPltThk { get; set; }
+        public string CoilWidth { get; set; }
         public bool IsPlateSketchSelected { get; set; }
         public bool IsShoeSketchSelected { get; set; }
 

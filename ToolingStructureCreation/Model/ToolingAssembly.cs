@@ -10,7 +10,7 @@ namespace ToolingStructureCreation.Model
 {
     public class ToolingAssembly
     {
-        public Dictionary<string, double> PlateThicknesses { get; set; }
+        //public Dictionary<string, double> PlateThicknesses { get; set; }
         double plateWidth;
         double plateLength;
         string stationNumber;
@@ -31,10 +31,10 @@ namespace ToolingStructureCreation.Model
             this.folderPath = folderPath;
             session = drawing.GetSession();
 
-            PlateThicknesses = plateThicknesses ?? new Dictionary<string, double>();
+            //PlateThicknesses = plateThicknesses ?? new Dictionary<string, double>();
         }
 
-        public double GetTotalThickness()
+        /*public double GetTotalThickness()
         {
             double totalThickness = 0.0;
             foreach (var plate in PlateThicknesses)
@@ -45,7 +45,7 @@ namespace ToolingStructureCreation.Model
                 }
             }
             return totalThickness;
-        }
+        }*/
 
         public double GetPlateWidth()
         {

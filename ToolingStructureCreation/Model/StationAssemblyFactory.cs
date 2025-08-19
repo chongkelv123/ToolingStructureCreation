@@ -8,8 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using ToolingStructureCreation.Services;
 using ToolingStructureCreation.View;
-using static NXOpen.Display.DecalBuilder;
-using static NXOpen.Motion.HydrodynamicBearingBuilder;
 
 namespace ToolingStructureCreation.Model
 {
@@ -52,7 +50,7 @@ namespace ToolingStructureCreation.Model
             subToolAsmCollection = new List<string>();
         }
 
-        public void CreateStnAsmFactory()
+        public void CreateStnAsmFactory(ToolingInfo toolingInfo)
         {
             //System.Diagnostics.Debugger.Launch();
             if (PlateThicknesses == null)
@@ -87,7 +85,10 @@ namespace ToolingStructureCreation.Model
 
                     string fileName = pltCodeGenerator.AskFileName();
                     pltLists.Add(fileName, plt.Value);
-                    Plate plate = new Plate(fileName, stnSketch.Length, stnSketch.Width, plt.Value);
+                    double plateWidth = toolingInfo.MaterialGuideType == MaterialGuideType.FullCoverage && type == ToolingStructureType.STRIPPER_PLATE
+                        ? toolingInfo.CoilWidth - 11.0
+                        : stnSketch.Width;
+                    Plate plate = new Plate(fileName, stnSketch.Length, plateWidth, plt.Value);
                     string itemName2 = plt.Key.Replace("_", " ");
                     plate.CreateNewPlate(
                         folderPath,

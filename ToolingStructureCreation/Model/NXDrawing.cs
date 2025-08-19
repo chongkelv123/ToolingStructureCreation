@@ -172,6 +172,44 @@ namespace ToolingStructureCreation.Model
             info.StringValue = partType;
             properties.SetAttribute(info);
         }
+
+        public static string GetTextFromDimension()
+        {
+            Selection selManager = UI.GetUI().SelectionManager;
+            TaggedObject selectedObject;
+            Point3d cursor;
+            string message = "Please select a dimension to get its text value.";
+            string title = "Get Dimension Text";
+            var scope = NXOpen.Selection.SelectionScope.WorkPartAndWorkPartOccurrence;
+            var action = NXOpen.Selection.SelectionAction.ClearAndEnableSpecific;
+            bool keepHighlighted = false;
+            bool includeFeature = false;
+
+            string result = null;
+
+            var dimMask = new Selection.MaskTriple(
+                NXOpen.UF.UFConstants.UF_dimension_type,
+                UFConstants.UF_dim_horizontal_subtype,
+                UFConstants.UF_all_subtype);
+            Selection.MaskTriple[] maskArray = new Selection.MaskTriple[]
+            {
+                dimMask
+            };
+            var response = selManager.SelectTaggedObject(message, title, scope, action, includeFeature, keepHighlighted, maskArray, out selectedObject, out cursor);
+
+            if (response != NXOpen.Selection.Response.Cancel && response != NXOpen.Selection.Response.Back)
+            {
+                //System.Diagnostics.Debugger.Launch();  
+                string[] texts;
+                string[] dual_texts;
+                int num_main_text;
+                int num_dual_text;
+                UFSession.GetUFSession().Drf.AskDimensionText(selectedObject.Tag, out num_main_text, out texts, out num_dual_text, out dual_texts);
+                result = texts[0];
+            }
+
+            return result;
+        }
     }
 }
 

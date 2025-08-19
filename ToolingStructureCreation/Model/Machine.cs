@@ -22,17 +22,17 @@ namespace ToolingStructureCreation.Model
 
         public Machine()
         {
-            machines = new List<string>() { 
-                Machine.MC304, 
-                Machine.MC303, 
-                Machine.MC254, 
-                Machine.MC302, 
-                Machine.MC602, 
-                Machine.MC403, 
-                Machine.MC803, 
-                Machine.MC1801, 
+            machines = new List<string>() {
+                Machine.MC304,
+                Machine.MC303,
+                Machine.MC254,
+                Machine.MC302,
+                Machine.MC602,
+                Machine.MC403,
+                Machine.MC803,
+                Machine.MC1801,
                 Machine.MC1202 };
-            
+
         }
         public List<string> GetMachines()
         {
@@ -55,22 +55,22 @@ namespace ToolingStructureCreation.Model
                 case MC304:
                     length = 2100;
                     width = 700;
-                    thickness = 40;                    
+                    thickness = 60;
                     break;
                 case MC303:
                     length = 2100;
                     width = 700;
-                    thickness = 40;
+                    thickness = 60;
                     break;
                 case MC254:
                     length = 2100;
                     width = 700;
-                    thickness = 40;
+                    thickness = 60;
                     break;
                 case MC302:
-                    length = 2100;
+                    length = 1800;
                     width = 700;
-                    thickness = 40;
+                    thickness = 60;
                     break;
                 case MC602:
                     length = 2300;
@@ -78,8 +78,8 @@ namespace ToolingStructureCreation.Model
                     thickness = 60;
                     break;
                 case MC403:
-                    length = 2300;
-                    width = 960;
+                    length = 2100;
+                    width = 700;
                     thickness = 60;
                     break;
                 case MC803:
@@ -98,7 +98,7 @@ namespace ToolingStructureCreation.Model
                     thickness = 60;
                     break;
                 default:
-                    throw new ArgumentException("Invalid machine name provided.");                    
+                    throw new ArgumentException("Invalid machine name provided.");
             }
 
             return new CommonPlate(length, width, thickness);

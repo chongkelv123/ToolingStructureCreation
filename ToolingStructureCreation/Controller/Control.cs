@@ -44,7 +44,7 @@ namespace ToolingStructureCreation.Controller
                 myForm.GetProjectInfo(), 
                 itemName);
 
-            stnAsmFactory.CreateStnAsmFactory();
+            stnAsmFactory.CreateStnAsmFactory(myForm.GetToolingInfo());
             stnAsmFactory.CreateToolAsmFactory(
                 myForm.GetProjectInfo(), 
                 asmCodeGenerator.AskDrawingCode(), 

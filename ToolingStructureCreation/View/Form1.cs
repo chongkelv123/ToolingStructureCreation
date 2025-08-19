@@ -38,11 +38,13 @@ namespace ToolingStructureCreation.View
         public double LowerShoeThk => double.TryParse(txtLowerShoeThk.Text, out double value) ? value : 0.0;
         public double ParallelBarThk => double.TryParse(txtParallelBarThk.Text, out double value) ? value : 0.0;
         public double CommonPltThk => double.TryParse(txtCommonPltThk.Text, out double value) ? value : 0.0;
+        public double CoilWidth => double.TryParse(txtCoilWidth.Text, out double value) ? value : 0.0;
         public string GetMachineName => cboMachine.SelectedItem.ToString();
+        public MaterialGuideType MaterialGuideType { get; set; }
 
         bool isPlateSketchSelected = false;
         bool isShoeSketchSelected = false;
-        bool isComPltSketchSelected = false;
+        bool isComPltSketchSelected = false;        
         bool showDebugMessage = false; // Set to true to show debug messages
 
         public bool IsPlateSketchSelected => isPlateSketchSelected;
@@ -70,7 +72,7 @@ namespace ToolingStructureCreation.View
             _validator = new FormValidator();
 
             this.control = control;
-
+            UpdateMatGuideCoverStatus();
             UpdateAllCalculations();
         }
 
@@ -96,6 +98,14 @@ namespace ToolingStructureCreation.View
             UpdatePunchLength();
             UpdatePenetration();
             UpdateFeedHeight();
+        }
+
+        public ToolingInfo GetToolingInfo()
+        {
+            return ToolingInfo.FromForm(
+                CoilWidth,
+                MaterialGuideType
+            );
         }
 
         private void InitializeCboDesign()
@@ -173,36 +183,6 @@ namespace ToolingStructureCreation.View
             }
         }
 
-        private void txtUpperShoeThk_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            KeyPressEvent_NumericalOnly(sender, e);
-        }
-
-        private void txtUpperPadThk_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            KeyPressEvent_NumericalOnly(sender, e);
-        }
-
-        private void txtPunHolderThk_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            KeyPressEvent_NumericalOnly(sender, e);
-        }
-
-        private void txtBottomPltThk_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            KeyPressEvent_NumericalOnly(sender, e);
-        }
-
-        private void txtStripperPlt_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            KeyPressEvent_NumericalOnly(sender, e);
-        }
-
-        private void txtMatThk_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            KeyPressEvent_NumericalOnly(sender, e);
-        }
-
         private static void KeyPressEvent_NumericalOnly(object sender, KeyPressEventArgs e)
         {
             // Allow control keys (e.g., backspace), digits, and optionally a single decimal point
@@ -218,36 +198,6 @@ namespace ToolingStructureCreation.View
             }
         }
 
-        private void txtDiePltThk_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            KeyPressEvent_NumericalOnly(sender, e);
-        }
-
-        private void txtLowerPadThk_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            KeyPressEvent_NumericalOnly(sender, e);
-        }
-
-        private void txtLowerShoeThk_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            KeyPressEvent_NumericalOnly(sender, e);
-        }
-
-        private void txtParallelBarThk_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            KeyPressEvent_NumericalOnly(sender, e);
-        }
-
-        private void txtCommonPltThk_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            KeyPressEvent_NumericalOnly(sender, e);
-        }
-
-        private void txtUpperShoeThk_TextChanged(object sender, EventArgs e)
-        {
-            CheckInputAndEnableApply();
-            UpdateAllCalculations();
-        }
         private void CheckInputAndEnableApply()
         {
             var validationData = new FormValidationData
@@ -264,6 +214,7 @@ namespace ToolingStructureCreation.View
                 LowerShoeThk = txtLowerShoeThk.Text,
                 ParallelBarThk = txtParallelBarThk.Text,
                 CommonPltThk = txtCommonPltThk.Text,
+                CoilWidth = txtCoilWidth.Text,
                 IsPlateSketchSelected = isPlateSketchSelected,
                 IsShoeSketchSelected = isShoeSketchSelected
             };
@@ -279,72 +230,11 @@ namespace ToolingStructureCreation.View
             }
         }
 
-        private void txtUpperPadThk_TextChanged(object sender, EventArgs e)
-        {
-            CheckInputAndEnableApply();
-            UpdateAllCalculations();
-        }
-
-        private void txtPunHolderThk_TextChanged(object sender, EventArgs e)
-        {
-            CheckInputAndEnableApply();
-            UpdateAllCalculations();
-        }
-
-        private void txtBottomPltThk_TextChanged(object sender, EventArgs e)
-        {
-            CheckInputAndEnableApply();
-            UpdateAllCalculations();
-        }
-
-        private void txtStripperPlt_TextChanged(object sender, EventArgs e)
-        {
-            CheckInputAndEnableApply();
-            UpdateAllCalculations();
-        }
-
-        private void txtMatThk_TextChanged(object sender, EventArgs e)
-        {
-            CheckInputAndEnableApply();
-            UpdateAllCalculations();            
-        }
-
-        private void txtDiePltThk_TextChanged(object sender, EventArgs e)
-        {
-            CheckInputAndEnableApply();
-            UpdateAllCalculations();            
-        }
-
-        private void txtLowerPadThk_TextChanged(object sender, EventArgs e)
-        {
-            CheckInputAndEnableApply();
-            UpdateAllCalculations();            
-        }
-
-        private void txtLowerShoeThk_TextChanged(object sender, EventArgs e)
-        {
-            CheckInputAndEnableApply();
-            UpdateAllCalculations();           
-        }
-
-        private void txtParallelBarThk_TextChanged(object sender, EventArgs e)
-        {
-            CheckInputAndEnableApply();
-            UpdateAllCalculations();
-        }
-
-        private void txtCommonPltThk_TextChanged(object sender, EventArgs e)
-        {
-            CheckInputAndEnableApply();
-            UpdateAllCalculations();            
-        }        
-        
-
         public double GetDiePlt_LowPadThk()
         {
             var thickness = GetCurrentThicknessData();
             return _calculationService.CalculateDiePlt_LowPadThk(thickness);
-        }                
+        }
 
         public double GetUpperShoeZPosition()
         {
@@ -362,7 +252,7 @@ namespace ToolingStructureCreation.View
         {
             var thickness = GetCurrentThicknessData();
             return _calculationService.CalculateCommonPlateZPosition(thickness);
-        }        
+        }
 
         private void UpdatePunchLength()
         {
@@ -399,8 +289,6 @@ namespace ToolingStructureCreation.View
                 txtFeedHeight.Text = string.Empty;
             }
         }
-
-
 
         private void txtLiftHeight_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -619,8 +507,84 @@ namespace ToolingStructureCreation.View
                 UpdateSketchStatus(COMPLATE, lblComPltSketchStatus);
             }
 
-            //CheckInputAndEnableApply();
             this.Show();
+        }
+
+        private void btnMatPickDim_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            txtMatThk.Text = NXDrawing.GetTextFromDimension();
+            this.Show();
+        }
+
+        private void btnCWidthPickDim_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            txtCoilWidth.Text = NXDrawing.GetTextFromDimension();
+            this.Show();
+        }
+
+
+        private void txtBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            KeyPressEvent_NumericalOnly(sender, e);
+        }
+
+        private void txtBox_textChanged(object sender, EventArgs e)
+        {
+            CheckInputAndEnableApply();
+            UpdateAllCalculations();
+        }
+
+        private void MatGuideCoverType_CheckedChange(object sender, EventArgs e)
+        {
+            UpdateMatGuideCoverStatus();
+        }
+
+        private void UpdateMatGuideCoverStatus()
+        {
+            if (radFullCoverage.Checked)
+            {
+                pictureBox1.Image = Properties.Resources.FullCoverGuide;
+                MaterialGuideType = MaterialGuideType.FullCoverage;
+                PlateThkSettingFullCoverage();
+            }
+            else if (radPartialCoverage.Checked)
+            {
+                pictureBox1.Image = Properties.Resources.PartialCoverGuide;
+                MaterialGuideType = MaterialGuideType.PartialCoverage;
+                PlateThkSettingPartialCoverage();
+            }
+        }
+
+        private void PlateThkSettingPartialCoverage()
+        {
+            txtUpperShoeThk.Text = "70.0";
+            txtUpperPadThk.Text = "27.0";
+            txtPunHolderThk.Text = "30.0";
+            txtBottomPltThk.Text = "16.0";
+            txtStripperPltThk.Text = "30.0";
+            txtMatThk.Text = "1.55";
+            txtDiePltThk.Text = "35.0";
+            txtLowerPadThk.Text = "25.0";
+            txtLowerShoeThk.Text = "70.0";
+            txtParallelBarThk.Text = "155.0";
+            txtCommonPltThk.Text = "60.0";
+        }
+
+        private void PlateThkSettingFullCoverage()
+        {
+            txtUpperShoeThk.Text = "70.0";
+            txtUpperPadThk.Text = "27.0";
+            txtPunHolderThk.Text = "30.0";
+            txtBottomPltThk.Text = "29.0";
+            txtStripperPltThk.Text = "17.0";
+            txtMatThk.Text = "1.55";
+            txtDiePltThk.Text = "35.0";
+            txtLowerPadThk.Text = "25.0";
+            txtLowerShoeThk.Text = "70.0";
+            txtParallelBarThk.Text = "155.0";
+            txtCommonPltThk.Text = "60.0";
         }
     }
 }
