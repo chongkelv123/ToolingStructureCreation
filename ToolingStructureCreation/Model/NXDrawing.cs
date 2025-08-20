@@ -33,6 +33,7 @@ namespace ToolingStructureCreation.Model
         LOWERSHOE = 60,
         COMMONPLATE = 80,
         PARALLELBAR = 87,
+        MATGUIDE = 125
     }
 
     public class NXDrawing

@@ -121,6 +121,33 @@ namespace ToolingStructureCreation.Services
             };
         }
 
+        /// <summary>
+        /// Creates configuration for MatGuideFull components
+        /// </summary>
+        public static ComponentCreationConfig CreateMaterialGuideFullConfig(string templateFileName,
+            string presentationName, string folderPath, string fileName, double length,
+            double width, double thickness, ProjectInfo projectInfo, string drawingCode, string itemName)
+        {
+            return new ComponentCreationConfig
+            {
+                TemplateFileName = MatGuideFullBase.TEMPLATE_MATGUIDEFULLFRONT_NAME,
+                PresentationName = MatGuideFullBase.MATGUIDEFULLFRONT_PRESENTATION_NAME,
+                UndoDescription = "Create New Material Guide Full",
+                FolderPath = folderPath,
+                FileName = fileName,
+                Width = width,
+                Length = length,
+                Thickness = thickness,
+                ProjectInfo = projectInfo,
+                DrawingCode = drawingCode,
+                ItemName = itemName,
+                ColorAssignmentAction = AssignMaterialGuideColors,
+                PartPropertiesType = PartProperties.INSERT,
+                Material = NXDrawing.GOA,
+                HardnessOrGrade = NXDrawing.FIFTYTWO_FIFTYFOUR
+            };
+        }
+
         #region Color Assignment Methods
 
         /// <summary>
@@ -171,6 +198,16 @@ namespace ToolingStructureCreation.Services
             foreach (Body body in workPart.Bodies)
             {
                 body.Color = (int)PlateColor.COMMONPLATE;
+            }
+        }
+        /// <summary>
+        /// Assigns colors to material guide bodies
+        /// </summary>
+        private static void AssignMaterialGuideColors(Part workPart, string fileName)
+        {
+            foreach (Body body in workPart.Bodies)
+            {
+                body.Color = (int)PlateColor.MATGUIDE;
             }
         }
 

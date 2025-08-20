@@ -33,6 +33,7 @@ namespace ToolingStructureCreation.Model
         public const string PLATE = "PLATE";
         public const string ASM = "ASM";
         public const string SHOE = "SHOE";
+        public const string INSERT = "INSERT";
 
         protected PartProperties(Part workPart)
         {

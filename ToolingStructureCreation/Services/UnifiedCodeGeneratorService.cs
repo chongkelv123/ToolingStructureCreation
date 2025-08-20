@@ -91,5 +91,13 @@ namespace ToolingStructureCreation.Services
         {
             return new UnifiedCodeGeneratorService(control, projectInfo, plateType, stationNumber);
         }
+
+        /// <summary>
+        /// Factory method to create material guide code generators
+        /// </summary>
+        public static UnifiedCodeGeneratorService CreateMaterialGuide(Control control, ProjectInfo projectInfo, ToolingStructureType type, int stationNumber)
+        {
+            return new UnifiedCodeGeneratorService(control, projectInfo, type, stationNumber);
+        }
     }
 }

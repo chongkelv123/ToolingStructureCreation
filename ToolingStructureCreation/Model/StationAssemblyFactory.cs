@@ -75,8 +75,7 @@ namespace ToolingStructureCreation.Model
                         continue;
                     }
                     var type = CodeGeneratorService.GetToolingType(plt.Key);
-
-                    // ✅ UPDATED: Using UnifiedCodeGeneratorService instead of PlateCodeGeneratorService
+                    
                     var pltCodeGenerator = UnifiedCodeGeneratorService.CreateForPlate(
                         control,
                         myForm.GetProjectInfo(),
@@ -97,9 +96,12 @@ namespace ToolingStructureCreation.Model
                         itemName2);
                 }
 
-                string itemName = $"{stnNumber}-Assembly";
+                // Create Material Guide
 
-                // ✅ UPDATED: Using UnifiedCodeGeneratorService instead of AsmCodeGeneratorServicecs
+
+                // Create Station Assembly
+                string itemName = $"{stnNumber}-Assembly";
+                
                 var asmCodeGenerator = UnifiedCodeGeneratorService.CreateForAssembly(
                     control,
                     myForm.GetProjectInfo(),
@@ -130,7 +132,7 @@ namespace ToolingStructureCreation.Model
                 var uprShoeGenerator = UnifiedCodeGeneratorService.CreateForShoe(
                     control,
                     projectInfo,
-                    uprShoeItemName);                
+                    uprShoeItemName);
 
                 string uprShoeFileNameWithoutExtension = uprShoeGenerator.AskFileName();
                 uprShoeComponentCollection.Add(uprShoeFileNameWithoutExtension);
@@ -158,6 +160,7 @@ namespace ToolingStructureCreation.Model
                     itemName2
                     );
             }            
+
 
             // Create Parallel Bar
             if (shoeSketch != null)
@@ -378,7 +381,7 @@ namespace ToolingStructureCreation.Model
                 workAssy.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
             }
             catch (NXOpen.NXException nxEx) when (nxEx.Message.Contains("File already exists"))
-            {                
+            {
                 // User-friendly error handling
                 string message = $"File already exists: {fileName}{NXDrawing.EXTENSION}\n\n" +
                                 $"Location: {folderPath}\n\n" +
@@ -394,7 +397,7 @@ namespace ToolingStructureCreation.Model
                 throw new InvalidOperationException($"Cannot create plate '{fileName}' - file already exists", nxEx);
             }
             catch (NXOpen.NXException nxEx)
-            {                
+            {
                 // Handle other NX-specific errors
                 string message = $"NX Error creating plate '{fileName}':\n{nxEx.Message}";
                 string title = "NX Operation Error";
@@ -403,7 +406,7 @@ namespace ToolingStructureCreation.Model
                 throw new InvalidOperationException($"Failed to create plate '{fileName}'", nxEx);
             }
             catch (Exception ex)
-            {                
+            {
                 // Handle unexpected errors
                 string message = $"Unexpected error creating plate '{fileName}':\n{ex.Message}";
                 string title = "Unexpected Error";
@@ -469,7 +472,7 @@ namespace ToolingStructureCreation.Model
                 workPart.Save(saveComponentParts, save);
             }
             catch (NXOpen.NXException nxEx) when (nxEx.Message.Contains("File already exists"))
-            {                
+            {
                 // User-friendly error handling
                 string message = $"File already exists: {fileName}{NXDrawing.EXTENSION}\n\n" +
                                 $"Location: {folderPath}\n\n" +
@@ -485,7 +488,7 @@ namespace ToolingStructureCreation.Model
                 throw new InvalidOperationException($"Cannot create plate '{fileName}' - file already exists", nxEx);
             }
             catch (NXOpen.NXException nxEx)
-            {                
+            {
                 // Handle other NX-specific errors
                 string message = $"NX Error creating plate '{fileName}':\n{nxEx.Message}";
                 string title = "NX Operation Error";
@@ -494,7 +497,7 @@ namespace ToolingStructureCreation.Model
                 throw new InvalidOperationException($"Failed to create plate '{fileName}'", nxEx);
             }
             catch (Exception ex)
-            {                
+            {
                 // Handle unexpected errors
                 string message = $"Unexpected error creating plate '{fileName}':\n{ex.Message}";
                 string title = "Unexpected Error";
