@@ -10,9 +10,9 @@ namespace ToolingStructureCreation.Model
 {
     public class MatGuideFullRear : MatGuideFullBase
     {
-        public MatGuideFullRear(double length, double width, double thickness, string fileName = null) 
+        public MatGuideFullRear(double length, double width, double thickness, string fileName)
             : base(length, width, thickness, fileName)
-        {
+        {            
         }
 
         public override void Create(string folderPath, ProjectInfo projectInfo, string drawingCode, string itemName)

@@ -19,6 +19,9 @@ namespace ToolingStructureCreation.Model
         public const string MATGUIDEFULLFRONT_PRESENTATION_NAME = "MaterialGuideFullFront";
         public const string MATGUIDEFULLREAR_PRESENTATION_NAME = "MaterialGuideFullRear";
 
+        public const string MATERIAL_GUIDE_FULL_REAR = "MATERIAL_GUIDE_FULL_REAR";
+        public const string MATERIAL_GUIDE_FULL_FRONT = "MATERIAL_GUIDE_FULL_FRONT";
+
         public MatGuideFullBase(double length, double width, double thickness, string fileName = null)
         {
             Length = length;

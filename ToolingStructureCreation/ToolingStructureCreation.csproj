@@ -73,6 +73,9 @@
     <Compile Include="Model\CommonPlateRight.cs" />
     <Compile Include="Model\Designer.cs" />
     <Compile Include="Model\Machine.cs" />
+    <Compile Include="Model\MatGuideFullBase.cs" />
+    <Compile Include="Model\MatGuideFullFront.cs" />
+    <Compile Include="Model\MatGuideFullRear.cs" />
     <Compile Include="Model\NXDrawing.cs" />
     <Compile Include="Model\ParallelBar.cs" />
     <Compile Include="Model\PartProperties.cs" />

@@ -75,7 +75,7 @@ namespace ToolingStructureCreation.Model
                         continue;
                     }
                     var type = CodeGeneratorService.GetToolingType(plt.Key);
-                    
+
                     var pltCodeGenerator = UnifiedCodeGeneratorService.CreateForPlate(
                         control,
                         myForm.GetProjectInfo(),
@@ -96,12 +96,72 @@ namespace ToolingStructureCreation.Model
                         itemName2);
                 }
 
-                // Create Material Guide
+                if (toolingInfo.MaterialGuideType == MaterialGuideType.FullCoverage)
+                {                    
+                    // Create Material Guide Front
+                    double length = stnNo == 1
+                        ? stnSketch.Length + 15.0 // Add 15mm for the first station
+                        : stnSketch.Length;
+                    double width = ManufacturingCalculationService.CalculateMatGuideFullWidth(
+                        stnSketch.Width,
+                        myForm.CoilWidth);
+                    double thickness = ManufacturingCalculationService.CalculateMatGuideFullThk(
+                        myForm.StripperPltThk,
+                        myForm.MatThk);
 
+                    string itemNameMatGuideFront = MatGuideFullBase.MATERIAL_GUIDE_FULL_FRONT.Replace("_", " ");
+                    var matGuideFrontCodeGenerator = UnifiedCodeGeneratorService.CreateMaterialGuide(
+                        control,
+                        myForm.GetProjectInfo(),
+                        ToolingStructureType.INSERT,
+                        itemNameMatGuideFront,
+                        stnNo);
+
+                    string matGuideFrontFileName = matGuideFrontCodeGenerator.AskFileName();
+                                       
+                    MatGuideFullFront matGuideFullFront = new MatGuideFullFront(
+                        length,
+                        width,
+                        thickness,
+                        matGuideFrontFileName);
+
+                    string drawingCodeFront = matGuideFrontCodeGenerator.AskDrawingCode();
+
+                    matGuideFullFront.Create(
+                        folderPath,
+                        myForm.GetProjectInfo(),
+                        drawingCodeFront,
+                        itemNameMatGuideFront);
+
+                    // Create Material Guide Rear
+                    string itemNameMatGuideRear = MatGuideFullBase.MATERIAL_GUIDE_FULL_REAR.Replace("_", " ");
+                    var matGuideRearCodeGenerator = UnifiedCodeGeneratorService.CreateMaterialGuide(
+                        control,
+                        myForm.GetProjectInfo(),
+                        ToolingStructureType.INSERT,
+                        itemNameMatGuideRear,
+                        stnNo);
+
+                    string matGuideRearFileName = matGuideRearCodeGenerator.AskFileName();
+
+                    MatGuideFullRear matGuideFullRear = new MatGuideFullRear(
+                        length,
+                        width,
+                        thickness,
+                        matGuideRearFileName);
+
+                    string drawingCodeRear = matGuideRearCodeGenerator.AskDrawingCode();
+
+                    matGuideFullRear.Create(
+                        folderPath,
+                        myForm.GetProjectInfo(),
+                        drawingCodeRear,
+                        itemNameMatGuideRear);
+                }
 
                 // Create Station Assembly
                 string itemName = $"{stnNumber}-Assembly";
-                
+
                 var asmCodeGenerator = UnifiedCodeGeneratorService.CreateForAssembly(
                     control,
                     myForm.GetProjectInfo(),
@@ -159,7 +219,7 @@ namespace ToolingStructureCreation.Model
                     lowShoeGenerator.AskDrawingCode(),
                     itemName2
                     );
-            }            
+            }
 
 
             // Create Parallel Bar

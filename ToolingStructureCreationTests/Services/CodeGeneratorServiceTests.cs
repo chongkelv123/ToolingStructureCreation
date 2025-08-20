@@ -332,5 +332,51 @@ namespace ToolingStructureCreation.Services.Tests
             // Assert
             Assert.AreEqual(expected, result);
         }
+
+        [TestMethod()]
+        public void GenerateDrawingCodeTest_Insert_ReturnLatestDrawingCode()
+        {
+            // Arrange
+            var type = ToolingStructureType.INSERT;
+            var dirPath = "C:\\CreateFolder\\Testing-Tooling-Structure";
+            var codePrefix = "40XC00-2401-";
+            var expected = "40XC00-2401-0111";
+
+            //Act
+            var result = CodeGeneratorService.GenerateDrawingCode(type, dirPath, codePrefix, 1);
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod()]
+        public void GenerateFileNameTest_Insert_MaterialGuide_GetValidFilename()
+        {
+            // Arrange
+            var type = ToolingStructureType.INSERT;
+            var dirPath = "C:\\CreateFolder\\Testing-Tooling-Structure\\test_runNumber";
+            var codePrefix = "40XC00-2401-";
+            var itemName = MatGuideFullFront.MATERIAL_GUIDE_FULL_FRONT.Replace("_", " ");
+            var stnNumber = 3;
+            var expected = $"40XC00-2401-0311_{itemName}-V00";
+            // Act
+            var result = CodeGeneratorService.GenerateFileName(type, dirPath, codePrefix, itemName, stnNumber);
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod()]
+        public void AskNextRunningNumberTest_InsertStation2_ReturnsNextCode()
+        {
+            // Arrange
+            string dir = "C:\\CreateFolder\\Testing-Tooling-Structure\\test_runNumber";
+            string codePrefix = "40XC00-2401-";
+            var station = 2;
+            string expected = "0212";
+            // Act
+            string result = CodeGeneratorService.AskNextRunningNumber(ToolingStructureType.INSERT, dir, codePrefix, station);
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
     }
 }

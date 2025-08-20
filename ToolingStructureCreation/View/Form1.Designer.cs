@@ -243,18 +243,17 @@
             // radPartialCoverage
             // 
             this.radPartialCoverage.AutoSize = true;
-            this.radPartialCoverage.Checked = true;
             this.radPartialCoverage.Location = new System.Drawing.Point(124, 27);
             this.radPartialCoverage.Name = "radPartialCoverage";
             this.radPartialCoverage.Size = new System.Drawing.Size(129, 20);
             this.radPartialCoverage.TabIndex = 1;
-            this.radPartialCoverage.TabStop = true;
             this.radPartialCoverage.Text = "Partial Coverage";
             this.radPartialCoverage.UseVisualStyleBackColor = true;
             // 
             // radFullCoverage
             // 
             this.radFullCoverage.AutoSize = true;
+            this.radFullCoverage.Checked = true;
             this.radFullCoverage.Location = new System.Drawing.Point(6, 27);
             this.radFullCoverage.Name = "radFullCoverage";
             this.radFullCoverage.Size = new System.Drawing.Size(112, 20);

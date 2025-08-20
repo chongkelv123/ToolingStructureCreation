@@ -114,6 +114,23 @@ namespace ToolingStructureCreation.Services
                    thicknesses.StripperPltThk + thicknesses.MatThk;
         }
 
+        /// <summary>
+        /// Calculates the thickness of material guide full (front / rear)
+        /// </summary>
+        public static double CalculateMatGuideFullThk(double strPlt_Thk, double mat_Thk)
+        {
+            double totalHeight = strPlt_Thk + mat_Thk;
+            return Math.Ceiling((totalHeight - 0.2) * 10) / 10.0; // Round up to nearest 0.1mm
+        }
+
+        /// <summary>
+        /// Calculates the width of material guide full (front / rear)
+        /// </summary>
+        public static double CalculateMatGuideFullWidth(double plate_Width, double mat_Width)
+        {
+            return ((plate_Width - (mat_Width + 1)) / 2) + 4.5; // Adjusted width calculation
+        }
+
         #endregion
         #region Utility Methods
 

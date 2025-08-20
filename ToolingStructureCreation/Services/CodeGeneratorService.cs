@@ -184,9 +184,9 @@ namespace ToolingStructureCreation.Services
                     continue;
 
                 // 4) Apply only the ACCESSORIES filter  
-                if (type == ToolingStructureType.ACCESSORIES)
+                if (type == ToolingStructureType.ACCESSORIES || type == ToolingStructureType.INSERT)
                 {
-                    if (runningNo <= defaultTypeCode)
+                    if (runningNo < defaultTypeCode)
                         continue;
                 }
 

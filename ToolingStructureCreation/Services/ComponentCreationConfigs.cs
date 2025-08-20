@@ -130,8 +130,8 @@ namespace ToolingStructureCreation.Services
         {
             return new ComponentCreationConfig
             {
-                TemplateFileName = MatGuideFullBase.TEMPLATE_MATGUIDEFULLFRONT_NAME,
-                PresentationName = MatGuideFullBase.MATGUIDEFULLFRONT_PRESENTATION_NAME,
+                TemplateFileName = templateFileName,
+                PresentationName = presentationName,
                 UndoDescription = "Create New Material Guide Full",
                 FolderPath = folderPath,
                 FileName = fileName,
