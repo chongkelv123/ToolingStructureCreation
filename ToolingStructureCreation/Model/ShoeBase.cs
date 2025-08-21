@@ -5,47 +5,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ToolingStructureCreation.Services;
 
 namespace ToolingStructureCreation.Model
 {
-    public class Shoe
+    public abstract class ShoeBase
     {
-        private string fileName;
-        private double length;
-        private double width;
-        private double thickness;
+        public string FileName { get; set; }
+        public double Length { get; set; }
+        public double Width { get; set; }
+        public double Thickness { get; set; }
 
         public const string UPPER_SHOE = "UPPER_SHOE";
         public const string LOWER_SHOE = "LOWER_SHOE";
-        public const string TEMPLATE_SHOE_NAME = "3DA_Template_SHOE-V00.prt";
-        public const string SHOE_PRESENTATION_NAME = "Shoe";
-
-        public Shoe(string name, double length, double width, double thickness)
+        public const string TEMPLATE_UPRSHOE_NAME = "3DA_Template_UPRSHOE-V00.prt";
+        public const string TEMPLATE_LOWSHOE_NAME = "3DA_Template_LOWSHOE-V00.prt";
+        public const string UPRSHOE_PRESENTATION_NAME = "UprShoe";
+        public const string LOWSHOE_PRESENTATION_NAME = "LowShoe";
+        public ShoeBase(string fileName, double length, double width, double thickness)
         {
-            this.fileName = name;
-            this.length = length;
-            this.width = width;
-            this.thickness = thickness;
+            FileName = fileName;
+            Length = length;
+            Width = width;
+            Thickness = thickness;
         }
 
-        public string GetShoeName() => fileName;
-        public double GetShoeLength() => length;
-        public double GetShoeWidth() => width;
-        public double GetShoeHeight() => thickness;
+        public abstract void Create(string folderPath, ProjectInfo projectInfo, string drawingCode, string itemName);
 
-        public void CreateNewShoe(string folderPath, ProjectInfo projectInfo, string drawingCode, string itemName)
-        {
-            // Create configuration for this shoe
-            var config = ComponentCreationConfigs.CreateShoeConfig(
-                folderPath, fileName, length, width, thickness, projectInfo, drawingCode, itemName
-                );
 
-            // Use the unified service to create the component
-            var creationService = new ComponentCreationService();
-            creationService.CreateComponent(config);
-        }
-        static public void Insert(Part workAssy, string compName, Point3d basePoint, string folderPath)
+        public static void Insert(Part workAssy, string compName, Point3d basePoint, string folderPath)
         {
             ComponentAssembly compAssy = workAssy.ComponentAssembly;
             PartLoadStatus status = null;
@@ -65,14 +52,14 @@ namespace ToolingStructureCreation.Model
             string partToAdd = $"{folderPath}{compName}{NXDrawing.EXTENSION}";
 
             if (
-                compName.Contains(Shoe.LOWER_SHOE)
+                compName.Contains(_Shoe.LOWER_SHOE)
                 || compName.Contains(ParallelBar.PARALLEL_BAR)
                 || compName.Contains(CommonPlate.LOWER_COMMON_PLATE)
                 )
             {
                 layer = 200;
             }
-            else if (compName.Contains("Striplayout"))
+            else if (compName.IndexOf("Striplayout", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 layer = 210;
             }

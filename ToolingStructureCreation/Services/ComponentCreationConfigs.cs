@@ -43,14 +43,14 @@ namespace ToolingStructureCreation.Services
         /// <summary>
         /// Creates configuration for Shoe components
         /// </summary>
-        public static ComponentCreationConfig CreateShoeConfig(string folderPath, string fileName,
+        public static ComponentCreationConfig CreateShoeConfig(string templateName, string presentationName, string folderPath, string fileName,
             double length, double width, double thickness, ProjectInfo projectInfo,
             string drawingCode, string itemName)
         {
             return new ComponentCreationConfig
             {
-                TemplateFileName = Shoe.TEMPLATE_SHOE_NAME,
-                PresentationName = Shoe.SHOE_PRESENTATION_NAME,
+                TemplateFileName = templateName,
+                PresentationName = presentationName,
                 UndoDescription = "Create New Shoe",
                 FolderPath = folderPath,
                 FileName = fileName,
@@ -182,9 +182,9 @@ namespace ToolingStructureCreation.Services
         {
             foreach (Body body in workPart.Bodies)
             {
-                if (fileName.Contains(Shoe.UPPER_SHOE))
+                if (fileName.Contains(_Shoe.UPPER_SHOE))
                     body.Color = (int)PlateColor.UPPERSHOE;
-                else if (fileName.Contains(Shoe.LOWER_SHOE))
+                else if (fileName.Contains(_Shoe.LOWER_SHOE))
                     body.Color = (int)PlateColor.LOWERSHOE;
                 else
                     body.Color = (int)PlateColor.COMMONPLATE;

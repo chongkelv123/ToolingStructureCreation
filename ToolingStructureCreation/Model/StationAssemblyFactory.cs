@@ -98,7 +98,7 @@ namespace ToolingStructureCreation.Model
 
                 Dictionary<string, Point3d> keyValuesMatGuide = new Dictionary<string, Point3d>();
                 if (toolingInfo.MaterialGuideType == MaterialGuideType.FullCoverage)
-                {                    
+                {
                     // Create Material Guide Front
                     double length = stnNo == 1
                         ? stnSketch.Length + 15.0 // Add 15mm for the first station
@@ -129,7 +129,7 @@ namespace ToolingStructureCreation.Model
                         thickness,
                         matGuideFrontFileName);
 
-                    string drawingCodeFront = matGuideFrontCodeGenerator.AskDrawingCode();                    
+                    string drawingCodeFront = matGuideFrontCodeGenerator.AskDrawingCode();
 
                     matGuideFullFront.Create(
                         folderPath,
@@ -164,7 +164,7 @@ namespace ToolingStructureCreation.Model
                         drawingCodeRear,
                         itemNameMatGuideRear);
                 }
-                
+
                 toolingInfo.KeyValuesPlateThk = pltLists;
                 toolingInfo.KeyValuesMaterialGuideThk = keyValuesMatGuide;
 
@@ -196,8 +196,8 @@ namespace ToolingStructureCreation.Model
                 shoeSketch = ShoeSketchLists[i];
 
                 string uprShoeItemName = ShoeSketchLists.Count > 1
-                    ? $"{Shoe.UPPER_SHOE}-{i + 1}"
-                    : Shoe.UPPER_SHOE;
+                    ? $"{ShoeBase.UPPER_SHOE}-{i + 1}"
+                    : ShoeBase.UPPER_SHOE;
                 var uprShoeGenerator = UnifiedCodeGeneratorService.CreateForShoe(
                     control,
                     projectInfo,
@@ -205,9 +205,9 @@ namespace ToolingStructureCreation.Model
 
                 string uprShoeFileNameWithoutExtension = uprShoeGenerator.AskFileName();
                 uprShoeComponentCollection.Add(uprShoeFileNameWithoutExtension);
-                Shoe upperShoe = new Shoe(uprShoeFileNameWithoutExtension, shoeSketch.Length, shoeSketch.Width, myForm.UpperShoeThk);
-                string itemName1 = Shoe.UPPER_SHOE.Replace("_", " ");
-                upperShoe.CreateNewShoe(
+                UpperShoe upperShoe = new UpperShoe(uprShoeFileNameWithoutExtension, shoeSketch.Length, shoeSketch.Width, myForm.UpperShoeThk);
+                string itemName1 = ShoeBase.UPPER_SHOE.Replace("_", " ");
+                upperShoe.Create(
                     folderPath,
                     myForm.GetProjectInfo(),
                     uprShoeGenerator.AskDrawingCode(),
@@ -215,14 +215,14 @@ namespace ToolingStructureCreation.Model
                     );
 
                 string lowShoeItemName = ShoeSketchLists.Count > 1
-                    ? $"{Shoe.LOWER_SHOE}-{i + 1}"
-                    : Shoe.LOWER_SHOE;
+                    ? $"{ShoeBase.LOWER_SHOE}-{i + 1}"
+                    : ShoeBase.LOWER_SHOE;
                 var lowShoeGenerator = UnifiedCodeGeneratorService.CreateForShoe(control, projectInfo, lowShoeItemName);
                 string lowShoeFileNameWithoutExtension = lowShoeGenerator.AskFileName();
                 lowShoeComponentCollection.Add(lowShoeFileNameWithoutExtension);
-                Shoe lowerShoe = new Shoe(lowShoeFileNameWithoutExtension, shoeSketch.Length, shoeSketch.Width, myForm.LowerShoeThk);
-                string itemName2 = Shoe.LOWER_SHOE.Replace("_", " ");
-                lowerShoe.CreateNewShoe(
+                LowerShoe lowerShoe = new LowerShoe(lowShoeFileNameWithoutExtension, shoeSketch.Length, shoeSketch.Width, myForm.LowerShoeThk);
+                string itemName2 = ShoeBase.LOWER_SHOE.Replace("_", " ");
+                lowerShoe.Create(
                     folderPath,
                     myForm.GetProjectInfo(),
                     lowShoeGenerator.AskDrawingCode(),
@@ -343,7 +343,7 @@ namespace ToolingStructureCreation.Model
 
                 // Insert Strip Layout
                 StripLayout stripLayout = control.GetStripLayout;
-                Shoe.Insert(workAssy, stripLayout.GetFileNameWithoutExtension, stripLayout.GetPosition, folderPath);
+                ShoeBase.Insert(workAssy, stripLayout.GetFileNameWithoutExtension, stripLayout.GetPosition, folderPath);
 
                 // Orient the work view to Isometric
                 workAssy.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
@@ -371,12 +371,12 @@ namespace ToolingStructureCreation.Model
                     double lowShoeZPosition = myForm.GetDiePlt_LowPadThk() * -1;
                     string uprShoeCompName = uprShoeComponentCollection[i];
                     string lowShoeCompName = lowShoeComponentCollection[i];
-                    Shoe.Insert(
+                    ShoeBase.Insert(
                             workAssy,
                             uprShoeCompName,
                             new Point3d(shoeSketch.StartLocation.X, Y_POSITION, uprShoeZPosition),
                             folderPath);
-                    Shoe.Insert(
+                    ShoeBase.Insert(
                             workAssy,
                             lowShoeCompName,
                             new Point3d(shoeSketch.StartLocation.X, Y_POSITION, lowShoeZPosition),
@@ -389,14 +389,14 @@ namespace ToolingStructureCreation.Model
                         double distBetweenFirstLastPBars = (lastParallelBarXPosition - firstParallelBarXPosition);
                         const double DIST_BETWEEN_PBAR = 330.0;
                         int numberOfParallelBars = (int)Math.Ceiling(distBetweenFirstLastPBars / DIST_BETWEEN_PBAR);
-                        Shoe.Insert(workAssy, compName, new Point3d(firstParallelBarXPosition, Y_POSITION, myForm.GetParallelBarZPosition()), folderPath);
-                        Shoe.Insert(workAssy, compName, new Point3d(lastParallelBarXPosition, Y_POSITION, myForm.GetParallelBarZPosition()), folderPath);
+                        ShoeBase.Insert(workAssy, compName, new Point3d(firstParallelBarXPosition, Y_POSITION, myForm.GetParallelBarZPosition()), folderPath);
+                        ShoeBase.Insert(workAssy, compName, new Point3d(lastParallelBarXPosition, Y_POSITION, myForm.GetParallelBarZPosition()), folderPath);
 
                         for (int j = 0; j < numberOfParallelBars - 2; j++)
                         {
                             double dist = distBetweenFirstLastPBars / (numberOfParallelBars - 1);
                             double xPosition = firstParallelBarXPosition + (j + 1) * dist;
-                            Shoe.Insert(workAssy, compName, new Point3d(xPosition, Y_POSITION, myForm.GetParallelBarZPosition()), folderPath);
+                            ShoeBase.Insert(workAssy, compName, new Point3d(xPosition, Y_POSITION, myForm.GetParallelBarZPosition()), folderPath);
                         }
                     }
 
@@ -406,7 +406,7 @@ namespace ToolingStructureCreation.Model
                         {
                             string comPltCompName = comPltComponentCollection[i];
 
-                            Shoe.Insert(
+                            ShoeBase.Insert(
                                 workAssy,
                                 comPltCompName,
                                 new Point3d(shoeSketch.MidPoint.X, Y_POSITION, myForm.GetCommonPlateZPosition()),
@@ -424,7 +424,7 @@ namespace ToolingStructureCreation.Model
                     {
                         string comPltCompName = comPltComponentCollection[i];
                         double comPltZPosition = myForm.GetCommonPlateZPosition();
-                        Shoe.Insert(
+                        ShoeBase.Insert(
                             workAssy,
                             comPltCompName,
                             new Point3d(comPltSketch.MidPoint.X, Y_POSITION, comPltZPosition),
@@ -526,7 +526,7 @@ namespace ToolingStructureCreation.Model
                 }
 
                 // Insert Material Guide
-                if (toolingInfo.MaterialGuideType == MaterialGuideType.FullCoverage && 
+                if (toolingInfo.MaterialGuideType == MaterialGuideType.FullCoverage &&
                     toolingInfo.KeyValuesMaterialGuideThk.Count > 0)
                 {
                     foreach (var matGuide in toolingInfo.KeyValuesMaterialGuideThk)
