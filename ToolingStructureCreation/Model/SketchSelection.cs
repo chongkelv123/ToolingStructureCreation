@@ -117,7 +117,10 @@ namespace ToolingStructureCreation.Model
                 GetBoundingBoxLength(overallBbox),
                 GetBoundingBoxWidth(overallBbox),
                 GetStartLocation(overallBbox),
-                GetBoundingBoxMidPointX(overallBbox));
+                GetBoundingBoxMidPointX(overallBbox),
+                GetLowerRightConer(overallBbox),
+                GetUpperRightConer(overallBbox)
+                );
         }
 
         public static double GetBoundingBoxDiagonal(double[] bBox)
@@ -186,12 +189,26 @@ namespace ToolingStructureCreation.Model
             double length = GetBoundingBoxLength(bBox);
             return new Point3d(midPoint.X - length / 2, midPoint.Y, midPoint.Z);
         }
+        public static Point3d GetLowerRightConer(double[] bBox)
+        {
+            Point3d midPoint = GetBoundingBoxMidPointX(bBox);
+            double length = GetBoundingBoxLength(bBox);
+            double width = GetBoundingBoxWidth(bBox);
+            return new Point3d(midPoint.X + length / 2.0, midPoint.Y - width / 2.0, midPoint.Z);
+        }
+        public static Point3d GetUpperRightConer(double[] bBox)
+        {
+            Point3d midPoint = GetBoundingBoxMidPointX(bBox);
+            double length = GetBoundingBoxLength(bBox);
+            double width = GetBoundingBoxWidth(bBox);
+            return new Point3d(midPoint.X + length / 2.0, midPoint.Y + width / 2.0, midPoint.Z);
+        }
         public static Point3d GetStartLocation(List<Point3d> points)
         {
             Point3d midPoint = GetBoundingBoxMidPointX(points);
             double length = GetBoundingBoxLength(points);
             return new Point3d(midPoint.X - length / 2, midPoint.Y, midPoint.Z);
-        }
+        }        
 
         public List<Sketch> AskListFromTaggedObjects(TaggedObject[] taggedObjects)
         {

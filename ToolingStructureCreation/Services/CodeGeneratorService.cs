@@ -293,5 +293,19 @@ namespace ToolingStructureCreation.Services
                 throw new ArgumentException($"Unsupported ToolingStructureType: {type}");
             }
         }
+
+        public static int GetStationNumber(string drawingCode)
+        {
+            string fourDigitCode = GetDrawingCode(drawingCode);
+            string stnPart = fourDigitCode.Substring(0, 2);
+            if (int.TryParse(stnPart, out int stnNumber))
+            {
+                return stnNumber;
+            }
+            else
+            {
+                throw new ArgumentException($"Invalid drawing code: {drawingCode}. Cannot extract station number.");
+            }
+        }
     }
 }

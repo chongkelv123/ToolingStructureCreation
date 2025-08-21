@@ -126,7 +126,7 @@ namespace ToolingStructureCreation.Services
         /// </summary>
         public static ComponentCreationConfig CreateMaterialGuideFullConfig(string templateFileName,
             string presentationName, string folderPath, string fileName, double length,
-            double width, double thickness, ProjectInfo projectInfo, string drawingCode, string itemName)
+            double width, double thickness, ProjectInfo projectInfo, string drawingCode, string itemName, bool isMatGuideFull = false)
         {
             return new ComponentCreationConfig
             {
@@ -144,7 +144,8 @@ namespace ToolingStructureCreation.Services
                 ColorAssignmentAction = AssignMaterialGuideColors,
                 PartPropertiesType = PartProperties.INSERT,
                 Material = NXDrawing.GOA,
-                HardnessOrGrade = NXDrawing.FIFTYTWO_FIFTYFOUR
+                HardnessOrGrade = NXDrawing.FIFTYTWO_FIFTYFOUR,
+                IsMatGuideFull = isMatGuideFull
             };
         }
 

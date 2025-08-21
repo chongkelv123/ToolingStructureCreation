@@ -26,7 +26,8 @@ namespace ToolingStructureCreation.Model
                 Thickness,
                 projectInfo,
                 drawingCode,
-                itemName
+                itemName,
+                isMatGuideFull: true
             );
 
             var creationService = new ComponentCreationService();

@@ -53,7 +53,7 @@ namespace ToolingStructureCreation.Model
             creationService.CreateComponent(config);
         }
 
-        static public void InsertPlate(Part workAssy, string compName, double cumThk, string folderPath)
+        static public void Insert(Part workAssy, string compName, double cumThk, string folderPath)
         {
             ComponentAssembly compAssy = workAssy.ComponentAssembly;
             PartLoadStatus status = null;

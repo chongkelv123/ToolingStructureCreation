@@ -96,6 +96,7 @@ namespace ToolingStructureCreation.Model
                         itemName2);
                 }
 
+                Dictionary<string, Point3d> keyValuesMatGuide = new Dictionary<string, Point3d>();
                 if (toolingInfo.MaterialGuideType == MaterialGuideType.FullCoverage)
                 {                    
                     // Create Material Guide Front
@@ -108,6 +109,7 @@ namespace ToolingStructureCreation.Model
                     double thickness = ManufacturingCalculationService.CalculateMatGuideFullThk(
                         myForm.StripperPltThk,
                         myForm.MatThk);
+                    double zPosition = myForm.GetDiePlt_LowPadThk();
 
                     string itemNameMatGuideFront = MatGuideFullBase.MATERIAL_GUIDE_FULL_FRONT.Replace("_", " ");
                     var matGuideFrontCodeGenerator = UnifiedCodeGeneratorService.CreateMaterialGuide(
@@ -118,14 +120,16 @@ namespace ToolingStructureCreation.Model
                         stnNo);
 
                     string matGuideFrontFileName = matGuideFrontCodeGenerator.AskFileName();
-                                       
+                    Point3d lrPosition = new Point3d(stnSketch.Length, stnSketch.LowerRightCorner.Y, zPosition);
+                    keyValuesMatGuide.Add(matGuideFrontFileName, lrPosition);
+
                     MatGuideFullFront matGuideFullFront = new MatGuideFullFront(
                         length,
                         width,
                         thickness,
                         matGuideFrontFileName);
 
-                    string drawingCodeFront = matGuideFrontCodeGenerator.AskDrawingCode();
+                    string drawingCodeFront = matGuideFrontCodeGenerator.AskDrawingCode();                    
 
                     matGuideFullFront.Create(
                         folderPath,
@@ -143,6 +147,8 @@ namespace ToolingStructureCreation.Model
                         stnNo);
 
                     string matGuideRearFileName = matGuideRearCodeGenerator.AskFileName();
+                    Point3d rrPosition = new Point3d(stnSketch.Length, stnSketch.UpperRightCorner.Y, zPosition);
+                    keyValuesMatGuide.Add(matGuideRearFileName, rrPosition);
 
                     MatGuideFullRear matGuideFullRear = new MatGuideFullRear(
                         length,
@@ -158,6 +164,9 @@ namespace ToolingStructureCreation.Model
                         drawingCodeRear,
                         itemNameMatGuideRear);
                 }
+                
+                toolingInfo.KeyValuesPlateThk = pltLists;
+                toolingInfo.KeyValuesMaterialGuideThk = keyValuesMatGuide;
 
                 // Create Station Assembly
                 string itemName = $"{stnNumber}-Assembly";
@@ -170,7 +179,7 @@ namespace ToolingStructureCreation.Model
                 string subAsmFileName = asmCodeGenerator.AskFileName();
                 subToolAsmCollection.Add(subAsmFileName);
                 CreateStationAssembly(
-                    pltLists,
+                    toolingInfo,
                     subAsmFileName,
                     folderPath,
                     myForm.GetProjectInfo(),
@@ -477,7 +486,7 @@ namespace ToolingStructureCreation.Model
 
         }
 
-        public void CreateStationAssembly(Dictionary<string, double> plateList, string fileName, string folderPath, ProjectInfo projectInfo, string drawingCode, string itemName)
+        public void CreateStationAssembly(ToolingInfo toolingInfo, string fileName, string folderPath, ProjectInfo projectInfo, string drawingCode, string itemName)
         {
             Session session = Session.GetSession();
             FileNew fileNew = session.Parts.FileNew();
@@ -505,15 +514,27 @@ namespace ToolingStructureCreation.Model
                 workPart.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
 
                 double cumThk = 0.0;
-                foreach (var component in plateList)
+                foreach (var pltList in toolingInfo.KeyValuesPlateThk)
                 {
-                    cumThk += component.Value;
-                    if (component.Key.Equals(NXDrawing.MAT_THK, StringComparison.OrdinalIgnoreCase))
+                    cumThk += pltList.Value;
+                    if (pltList.Key.Equals(NXDrawing.MAT_THK, StringComparison.OrdinalIgnoreCase))
                     {
                         continue; // Skip the material thickness entry
                     }
-                    string fn = component.Key;
-                    Plate.InsertPlate(workPart, fn, cumThk, folderPath);
+                    string fn = pltList.Key;
+                    Plate.Insert(workPart, fn, cumThk, folderPath);
+                }
+
+                // Insert Material Guide
+                if (toolingInfo.MaterialGuideType == MaterialGuideType.FullCoverage && 
+                    toolingInfo.KeyValuesMaterialGuideThk.Count > 0)
+                {
+                    foreach (var matGuide in toolingInfo.KeyValuesMaterialGuideThk)
+                    {
+                        string fileNameMatGuide = matGuide.Key;
+                        Point3d position = matGuide.Value;
+                        MatGuideFullBase.Insert(workPart, fileNameMatGuide, position, folderPath);
+                    }
                 }
 
                 NXDrawing.UpdatePartProperties(

@@ -17,16 +17,21 @@ namespace ToolingStructureCreation.Model
         Point3d midPoint;
         List<Point3d> pointCollections;
 
+        public Point3d LowerRightCorner { get; }
+        public Point3d UpperRightCorner { get; }
+
         bool showDebugMessage = false;
 
         public Sketch() { }
 
-        public Sketch(double length, double width, Point3d startLocation, Point3d midPoint)
+        public Sketch(double length, double width, Point3d startLocation, Point3d midPoint, Point3d lrConer, Point3d rrCorner)
         {
             this.length = length;
             this.width = width;
             this.startLocation = startLocation;
             this.midPoint = midPoint;
+            LowerRightCorner = lrConer;
+            UpperRightCorner = rrCorner;
         }
 
         public double Length => length;

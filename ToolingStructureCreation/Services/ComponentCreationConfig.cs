@@ -29,5 +29,6 @@ namespace ToolingStructureCreation.Services
         public string PartPropertiesType { get; set; }
         public string Material { get; set; } = NXDrawing.S50C;
         public string HardnessOrGrade { get; set; } = NXDrawing.HYPHEN;
+        public bool IsMatGuideFull { get; set; } = false;
     }
 }

@@ -37,6 +37,13 @@ namespace ToolingStructureCreation.Services
                 // Phase 3: Expression Management (common pattern)
                 UpdateComponentExpressions(workPart, config);
 
+                int stnNumber = CodeGeneratorService.GetStationNumber(config.DrawingCode);
+                if (config.IsMatGuideFull && stnNumber > 1)
+                {
+                    // Phase 3A: Expression (materual guide full)
+                    UpdateMatGuideExpressions(workPart, config);
+                }
+
                 // Phase 4: Update Operations (common)
                 UpdateComponent(session, config);
 
@@ -70,6 +77,32 @@ namespace ToolingStructureCreation.Services
                 NXDrawing.ShowMessageBox("NX Operation Error", NXOpen.NXMessageBox.DialogType.Error, message);
                 throw new InvalidOperationException($"Failed to create component '{config.FileName}'", nxEx);
             }
+        }
+
+        private void UpdateMatGuideExpressions(Part workPart, ComponentCreationConfig config)
+        {
+            string angle = "45.0"; // Default angle for relief, can be parameterized if needed
+            string dist = "2.0"; // Default distance for relief, can be parameterized if needed
+
+            // Find expressions
+            var reliefAngle = workPart.Expressions.FindObject("ReliefAngle") as Expression;
+            var reliefDist = workPart.Expressions.FindObject("ReliefDist") as Expression;
+
+            // Validate expressions exist (common error handling pattern)
+            if (reliefAngle == null)
+            {
+                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Relief Angle' not found.");
+                return;
+            }
+            if (reliefDist == null)
+            {
+                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Relief Distance' not found.");
+                return;
+            }
+
+            // Update expressions (common pattern)
+            workPart.Expressions.EditExpression(reliefAngle, angle);
+            workPart.Expressions.EditExpression(reliefDist, dist);
         }
 
         private void ConfigureFileNew(FileNew fileNew, ComponentCreationConfig config)

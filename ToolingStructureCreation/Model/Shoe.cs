@@ -32,7 +32,7 @@ namespace ToolingStructureCreation.Model
         public string GetShoeName() => fileName;
         public double GetShoeLength() => length;
         public double GetShoeWidth() => width;
-        public double GetShoeHeight() => thickness;        
+        public double GetShoeHeight() => thickness;
 
         public void CreateNewShoe(string folderPath, ProjectInfo projectInfo, string drawingCode, string itemName)
         {
@@ -64,9 +64,17 @@ namespace ToolingStructureCreation.Model
 
             string partToAdd = $"{folderPath}{compName}{NXDrawing.EXTENSION}";
 
-            if (compName.Equals(Shoe.LOWER_SHOE))
+            if (
+                compName.Contains(Shoe.LOWER_SHOE)
+                || compName.Contains(ParallelBar.PARALLEL_BAR)
+                || compName.Contains(CommonPlate.LOWER_COMMON_PLATE)
+                )
             {
                 layer = 200;
+            }
+            else if (compName.Contains("Striplayout"))
+            {
+                layer = 210;
             }
 
             NXOpen.Assemblies.Component component = compAssy.AddComponent(partToAdd, referenceSetName, compName, basePoint, orientation, layer, out status);
