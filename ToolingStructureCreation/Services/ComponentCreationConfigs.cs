@@ -182,9 +182,9 @@ namespace ToolingStructureCreation.Services
         {
             foreach (Body body in workPart.Bodies)
             {
-                if (fileName.Contains(_Shoe.UPPER_SHOE))
+                if (fileName.Contains(ShoeBase.UPPER_SHOE))
                     body.Color = (int)PlateColor.UPPERSHOE;
-                else if (fileName.Contains(_Shoe.LOWER_SHOE))
+                else if (fileName.Contains(ShoeBase.LOWER_SHOE))
                     body.Color = (int)PlateColor.LOWERSHOE;
                 else
                     body.Color = (int)PlateColor.COMMONPLATE;

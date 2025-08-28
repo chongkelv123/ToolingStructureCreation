@@ -52,7 +52,7 @@ namespace ToolingStructureCreation.Model
             string partToAdd = $"{folderPath}{compName}{NXDrawing.EXTENSION}";
 
             if (
-                compName.Contains(_Shoe.LOWER_SHOE)
+                compName.Contains(LOWER_SHOE)
                 || compName.Contains(ParallelBar.PARALLEL_BAR)
                 || compName.Contains(CommonPlate.LOWER_COMMON_PLATE)
                 )
