@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ToolingStructureCreation.Services;
 using ToolingStructureCreation.View;
+using static NXOpen.Features.SheetMetal.BendTaperBuilder;
 
 namespace ToolingStructureCreation.Model
 {
@@ -310,6 +311,8 @@ namespace ToolingStructureCreation.Model
 
         public void CreateToolAsmFactory(ProjectInfo projectInfo, string drawingCode, string itemName)
         {
+            var startTime = DateTime.Now;
+
             Session session = Session.GetSession();
             FileNew fileNew = session.Parts.FileNew();
             fileNew.TemplateFileName = ToolingAssembly.TEMPLATE_STP_NAME;
@@ -448,6 +451,13 @@ namespace ToolingStructureCreation.Model
                 workAssy.Save(saveComponentParts, save);
 
                 workAssy.ModelingViews.WorkView.Orient(NXOpen.View.Canned.Isometric, NXOpen.View.ScaleAdjustment.Fit);
+
+                // Calculate performance metrics
+                var processingTime = (DateTime.Now - startTime).TotalMilliseconds;
+                long fileSize = ComponentCreationService.GetFileSize(folderPath, itemName);
+
+                // **UPDATED: CSV-based component logging with enhanced type classification**
+                ComponentCreationService.LogComponentWithTypeClassification(itemName, fileSize, processingTime);
             }
             catch (NXOpen.NXException nxEx) when (nxEx.Message.Contains("File already exists"))
             {
@@ -488,6 +498,8 @@ namespace ToolingStructureCreation.Model
 
         public void CreateStationAssembly(ToolingInfo toolingInfo, string fileName, string folderPath, ProjectInfo projectInfo, string drawingCode, string itemName)
         {
+            var startTime = DateTime.Now;
+
             Session session = Session.GetSession();
             FileNew fileNew = session.Parts.FileNew();
             fileNew.TemplateFileName = ToolingAssembly.TEMPLATE_STP_NAME;
@@ -551,6 +563,13 @@ namespace ToolingStructureCreation.Model
                 BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
                 BasePart.CloseAfterSave save = BasePart.CloseAfterSave.True;
                 workPart.Save(saveComponentParts, save);
+
+                // Calculate performance metrics
+                var processingTime = (DateTime.Now - startTime).TotalMilliseconds;
+                long fileSize = ComponentCreationService.GetFileSize(folderPath, fileName);
+
+                // **UPDATED: CSV-based component logging with enhanced type classification**
+                ComponentCreationService.LogComponentWithTypeClassification(fileName, fileSize, processingTime);
             }
             catch (NXOpen.NXException nxEx) when (nxEx.Message.Contains("File already exists"))
             {

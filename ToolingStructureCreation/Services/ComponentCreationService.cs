@@ -65,14 +65,8 @@ namespace ToolingStructureCreation.Services
                 var processingTime = (DateTime.Now - startTime).TotalMilliseconds;
                 long fileSize = GetFileSize(config.FolderPath, config.FileName);
 
-                // Log component creation success
-                UsageTrackingService.Instance.LogComponentCreated(
-                    config.ItemName,
-                    fileSize,
-                    processingTime);
-
-                UsageTrackingService.Instance.LogAction("COMPONENT_CREATED",
-                    $"{config.ItemName} created in {processingTime:F0}ms, size: {fileSize} bytes");
+                // **UPDATED: CSV-based component logging with enhanced type classification**
+                LogComponentWithTypeClassification(config.ItemName, fileSize, processingTime, config);
             }
             catch (NXOpen.NXException nxEx) when (nxEx.Message.Contains("File already exists"))
             {
@@ -112,8 +106,80 @@ namespace ToolingStructureCreation.Services
             }
         }
 
+        /// <summary>
+        /// Enhanced component logging with detailed type classification for CSV tracking
+        /// </summary>
+        public static void LogComponentWithTypeClassification(string itemName, long fileSize, double processingTime, ComponentCreationConfig config = null)
+        {
+            // Determine component type based on multiple factors for accurate classification
+            string componentType = ClassifyComponentType(itemName, config);
+
+            // Log to CSV-based tracking system
+            UsageTrackingService.Instance.LogComponentCreated(componentType, fileSize, processingTime);
+        }
+
+        /// <summary>
+        /// Classifies component types for accurate PlateShoe vs Assembly counting
+        /// </summary>
+        private static string ClassifyComponentType(string itemName, ComponentCreationConfig config)
+        {
+            // Normalize item name for comparison
+            string normalizedName = itemName?.ToUpper().Replace(" ", "_") ?? "";
+
+            // **ASSEMBLY COMPONENTS** (Complex assemblies requiring significant manual effort)
+            var assemblyIndicators = new[]
+            {
+                "ASSEMBLY", "ASM", "MAIN", "STATION", "TOOLING",
+                "MAINASSEMBLY", "TOOLINGASSEMBLY", "STATIONASSEMBLY",
+                "STN1-ASSEMBLY", "STN2-ASSEMBLY", "STN3-ASSEMBLY", "STN4-ASSEMBLY"
+            };
+
+            if (assemblyIndicators.Any(indicator => normalizedName.Contains(indicator)))
+            {
+                return "Assembly"; // Will be counted as AssemblyCount
+            }
+
+            // **PLATE/SHOE COMPONENTS** (Individual components with standardized creation)
+            var plateShoeIndicators = new[]
+            {
+                // Plates
+                "UPPER_PAD", "PUNCH_HOLDER", "BOTTOMING_PLATE", "STRIPPER_PLATE",
+                "DIE_PLATE", "LOWER_PAD", "PLATE",
+                
+                // Shoes and structural components  
+                "UPPER_SHOE", "LOWER_SHOE", "SHOE",
+                "PARALLEL_BAR", "PARALLELBAR",
+                "COMMON_PLATE", "COMMONPLATE", "LOWER_COMMON_PLATE",
+                
+                // Material guides and inserts
+                "MATERIAL_GUIDE", "MATGUIDE", "INSERT"
+            };
+
+            if (plateShoeIndicators.Any(indicator => normalizedName.Contains(indicator)))
+            {
+                return "PlateShoe"; // Will be counted as PlateShoeCount
+            }
+
+            // **FALLBACK CLASSIFICATION**
+            // Use template filename and part properties type as secondary indicators
+            if (config.PartPropertiesType == PartProperties.ASM)
+            {
+                return "Assembly";
+            }
+
+            if (config.PartPropertiesType == PartProperties.PLATE ||
+                config.PartPropertiesType == PartProperties.SHOE ||
+                config.PartPropertiesType == PartProperties.INSERT)
+            {
+                return "PlateShoe";
+            }
+
+            // **DEFAULT**: Most individual components are PlateShoe type
+            return "PlateShoe";
+        }
+
         // Add this helper method to ComponentCreationService:
-        private long GetFileSize(string folderPath, string fileName)
+        public static long GetFileSize(string folderPath, string fileName)
         {
             try
             {

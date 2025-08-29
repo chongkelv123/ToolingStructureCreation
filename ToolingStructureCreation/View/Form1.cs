@@ -142,9 +142,9 @@ namespace ToolingStructureCreation.View
         private void btnApply_Click(object sender, EventArgs e)
         {
             var startTime = DateTime.Now;
-
+            
             // Capture engineer name at the moment of Apply click
-            string engineerName = GetDesginer; // Uses cboDesign.SelectedItem?.ToString() ?? cboDesign.Text
+            string engineerName = cboDesign.Text;
             if (!string.IsNullOrEmpty(engineerName))
             {
                 UsageTrackingService.Instance.LogAction("ENGINEER_IDENTIFIED", engineerName);
@@ -155,6 +155,9 @@ namespace ToolingStructureCreation.View
             UsageTrackingService.Instance.UpdateSessionProjectInfo(
                 projectInfo.Model ?? "Unknown",
                 projectInfo.Part ?? "Unknown");
+
+            // Capture engineer name
+            UsageTrackingService.Instance.UpdateSessionEngineerInfo(engineerName);
 
             // Log configuration before processing
             UsageTrackingService.Instance.UpdateSessionConfiguration(

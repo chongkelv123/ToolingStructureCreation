@@ -33,7 +33,7 @@ namespace ToolingStructureCreation.Controller
             }
             // Start usage tracking session
             string moduleVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "Unknown";
-            UsageTrackingService.Instance.StartSession("Unknown", moduleVersion); // Will be updated from from
+            UsageTrackingService.Instance.StartSession(moduleVersion);
             UsageTrackingService.Instance.LogAction("CONTROL_INITIALIZED", "Main control initialized");
 
             stripLayout = drawing.GetStripLayout();

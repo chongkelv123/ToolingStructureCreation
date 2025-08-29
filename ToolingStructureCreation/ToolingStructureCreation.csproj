@@ -119,6 +119,7 @@
     <Compile Include="Services\ThicknessData.cs" />
     <Compile Include="Services\UnifiedCodeGeneratorService.cs" />
     <Compile Include="Services\UsageSession.cs" />
+    <Compile Include="Services\UsageSessionData.cs" />
     <Compile Include="Services\UsageTrackingService.cs" />
     <Compile Include="Services\UserAction.cs" />
     <Compile Include="Services\ValidationResult.cs" />
