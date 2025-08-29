@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NXOpen">
       <HintPath>C:\tool\NX2212\NXBIN\managed\NXOpen.dll</HintPath>
       <Private>False</Private>
@@ -104,6 +107,7 @@
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\CodeGeneratorService.cs" />
+    <Compile Include="Services\ComponentCreated.cs" />
     <Compile Include="Services\ComponentCreationConfig.cs" />
     <Compile Include="Services\ComponentCreationConfigs.cs" />
     <Compile Include="Services\ComponentCreationService.cs" />
@@ -111,8 +115,12 @@
     <Compile Include="Services\FormValidator.cs" />
     <Compile Include="Services\ICodeGeneratorServices.cs" />
     <Compile Include="Services\ManufacturingCalculationService.cs" />
+    <Compile Include="Services\ProjectMetrics.cs" />
     <Compile Include="Services\ThicknessData.cs" />
     <Compile Include="Services\UnifiedCodeGeneratorService.cs" />
+    <Compile Include="Services\UsageSession.cs" />
+    <Compile Include="Services\UsageTrackingService.cs" />
+    <Compile Include="Services\UserAction.cs" />
     <Compile Include="Services\ValidationResult.cs" />
     <Compile Include="View\Form1.cs">
       <SubType>Form</SubType>
@@ -135,6 +143,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\ToolingStructure.jpg" />
   </ItemGroup>
   <ItemGroup>

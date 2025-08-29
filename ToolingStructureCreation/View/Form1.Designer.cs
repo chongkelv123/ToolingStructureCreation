@@ -813,6 +813,7 @@
             this.cboDesign.Name = "cboDesign";
             this.cboDesign.Size = new System.Drawing.Size(200, 24);
             this.cboDesign.TabIndex = 4;
+            this.cboDesign.SelectedIndexChanged += new System.EventHandler(this.cboDesign_SelectedIndexChanged);
             // 
             // txtCodePrefix
             // 

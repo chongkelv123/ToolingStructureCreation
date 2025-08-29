@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using ToolingStructureCreation.Model;
 
 namespace ToolingStructureCreation.Services
@@ -19,6 +20,7 @@ namespace ToolingStructureCreation.Services
         /// </summary>
         public void CreateComponent(ComponentCreationConfig config)
         {
+            var startTime = DateTime.Now;
             Session session = Session.GetSession();
             FileNew fileNew = session.Parts.FileNew();
 
@@ -58,9 +60,27 @@ namespace ToolingStructureCreation.Services
 
                 // Phase 7: Save Operations (common)
                 SaveComponent(workPart);
+
+                // Calculate performance metrics
+                var processingTime = (DateTime.Now - startTime).TotalMilliseconds;
+                long fileSize = GetFileSize(config.FolderPath, config.FileName);
+
+                // Log component creation success
+                UsageTrackingService.Instance.LogComponentCreated(
+                    config.ItemName,
+                    fileSize,
+                    processingTime);
+
+                UsageTrackingService.Instance.LogAction("COMPONENT_CREATED",
+                    $"{config.ItemName} created in {processingTime:F0}ms, size: {fileSize} bytes");
             }
             catch (NXOpen.NXException nxEx) when (nxEx.Message.Contains("File already exists"))
             {
+                var processingTime = (DateTime.Now - startTime).TotalMilliseconds;
+
+                UsageTrackingService.Instance.LogAction("COMPONENT_ERROR",
+                    $"File exists error for {config.ItemName} after {processingTime:F0}ms");
+
                 string message = $"File already exists: {config.FileName}{NXDrawing.EXTENSION}\n\n" +
                                $"Location: {config.FolderPath}\n\n" +
                                "Please:\n" +
@@ -73,10 +93,41 @@ namespace ToolingStructureCreation.Services
             }
             catch (NXOpen.NXException nxEx)
             {
+                var processingTime = (DateTime.Now - startTime).TotalMilliseconds;
+
+                UsageTrackingService.Instance.LogAction("COMPONENT_ERROR",
+                    $"NX error for {config.ItemName} after {processingTime:F0}ms: {nxEx.Message}");
+
                 string message = $"NX Error creating component '{config.FileName}':\n{nxEx.Message}";
                 NXDrawing.ShowMessageBox("NX Operation Error", NXOpen.NXMessageBox.DialogType.Error, message);
                 throw new InvalidOperationException($"Failed to create component '{config.FileName}'", nxEx);
             }
+            catch (Exception ex)
+            {
+                var processingTime = (DateTime.Now - startTime).TotalMilliseconds;
+
+                UsageTrackingService.Instance.LogAction("COMPONENT_ERROR",
+                    $"Unexpected error for {config.ItemName} after {processingTime:F0}ms: {ex.Message}");
+                throw;
+            }
+        }
+
+        // Add this helper method to ComponentCreationService:
+        private long GetFileSize(string folderPath, string fileName)
+        {
+            try
+            {
+                string fullPath = Path.Combine(folderPath, fileName + NXDrawing.EXTENSION);
+                if (File.Exists(fullPath))
+                {
+                    return new FileInfo(fullPath).Length;
+                }
+            }
+            catch 
+            {
+                // Silent fail for file size calculation
+            }
+            return 0;
         }
 
         private void UpdateMatGuideExpressions(Part workPart, ComponentCreationConfig config)

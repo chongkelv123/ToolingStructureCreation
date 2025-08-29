@@ -310,7 +310,7 @@ namespace ToolingStructureCreation.Services.Tests
             var type = ToolingStructureType.SHOE;
             var dirPath = "C:\\CreateFolder\\Testing-Tooling-Structure";
             var codePrefix = "40XC00-2401-";
-            var itemName = _Shoe.UPPER_SHOE;
+            var itemName = ShoeBase.UPPER_SHOE;
             var expected = $"40XC00-2401-0001_{itemName}-V00";
             // Act
             var result = CodeGeneratorService.GenerateFileName(type, dirPath, codePrefix, itemName);

@@ -44,7 +44,7 @@ namespace ToolingStructureCreation.View
 
         bool isPlateSketchSelected = false;
         bool isShoeSketchSelected = false;
-        bool isComPltSketchSelected = false;        
+        bool isComPltSketchSelected = false;
         bool showDebugMessage = false; // Set to true to show debug messages
 
         public bool IsPlateSketchSelected => isPlateSketchSelected;
@@ -73,7 +73,7 @@ namespace ToolingStructureCreation.View
 
             this.control = control;
             UpdateMatGuideCoverStatus();
-            UpdateAllCalculations();
+            UpdateAllCalculations();            
         }
 
         // =============================================================================
@@ -141,8 +141,34 @@ namespace ToolingStructureCreation.View
 
         private void btnApply_Click(object sender, EventArgs e)
         {
+            var startTime = DateTime.Now;
 
-            StationAssemblyFactory stnAsmFactory = new StationAssemblyFactory(
+            // Capture engineer name at the moment of Apply click
+            string engineerName = GetDesginer; // Uses cboDesign.SelectedItem?.ToString() ?? cboDesign.Text
+            if (!string.IsNullOrEmpty(engineerName))
+            {
+                UsageTrackingService.Instance.LogAction("ENGINEER_IDENTIFIED", engineerName);
+            }
+
+            // Capture project information (MODEL/PART)
+            ProjectInfo projectInfo = GetProjectInfo();
+            UsageTrackingService.Instance.UpdateSessionProjectInfo(
+                projectInfo.Model ?? "Unknown",
+                projectInfo.Part ?? "Unknown");
+
+            // Log configuration before processing
+            UsageTrackingService.Instance.UpdateSessionConfiguration(
+                GetMachineName,
+                MaterialGuideType,
+                stationSketchLists?.Count ?? 0);
+
+            UsageTrackingService.Instance.LogAction("APPLY_CLICKED",
+                $"Apply clicked by {engineerName} for Model:{projectInfo.Model}, Part:{projectInfo.Part}, Stations:{stationSketchLists?.Count ?? 0}");
+
+
+            try
+            {
+                StationAssemblyFactory stnAsmFactory = new StationAssemblyFactory(
                 new Dictionary<string, double>
                 {
                     { NXDrawing.LOWER_PAD, LowerPadThk },
@@ -160,8 +186,22 @@ namespace ToolingStructureCreation.View
                 control
             );
 
-            control.Start(stnAsmFactory);
-            this.Close();
+                control.Start(stnAsmFactory);
+
+                var duration = (DateTime.Now - startTime).TotalMilliseconds;
+                UsageTrackingService.Instance.LogAction("FORM_APPLY_SUCCESS", $"Form processing completed in {duration:F0}ms");
+
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                var duration = (DateTime.Now - startTime).TotalMilliseconds;
+                UsageTrackingService.Instance.LogAction("FORM_APPLY_ERROR",
+                    $"Form processing failed after {duration:F0}ms: {ex.Message}");
+                throw;
+            }
+
+
         }
 
         private void txtPath_TextChanged(object sender, EventArgs e)
@@ -304,19 +344,26 @@ namespace ToolingStructureCreation.View
         private void btnSelectPlateSketch_Click(object sender, EventArgs e)
         {
             this.Hide();
+            UsageTrackingService.Instance.LogAction("SKETCH_SELECTION_START", "Plate sketch selection initiated");
+
             NXDrawing xDrawing = control.GetDrawing;
             Model.SketchSelection plateSketch = new Model.SketchSelection(xDrawing);
             plateTaggedObjects = plateSketch.SelectSketch();
+
             if (plateTaggedObjects != null && plateTaggedObjects.Length > 0)
             {
                 isPlateSketchSelected = true;
                 UpdateSketchStatus(PLATE, lblPlateSketchStatus);
                 stationSketchLists = plateSketch.AskListFromTaggedObjects(plateTaggedObjects);
+
+                UsageTrackingService.Instance.LogAction("PLATE_SKETCH_SELECTED",
+                    $"Selected {plateTaggedObjects.Length} plate sketches");
             }
             else
             {
                 isPlateSketchSelected = false;
                 UpdateSketchStatus(PLATE, lblPlateSketchStatus);
+                UsageTrackingService.Instance.LogAction("PLATE_SKETCH_CANCELLED", "Plate sketch selection cancelled");
             }
 
             CheckInputAndEnableApply();
@@ -348,6 +395,7 @@ namespace ToolingStructureCreation.View
         private void btnSelectShoeSketch_Click(object sender, EventArgs e)
         {
             this.Hide();
+            UsageTrackingService.Instance.LogAction("SKETCH_SELECTION_START", "Shoe sketch selection initiated");
 
             NXDrawing xDrawing = control.GetDrawing;
             Model.SketchSelection shoeSketch = new Model.SketchSelection(xDrawing);
@@ -357,11 +405,15 @@ namespace ToolingStructureCreation.View
                 isShoeSketchSelected = true;
                 UpdateSketchStatus(SHOE, lblShoeSketchStatus);
                 shoeSketchLists = shoeSketch.AskListFromTaggedObjects(shoeTaggedObjects);
+
+                UsageTrackingService.Instance.LogAction("SHOE_SKETCH_SELECTED",
+                    $"Selected {shoeTaggedObjects.Length} shoe sketches");
             }
             else
             {
                 isShoeSketchSelected = false;
                 UpdateSketchStatus(SHOE, lblShoeSketchStatus);
+                UsageTrackingService.Instance.LogAction("SHOE_SKETCH_CANCELLED", "Shoe sketch selection cancelled");
             }
 
             CheckInputAndEnableApply();
@@ -372,6 +424,9 @@ namespace ToolingStructureCreation.View
         {
             UpdateCommonPltThk(machine);
             UpdateChkComPltSketSelection();
+
+            UsageTrackingService.Instance.LogAction("MACHINE_SELECTED", cboMachine.SelectedItem?.ToString() ?? "Unknown");
+
         }
 
         private void UpdateChkComPltSketSelection()
@@ -513,14 +568,40 @@ namespace ToolingStructureCreation.View
         private void btnMatPickDim_Click(object sender, EventArgs e)
         {
             this.Hide();
-            txtMatThk.Text = NXDrawing.GetTextFromDimension();
+            UsageTrackingService.Instance.LogAction("DIMENSION_PICK_START", "Material thickness dimension pick initiated");
+
+            string result = NXDrawing.GetTextFromDimension();
+            txtMatThk.Text = result;
+
+            if (!string.IsNullOrEmpty(result))
+            {
+                UsageTrackingService.Instance.LogAction("DIMENSION_PICKED", $"Material thickness: {result}");
+            }
+            else
+            {
+                UsageTrackingService.Instance.LogAction("DIMENSION_PICK_CANCELLED", "Material thickness pick cancelled");
+            }
+
             this.Show();
         }
 
         private void btnCWidthPickDim_Click(object sender, EventArgs e)
         {
             this.Hide();
-            txtCoilWidth.Text = NXDrawing.GetTextFromDimension();
+            UsageTrackingService.Instance.LogAction("DIMENSION_PICK_START", "Coil width dimension pick initiated");
+
+            string result = NXDrawing.GetTextFromDimension();
+            txtCoilWidth.Text = result;
+
+            if (!string.IsNullOrEmpty(result))
+            {
+                UsageTrackingService.Instance.LogAction("DIMENSION_PICKED", $"Coil width: {result}");
+            }
+            else
+            {
+                UsageTrackingService.Instance.LogAction("DIMENSION_PICK_CANCELLED", "Coil width pick cancelled");
+            }
+
             this.Show();
         }
 
@@ -539,6 +620,9 @@ namespace ToolingStructureCreation.View
         private void MatGuideCoverType_CheckedChange(object sender, EventArgs e)
         {
             UpdateMatGuideCoverStatus();
+
+            string coverageType = radFullCoverage.Checked ? "Full Coverage" : "Partial Coverage";
+            UsageTrackingService.Instance.LogAction("COVERAGE_TYPE_CHANGED", coverageType);
         }
 
         private void UpdateMatGuideCoverStatus()
@@ -585,6 +669,10 @@ namespace ToolingStructureCreation.View
             txtLowerShoeThk.Text = "70.0";
             txtParallelBarThk.Text = "155.0";
             txtCommonPltThk.Text = "60.0";
+        }
+
+        private void cboDesign_SelectedIndexChanged(object sender, EventArgs e)
+        {            
         }
     }
 }
