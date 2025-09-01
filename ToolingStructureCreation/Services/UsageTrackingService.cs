@@ -21,7 +21,8 @@ namespace ToolingStructureCreation.Services
 
         private UsageTrackingService()
         {
-            _logDirectory = @"\\SPL-SMB\DE\Common\SGA\3DA setup folder\logs\usage_logs";
+            //_logDirectory = @"\\SPL-SMB\DE\Common\SGA\3DA setup folder\logs\usage_logs";
+            _logDirectory = @"D:\NXCUSTOM\logs\usage_logs";
             EnsureLogDirectoryExists();
         }
 

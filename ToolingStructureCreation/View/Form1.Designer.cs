@@ -814,6 +814,7 @@
             this.cboDesign.Size = new System.Drawing.Size(200, 24);
             this.cboDesign.TabIndex = 4;
             this.cboDesign.SelectedIndexChanged += new System.EventHandler(this.cboDesign_SelectedIndexChanged);
+            this.cboDesign.TextChanged += new System.EventHandler(this.cboDesign_TextChanged);
             // 
             // txtCodePrefix
             // 
@@ -821,6 +822,7 @@
             this.txtCodePrefix.Name = "txtCodePrefix";
             this.txtCodePrefix.Size = new System.Drawing.Size(200, 22);
             this.txtCodePrefix.TabIndex = 3;
+            this.txtCodePrefix.TextChanged += new System.EventHandler(this.txtCodePrefix_TextChanged);
             // 
             // txtPart
             // 
@@ -828,6 +830,7 @@
             this.txtPart.Name = "txtPart";
             this.txtPart.Size = new System.Drawing.Size(200, 22);
             this.txtPart.TabIndex = 2;
+            this.txtPart.TextChanged += new System.EventHandler(this.txtPart_TextChanged);
             // 
             // txtModel
             // 
@@ -835,6 +838,7 @@
             this.txtModel.Name = "txtModel";
             this.txtModel.Size = new System.Drawing.Size(200, 22);
             this.txtModel.TabIndex = 1;
+            this.txtModel.TextChanged += new System.EventHandler(this.txtModel_TextChanged);
             // 
             // label18
             // 

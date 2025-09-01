@@ -28,6 +28,8 @@ namespace ToolingStructureCreation.Services
             nameof(FormValidationData.CoilWidth)
         };
 
+        bool debugMode = false;
+
         /// <summary>
         /// Validates all form inputs for enabling Apply button
         /// </summary>
@@ -56,6 +58,14 @@ namespace ToolingStructureCreation.Services
             if (!directoryValidation.IsValid)
             {
                 result.Errors.AddRange(directoryValidation.Errors);
+                result.IsValid = false;
+            }
+
+            // Valistate Project Info
+            var projectInfoValidation = ValidateProjectInfo(data);
+            if (!projectInfoValidation.IsValid)
+            {
+                result.Errors.AddRange(projectInfoValidation.Errors);
                 result.IsValid = false;
             }
 
@@ -141,6 +151,9 @@ namespace ToolingStructureCreation.Services
         public ValidationResult ValidateProjectInfo(FormValidationData data)
         {
             var result = new ValidationResult { IsValid = true };
+
+            if (debugMode)
+                System.Diagnostics.Debugger.Launch();
 
             if (string.IsNullOrWhiteSpace(data.Model))
                 result.AddError("Model is required");

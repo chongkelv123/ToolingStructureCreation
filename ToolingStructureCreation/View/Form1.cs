@@ -41,6 +41,11 @@ namespace ToolingStructureCreation.View
         public double CoilWidth => double.TryParse(txtCoilWidth.Text, out double value) ? value : 0.0;
         public string GetMachineName => cboMachine.SelectedItem.ToString();
         public MaterialGuideType MaterialGuideType { get; set; }
+        public Machine GetMachine => machine;
+        public string GetModel => txtModel.Text.Trim();
+        public string GetPart => txtPart.Text.Trim();
+        public string GetCodePrefix => txtCodePrefix.Text.Trim();
+        public string GetDesginer => cboDesign.SelectedItem?.ToString() ?? cboDesign.Text;
 
         bool isPlateSketchSelected = false;
         bool isShoeSketchSelected = false;
@@ -60,7 +65,7 @@ namespace ToolingStructureCreation.View
         List<Model.Sketch> stationSketchLists;
         List<Model.Sketch> shoeSketchLists;
         List<Model.Sketch> comPlateSketchList;
-        Machine machine;
+        Machine machine;        
 
         public formToolStructure(Controller.Control control)
         {
@@ -73,7 +78,7 @@ namespace ToolingStructureCreation.View
 
             this.control = control;
             UpdateMatGuideCoverStatus();
-            UpdateAllCalculations();            
+            UpdateAllCalculations();
         }
 
         // =============================================================================
@@ -142,7 +147,7 @@ namespace ToolingStructureCreation.View
         private void btnApply_Click(object sender, EventArgs e)
         {
             var startTime = DateTime.Now;
-            
+
             // Capture engineer name at the moment of Apply click
             string engineerName = cboDesign.Text;
             if (!string.IsNullOrEmpty(engineerName))
@@ -212,19 +217,7 @@ namespace ToolingStructureCreation.View
             CheckInputAndEnableApply();
         }
 
-        public Machine GetMachine => machine;
-
-        private bool IsDirectoryExists()
-        {
-            if (Directory.Exists(txtPath.Text))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+                
 
         private static void KeyPressEvent_NumericalOnly(object sender, KeyPressEventArgs e)
         {
@@ -259,7 +252,11 @@ namespace ToolingStructureCreation.View
                 CommonPltThk = txtCommonPltThk.Text,
                 CoilWidth = txtCoilWidth.Text,
                 IsPlateSketchSelected = isPlateSketchSelected,
-                IsShoeSketchSelected = isShoeSketchSelected
+                IsShoeSketchSelected = isShoeSketchSelected,
+                Model = GetModel,
+                Part = GetPart,
+                CodePrefix = GetCodePrefix,
+                Designer = cboDesign.Text
             };
 
             var validationResult = _validator.ValidateForApply(validationData);
@@ -510,10 +507,10 @@ namespace ToolingStructureCreation.View
         private bool IsProjectInfoFilled()
         {
             bool isFilled =
-                !string.IsNullOrWhiteSpace(txtModel.Text) &&
-                !string.IsNullOrWhiteSpace(txtPart.Text) &&
-                !string.IsNullOrWhiteSpace(txtCodePrefix.Text) &&
-                !string.IsNullOrWhiteSpace(cboDesign.Text);
+                !string.IsNullOrWhiteSpace(GetModel) &&
+                !string.IsNullOrWhiteSpace(GetPart) &&
+                !string.IsNullOrWhiteSpace(GetCodePrefix) &&
+                !string.IsNullOrWhiteSpace(GetDesginer);
 
             return isFilled;
         }
@@ -527,12 +524,7 @@ namespace ToolingStructureCreation.View
                 GetDesginer
             );
             return projectInfo;
-        }
-
-        public string GetModel => txtModel.Text.Trim();
-        public string GetPart => txtPart.Text.Trim();
-        public string GetCodePrefix => txtCodePrefix.Text.Trim();
-        public string GetDesginer => cboDesign.SelectedItem?.ToString() ?? cboDesign.Text;
+        }        
 
         private void chkActiveComPltSkt_CheckedChanged(object sender, EventArgs e)
         {
@@ -675,7 +667,27 @@ namespace ToolingStructureCreation.View
         }
 
         private void cboDesign_SelectedIndexChanged(object sender, EventArgs e)
-        {            
+        {
+        }
+
+        private void txtCodePrefix_TextChanged(object sender, EventArgs e)
+        {
+            CheckInputAndEnableApply();
+        }
+
+        private void cboDesign_TextChanged(object sender, EventArgs e)
+        {
+            CheckInputAndEnableApply();
+        }
+
+        private void txtModel_TextChanged(object sender, EventArgs e)
+        {
+            CheckInputAndEnableApply();
+        }
+
+        private void txtPart_TextChanged(object sender, EventArgs e)
+        {
+            CheckInputAndEnableApply();
         }
     }
 }
