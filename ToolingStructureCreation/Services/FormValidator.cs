@@ -152,8 +152,8 @@ namespace ToolingStructureCreation.Services
         {
             var result = new ValidationResult { IsValid = true };
 
-            if (debugMode)
-                System.Diagnostics.Debugger.Launch();
+            //if (debugMode)
+            //    System.Diagnostics.Debugger.Launch();
 
             if (string.IsNullOrWhiteSpace(data.Model))
                 result.AddError("Model is required");
@@ -186,6 +186,7 @@ namespace ToolingStructureCreation.Services
             return false;
         }
 
+
         /// <summary>
         /// Parses thickness value safely
         /// </summary>
@@ -196,6 +197,19 @@ namespace ToolingStructureCreation.Services
 
         private string GetFieldValue(FormValidationData data, string fieldName)
         {
+            if (debugMode)
+            {
+                System.Diagnostics.Debugger.Launch();
+                var typeOf = typeof(FormValidationData);
+                var properTy = typeOf.GetProperty(fieldName);
+                var value = properTy?.GetValue(data) as string ?? string.Empty;
+                System.Diagnostics.Debug.WriteLine($"[Debug] typeof(FormValidationData): {typeOf}");
+                System.Diagnostics.Debug.WriteLine($"[Debug] property: {properTy}");
+                System.Diagnostics.Debug.WriteLine($"[Debug] value: {value}");
+            }
+                
+
+
             var property = typeof(FormValidationData).GetProperty(fieldName);
             return property?.GetValue(data) as string ?? string.Empty;
         }
