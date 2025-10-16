@@ -10,7 +10,7 @@ namespace ToolingStructureCreation.Constants
     {
         public static class Attributes
         {
-            public const string CATEGORY_PLT_THK = "PlateThickness";
+            public const string CATEGORY_PLATE_THK = "PlateThickness";
             public const string CATEGORY_TITLEBLOCK = "TITLEBLOCK";
             public const string CATEGORY_TOOL = "Tool";
             public const string CATEGORY_TOOLINGINFO = "ToolingInfo";
@@ -52,7 +52,7 @@ namespace ToolingStructureCreation.Constants
             public const string LOWER_PAD_SPACER = "LowerPadSpacer";
             public const string COIL_WIDTH = "CoilWidth";
             public const string PUNCH_LENGTH = "PunchLength";
-            public const string LIFTING_STROKE = "LiftingStroke";
+            public const string LIFTING_HEIGHT = "LiftingHeight";
             public const string STRIPPER_STROKE = "StripperStroke";
         }
 

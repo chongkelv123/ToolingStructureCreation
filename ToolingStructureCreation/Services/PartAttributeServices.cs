@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ToolingStructureCreation.Model;
+using static ToolingStructureCreation.Constants.Const;
 
 namespace ToolingStructureCreation.Services
 {
@@ -14,10 +15,10 @@ namespace ToolingStructureCreation.Services
         {
             Part workPart = Session.GetSession().Parts.Work;
             PlateThicknessProperties plateThickness = new PlateThicknessProperties();
-            
+
             var plateThkKeyValueInfo = PlateThicknessProperties.GenerateKeyValue_Info(prop);
             var attributeInfoList = plateThickness.AttributeInfoToList(
-                PartProperties.CATEGORY_PLATE_THK, 
+                Attributes.CATEGORY_PLATE_THK,
                 plateThkKeyValueInfo);
             plateThickness.SetAttributesByList(attributeInfoList);
         }
@@ -28,7 +29,7 @@ namespace ToolingStructureCreation.Services
             TitleBlockProperties titleBlockProperties = new TitleBlockProperties();
             var titleKeyValueInfo = TitleBlockProperties.GenerateKeyValue_Info(titleProp);
             var attributeInfoList = titleBlockProperties.AttributeInfoToList(
-                PartProperties.CATEGORY_TITLE,
+                Attributes.CATEGORY_TITLEBLOCK,
                 titleKeyValueInfo);
             titleBlockProperties.SetAttributesByList(attributeInfoList);
         }
@@ -39,9 +40,20 @@ namespace ToolingStructureCreation.Services
             ToolProperties toolProperties = new ToolProperties();
             var toolKeyValueInfo = ToolProperties.GenerateKeyValue_Info(toolProp);
             var attributeInfoList = toolProperties.AttributeInfoToList(
-                PartProperties.CATEGORY_TOOL,
+                Attributes.CATEGORY_TOOL,
                 toolKeyValueInfo);
             toolProperties.SetAttributesByList(attributeInfoList);
         }
-    }    
+
+        public static void UpdateToolingInfoProperties(ToolingInfoProperties toolingInfoProp)
+        {
+            Part workPart = Session.GetSession().Parts.Work;
+            ToolingInfoProperties toolingInfoProperties = new ToolingInfoProperties();
+            var toolingInfoKeyValueInfo = ToolingInfoProperties.GenerateKeyValue_Info(toolingInfoProp);
+            var attributeInfoList = toolingInfoProperties.AttributeInfoToList(
+                Attributes.CATEGORY_TOOLINGINFO,
+                toolingInfoKeyValueInfo);
+            toolingInfoProperties.SetAttributesByList(attributeInfoList);
+        }
+    }
 }

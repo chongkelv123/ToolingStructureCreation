@@ -95,6 +95,7 @@
     <Compile Include="Model\TitleBlockProperties.cs" />
     <Compile Include="Model\ToolingAssembly.cs" />
     <Compile Include="Model\ToolingInfo.cs" />
+    <Compile Include="Model\ToolingInfoProperties.cs" />
     <Compile Include="Model\ToolProperties.cs" />
     <Compile Include="Model\UpperShoe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

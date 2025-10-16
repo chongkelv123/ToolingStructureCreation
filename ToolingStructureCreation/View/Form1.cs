@@ -31,6 +31,16 @@ namespace ToolingStructureCreation.View
             get => txtPath.Text.Trim() + "\\";
             set => txtPath.Text = value;
         }
+        public string TextPunchLength
+        {
+            get => txtPunchLength.Text.Trim();
+            set => txtPunchLength.Text = value;
+        }
+        public string TextLiftHeight
+        {
+            get => txtLiftHeight.Text.Trim();
+            set => txtLiftHeight.Text = value;
+        }
         public double UpperShoeThk => double.TryParse(txtUpperShoeThk.Text, out double value) ? value : 0.0;
         public double UpperPadThk => double.TryParse(txtUpperPadThk.Text, out double value) ? value : 0.0;
         public double PunHolderThk => double.TryParse(txtPunHolderThk.Text, out double value) ? value : 0.0;
@@ -43,6 +53,8 @@ namespace ToolingStructureCreation.View
         public double ParallelBarThk => double.TryParse(txtParallelBarThk.Text, out double value) ? value : 0.0;
         public double CommonPltThk => double.TryParse(txtCommonPltThk.Text, out double value) ? value : 0.0;
         public double CoilWidth => double.TryParse(txtCoilWidth.Text, out double value) ? value : 0.0;
+        public double LiftHeight => double.TryParse(txtLiftHeight.Text, out double value) ? value : 0.0;
+        public double PunchLength => double.TryParse(txtPunchLength.Text, out double value) ? value : 0.0;
         public string GetMachineName => cboMachine.SelectedItem.ToString();
         public MaterialGuideType MaterialGuideType { get; set; }
         public Machine GetMachine => machine;
@@ -302,7 +314,7 @@ namespace ToolingStructureCreation.View
         {
             var thickness = GetCurrentThicknessData();
             double punchLength = _calculationService.CalculatePunchLength(thickness);
-            txtPunchLength.Text = punchLength.ToString("F1");
+            TextPunchLength = punchLength.ToString("F1");
         }
 
         private void UpdatePenetration()

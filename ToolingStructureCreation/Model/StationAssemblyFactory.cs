@@ -522,6 +522,14 @@ namespace ToolingStructureCreation.Model
                 CommonPlateThk = myForm.CommonPltThk
             };
             PartAttributeServices.UpdatePlateThicknessProperties(pltThkProp);
+
+            var toolInfoProp = new ToolingInfoProperties()
+            {
+                CoilWidth = myForm.CoilWidth,
+                LiftingHeight = myForm.LiftHeight,
+                PunchLength = myForm.PunchLength
+            };
+            PartAttributeServices.UpdateToolingInfoProperties(toolInfoProp);
         }
 
         public void CreateStationAssembly(ToolingInfo toolingInfo, string fileName, string folderPath, ProjectInfo projectInfo, string drawingCode, string itemName)
