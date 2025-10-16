@@ -17,21 +17,7 @@ namespace ToolingStructureCreation.Services
         private readonly string _dirPath;
         private readonly string _codePrefix;
         private readonly string _itemName;
-        private readonly int _stationNumber;
-
-        /*/// <summary>
-        /// Constructor for assembly and shoe types (no station number needed)
-        /// </summary>
-        public UnifiedCodeGeneratorService(Control control, ProjectInfo projectInfo, ToolingStructureType type, string itemName)
-            : base(control, projectInfo)
-        {
-            _type = type;
-            _myForm = control.GetForm;
-            _dirPath = _myForm.GetPath;
-            _codePrefix = GetCodePrefix(projectInfo.DwgCodePrefix);
-            _itemName = itemName;
-            _stationNumber = 0; // Default for non-plate types
-        }*/
+        private readonly int _stationNumber;        
 
         /// <summary>
         /// Constructor for plate types (requires station number)
@@ -41,7 +27,7 @@ namespace ToolingStructureCreation.Services
         {
             _type = type;
             _myForm = control.GetForm;
-            _dirPath = _myForm.GetPath;
+            _dirPath = _myForm.TextPath;
             _codePrefix = GetCodePrefix(projectInfo.DwgCodePrefix);
             _itemName = itemName;
             _stationNumber = stationNumber;

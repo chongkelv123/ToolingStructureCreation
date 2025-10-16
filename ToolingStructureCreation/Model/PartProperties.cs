@@ -8,11 +8,10 @@ using NXOpen;
 namespace ToolingStructureCreation.Model
 {
     public abstract class PartProperties
-    {
-        protected Part workPart;
-
+    {        
         public const string CATEGORY_TITLE = "TITLEBLOCK";
         public const string CATEGORY_TOOL = "Tool";
+        public const string CATEGORY_PLATE_THK = "PlateThickness";
 
         public const string PART = "PART";
         public const string DRAWING_CODE = "DRAWING CODE";
@@ -35,9 +34,8 @@ namespace ToolingStructureCreation.Model
         public const string SHOE = "SHOE";
         public const string INSERT = "INSERT";
 
-        protected PartProperties(Part workPart)
-        {
-            this.workPart = workPart;
+        protected PartProperties()
+        {            
         }
 
         public List<NXObject.AttributeInformation> AttributeInfoToList(string category, Dictionary<string, string> titleInfos)
@@ -69,6 +67,7 @@ namespace ToolingStructureCreation.Model
 
         public void SetAttributesByList(List<NXObject.AttributeInformation> attributes)
         {
+            Part workPart = Session.GetSession().Parts.Work;
             try
             {
                 attributes.ForEach(a => { workPart.SetUserAttribute(a, Update.Option.Now); });
@@ -76,12 +75,13 @@ namespace ToolingStructureCreation.Model
             catch (Exception e)
             {
                 string message = $"Error occur at TitleBlockProperties: {e.Message}";
-                NXDrawing.ShowMessageBox("ERROR", NXMessageBox.DialogType.Error, message);
+                NXDrawing.ShowMessageBox(message, "ERROR", NXMessageBox.DialogType.Error);
             }
         }
 
         public void SetAttribute(NXObject.AttributeInformation info)
         {
+            Part workPart = Session.GetSession().Parts.Work;
             workPart.SetUserAttribute(info, Update.Option.Now);
         }
     }

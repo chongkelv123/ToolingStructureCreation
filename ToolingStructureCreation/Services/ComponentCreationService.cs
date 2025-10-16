@@ -1,11 +1,13 @@
 ﻿using NXOpen;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 using ToolingStructureCreation.Model;
+using static NXOpen.Motion.HydrodynamicBearingBuilder;
+using static ToolingStructureCreation.Constants.Const;
 
 namespace ToolingStructureCreation.Services
 {
@@ -56,7 +58,7 @@ namespace ToolingStructureCreation.Services
                 }
 
                 // Phase 6: Part Properties Update (common pattern)
-                UpdatePartProperties(config);
+                UpdatePartDrawingProperties(config);
 
                 // Phase 7: Save Operations (common)
                 SaveComponent(workPart);
@@ -82,7 +84,7 @@ namespace ToolingStructureCreation.Services
                                "• Choose a different output directory, or\n" +
                                "• Modify the project code prefix";
 
-                NXDrawing.ShowMessageBox("File Conflict", NXOpen.NXMessageBox.DialogType.Warning, message);
+                NXDrawing.ShowMessageBox(message, "File Conflict", NXOpen.NXMessageBox.DialogType.Warning);
                 throw new InvalidOperationException($"Cannot create component '{config.FileName}' - file already exists", nxEx);
             }
             catch (NXOpen.NXException nxEx)
@@ -93,7 +95,7 @@ namespace ToolingStructureCreation.Services
                     $"NX error for {config.ItemName} after {processingTime:F0}ms: {nxEx.Message}");
 
                 string message = $"NX Error creating component '{config.FileName}':\n{nxEx.Message}";
-                NXDrawing.ShowMessageBox("NX Operation Error", NXOpen.NXMessageBox.DialogType.Error, message);
+                NXDrawing.ShowMessageBox(message, "NX Operation Error", NXOpen.NXMessageBox.DialogType.Error);
                 throw new InvalidOperationException($"Failed to create component '{config.FileName}'", nxEx);
             }
             catch (Exception ex)
@@ -208,12 +210,12 @@ namespace ToolingStructureCreation.Services
             // Validate expressions exist (common error handling pattern)
             if (reliefAngle == null)
             {
-                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Relief Angle' not found.");
+                NXDrawing.ShowMessageBox("Expression 'Relief Angle' not found.", "Error", NXMessageBox.DialogType.Error);
                 return;
             }
             if (reliefDist == null)
             {
-                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Relief Distance' not found.");
+                NXDrawing.ShowMessageBox("Expression 'Relief Distance' not found.", "Error", NXMessageBox.DialogType.Error);
                 return;
             }
 
@@ -245,17 +247,17 @@ namespace ToolingStructureCreation.Services
             // Validate expressions exist (common error handling pattern)
             if (expressionWidth == null)
             {
-                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Width' not found.");
+                NXDrawing.ShowMessageBox("Expression 'Width' not found.", "Error", NXMessageBox.DialogType.Error);
                 return;
             }
             if (expressionLength == null)
             {
-                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Length' not found.");
+                NXDrawing.ShowMessageBox("Expression 'Length' not found.", "Error", NXMessageBox.DialogType.Error);
                 return;
             }
             if (expressionThk == null)
             {
-                NXDrawing.ShowMessageBox("Error", NXMessageBox.DialogType.Error, "Expression 'Thk' not found.");
+                NXDrawing.ShowMessageBox("Expression 'Thk' not found.", "Error", NXMessageBox.DialogType.Error);
                 return;
             }
 
@@ -271,21 +273,25 @@ namespace ToolingStructureCreation.Services
             session.UpdateManager.DoUpdate(undoMark);
         }
 
-        private void UpdatePartProperties(ComponentCreationConfig config)
+        private void UpdatePartDrawingProperties(ComponentCreationConfig config)
         {
-            string thicknessFormat = config.PartPropertiesType == PartProperties.SHOE ? "F1" : "F2";
+            string thicknessFormat = config.PartPropertiesType == PartProperties.SHOE ? "F1" : "F2";            
 
-            NXDrawing.UpdatePartProperties(
-                config.ProjectInfo,
-                config.DrawingCode,
-                config.ItemName,
-                config.Length.ToString("F1"),
-                config.Thickness.ToString(thicknessFormat),
-                config.Width.ToString("F1"),
-                config.HardnessOrGrade,
-                config.Material,
-                config.PartPropertiesType
-            );
+            var titleProp = new TitleBlockProperties()
+            {
+                DesignBy = config.ProjectInfo.Designer,
+                DrawingCode = config.DrawingCode,
+                HRC = config.HardnessOrGrade,
+                ItemName = config.ItemName,
+                Length = config.Length.ToString("F1"),
+                Thickness = config.Thickness.ToString(thicknessFormat),
+                Width = config.Width.ToString("F1"),
+                Material = config.Material,
+                ModelName = config.ProjectInfo.Model,
+                PartName = config.ProjectInfo.Part,
+                Quantity = "1"
+            };
+            PartAttributeServices.UpdateTitleBlockProperties(titleProp);
         }
 
         private void SaveComponent(Part workPart)

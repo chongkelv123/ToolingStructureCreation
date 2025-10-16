@@ -26,7 +26,11 @@ namespace ToolingStructureCreation.View
         private readonly FormValidator _validator;
 
         Controller.Control control;
-        public string GetPath => txtPath.Text + "\\";
+        public string TextPath
+        { 
+            get => txtPath.Text.Trim() + "\\";
+            set => txtPath.Text = value;
+        }
         public double UpperShoeThk => double.TryParse(txtUpperShoeThk.Text, out double value) ? value : 0.0;
         public double UpperPadThk => double.TryParse(txtUpperPadThk.Text, out double value) ? value : 0.0;
         public double PunHolderThk => double.TryParse(txtPunHolderThk.Text, out double value) ? value : 0.0;
@@ -190,7 +194,7 @@ namespace ToolingStructureCreation.View
                 stationSketchLists,
                 shoeSketchLists,
                 comPlateSketchList,
-                GetPath,
+                TextPath,
                 control
             );
 
@@ -688,6 +692,21 @@ namespace ToolingStructureCreation.View
         private void txtPart_TextChanged(object sender, EventArgs e)
         {
             CheckInputAndEnableApply();
+        }
+
+        private void btnPathRetrieve_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Part workPart = Session.GetSession().Parts.Work;
+                TextPath = FileManagerService.GetCurrentDirectory(workPart);                
+            }
+            catch (Exception ex)
+            {
+                string message = $"Error retrieving path or loading assembly files: {ex.Message}";
+                string title = "Error";
+                NXDrawing.ShowMessageBox(message, title, NXMessageBox.DialogType.Error);
+            }
         }
     }
 }

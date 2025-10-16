@@ -8,29 +8,19 @@ using NXOpen;
 namespace ToolingStructureCreation.Model
 {
     public class ToolProperties: PartProperties
-    {
-        private string partType;
-        private string stdPartItem;
-        private bool isStdPart;
+    {        
+        public bool IsStandardPart { get; set; }
+        public string PartType { get; set; }
+        public string StdPartItem { get; set; }
 
-        private Dictionary<string, string> keyValue_Info;
-        public Dictionary<string, string> KeyValueInfo => KeyValueInfo;
-
-        public ToolProperties(Part workPart, string partType, string stdPartItem, bool isStdPart): base(workPart)
+        public static Dictionary<string, string> GenerateKeyValue_Info(ToolProperties toolProp)
         {
-            this.partType = partType;
-            this.stdPartItem = stdPartItem;
-            this.isStdPart = isStdPart;
+            Dictionary<string, string> keyValue_Info = new Dictionary<string, string>()
+            {
+                [PART_TYPE] = toolProp.PartType                
+            };
 
-            GenerateKeyValue_Info();
-        }
-
-        private void GenerateKeyValue_Info()
-        {
-            keyValue_Info = new Dictionary<string, string>();
-            keyValue_Info.Add(PART_TYPE, partType);
-            keyValue_Info.Add(STDPART_ITEM, stdPartItem);
-            keyValue_Info.Add(IS_STANDARD_PART, isStdPart ? "TRUE":"FALSE");
+            return keyValue_Info;
         }
     }
 }

@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\Const.cs" />
     <Compile Include="Controller\Control.cs" />
     <Compile Include="Main\MyProgram.cs" />
     <Compile Include="Main\Unload.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Model\ParallelBar.cs" />
     <Compile Include="Model\PartProperties.cs" />
     <Compile Include="Model\Plate.cs" />
+    <Compile Include="Model\PlateThicknessProperties.cs" />
     <Compile Include="Model\ProjectInfo.cs" />
     <Compile Include="Model\ShoeBase.cs" />
     <Compile Include="Model\Sketch.cs" />
@@ -111,10 +113,12 @@
     <Compile Include="Services\ComponentCreationConfig.cs" />
     <Compile Include="Services\ComponentCreationConfigs.cs" />
     <Compile Include="Services\ComponentCreationService.cs" />
+    <Compile Include="Services\FileManagerService.cs" />
     <Compile Include="Services\FormValidationData.cs" />
     <Compile Include="Services\FormValidator.cs" />
     <Compile Include="Services\ICodeGeneratorServices.cs" />
     <Compile Include="Services\ManufacturingCalculationService.cs" />
+    <Compile Include="Services\PartAttributeServices.cs" />
     <Compile Include="Services\ProjectMetrics.cs" />
     <Compile Include="Services\ThicknessData.cs" />
     <Compile Include="Services\UnifiedCodeGeneratorService.cs" />

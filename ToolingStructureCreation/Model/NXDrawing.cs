@@ -79,7 +79,7 @@ namespace ToolingStructureCreation.Model
             this.control = control;
         }
 
-        public static void ShowMessageBox(string title, NXMessageBox.DialogType msgboxType, string message)
+        public static void ShowMessageBox(string message, string title, NXMessageBox.DialogType msgboxType)
         {
             UI ui = UI.GetUI();
             ui.NXMessageBox.Show(title, msgboxType, message);
@@ -130,7 +130,7 @@ namespace ToolingStructureCreation.Model
             if (isNoCompnent)
             {
                 message += " you are not open any drawings yet! ;-)";
-                ShowMessageBox(title, msgboxType, message);
+                ShowMessageBox(message, title, msgboxType);
                 return false;
             }
 
@@ -145,34 +145,7 @@ namespace ToolingStructureCreation.Model
                 Guide.InfoWriteLine($"Full path: {fullPath}");
             }
             return new StripLayout(fullPath, position);
-        }
-
-        public static void UpdatePartProperties(ProjectInfo projectInfo, string drawingCode, string itemName, string length, string thickness, string width, string hrc, string material, string partType)
-        {
-            Part workPart = Session.GetSession().Parts.Work;
-            TitleBlockProperties properties = new TitleBlockProperties(
-                workPart,
-                projectInfo.Designer,
-                drawingCode,
-                hrc,
-                itemName,
-                length,
-                thickness,
-                width,
-                material,
-                projectInfo.Model,
-                projectInfo.Part
-                );
-            var attrList = properties.AttributeInfoToList(PartProperties.CATEGORY_TITLE, properties.KeyValueInfo);
-            properties.SetAttributesByList(attrList);
-
-            NXObject.AttributeInformation info = new NXObject.AttributeInformation();
-            info.Category = PartProperties.CATEGORY_TOOL;
-            info.Title = PartProperties.PART_TYPE;
-            info.Type = NXObject.AttributeType.String;
-            info.StringValue = partType;
-            properties.SetAttribute(info);
-        }
+        }        
 
         public static string GetTextFromDimension()
         {

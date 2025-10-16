@@ -69,7 +69,7 @@ namespace ToolingStructureCreation.Model
             {
                 string message = $"Error writing to file: {ex.Message}";
                 string title = "Error writing file";
-                NXDrawing.ShowMessageBox(title, NXOpen.NXMessageBox.DialogType.Error, message);
+                NXDrawing.ShowMessageBox(message, title, NXOpen.NXMessageBox.DialogType.Error);
             }
             finally
             {
@@ -105,7 +105,7 @@ namespace ToolingStructureCreation.Model
             {
                 string message = $"File not found: {ex.Message}";
                 string title = "Error file not found";
-                NXDrawing.ShowMessageBox(title, NXOpen.NXMessageBox.DialogType.Error, message);
+                NXDrawing.ShowMessageBox(message, title, NXOpen.NXMessageBox.DialogType.Error);
             }
 
             return result;

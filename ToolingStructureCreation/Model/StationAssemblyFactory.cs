@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ToolingStructureCreation.Services;
 using ToolingStructureCreation.View;
-using static NXOpen.Features.SheetMetal.BendTaperBuilder;
+using static ToolingStructureCreation.Constants.Const;
 
 namespace ToolingStructureCreation.Model
 {
@@ -52,8 +52,7 @@ namespace ToolingStructureCreation.Model
         }
 
         public void CreateStnAsmFactory(ToolingInfo toolingInfo)
-        {
-            //System.Diagnostics.Debugger.Launch();
+        {            
             if (PlateThicknesses == null)
             {
                 throw new InvalidOperationException("PlateThicknesses dictionary is not initialized. Please provide a valid dictionary of plate thicknesses.");
@@ -298,8 +297,7 @@ namespace ToolingStructureCreation.Model
                 var compCodeGenerator = UnifiedCodeGeneratorService.CreateForShoe(control, myForm.GetProjectInfo(), compPltItemName);
                 string compPlatefileName = compCodeGenerator.AskFileName();
                 comPltComponentCollection.Add(compPlatefileName);
-                commonPltInfo.FileName = compPlatefileName;
-                //CommonPlateBase commonPlate = new CommonPlate(commonPltInfo.GetLength(), commonPltInfo.GetWidth(), myForm.CommonPltThk, compPlatefileName);
+                commonPltInfo.FileName = compPlatefileName;                
                 commonPltInfo.CreateNewCommonPlate(
                     folderPath,
                     myForm.GetProjectInfo(),
@@ -321,8 +319,7 @@ namespace ToolingStructureCreation.Model
             fileNew.Units = Part.Units.Millimeters;
             fileNew.TemplatePresentationName = ToolingAssembly.ASSEMBLY;
             fileNew.SetCanCreateAltrep(false);
-
-            //string itemName = "MainToolAssembly";
+            
             var asmCodeGenerator = UnifiedCodeGeneratorService.CreateForAssembly(
                 control,
                 myForm.GetProjectInfo(),
@@ -433,18 +430,9 @@ namespace ToolingStructureCreation.Model
                             new Point3d(comPltSketch.MidPoint.X, Y_POSITION, comPltZPosition),
                             folderPath);
                     }
-                }
+                }                
 
-                NXDrawing.UpdatePartProperties(
-                    projectInfo,
-                    drawingCode,
-                    itemName,
-                    NXDrawing.HYPHEN,
-                    NXDrawing.HYPHEN,
-                    NXDrawing.HYPHEN,
-                    NXDrawing.HYPHEN,
-                    NXDrawing.HYPHEN,
-                    PartProperties.ASM);
+                UpdateAsmDrawingProperties(projectInfo, drawingCode, itemName);
 
                 BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
                 BasePart.CloseAfterSave save = BasePart.CloseAfterSave.False;
@@ -470,7 +458,7 @@ namespace ToolingStructureCreation.Model
                                 "• Modify the project code prefix";
 
                 string title = "File Conflict";
-                NXDrawing.ShowMessageBox(title, NXOpen.NXMessageBox.DialogType.Warning, message);
+                NXDrawing.ShowMessageBox(message, title, NXOpen.NXMessageBox.DialogType.Warning);
 
                 // Re-throw to stop the creation process
                 throw new InvalidOperationException($"Cannot create plate '{fileName}' - file already exists", nxEx);
@@ -480,7 +468,7 @@ namespace ToolingStructureCreation.Model
                 // Handle other NX-specific errors
                 string message = $"NX Error creating plate '{fileName}':\n{nxEx.Message}";
                 string title = "NX Operation Error";
-                NXDrawing.ShowMessageBox(title, NXOpen.NXMessageBox.DialogType.Error, message);
+                NXDrawing.ShowMessageBox(message, title, NXOpen.NXMessageBox.DialogType.Error);
 
                 throw new InvalidOperationException($"Failed to create plate '{fileName}'", nxEx);
             }
@@ -489,11 +477,51 @@ namespace ToolingStructureCreation.Model
                 // Handle unexpected errors
                 string message = $"Unexpected error creating plate '{fileName}':\n{ex.Message}";
                 string title = "Unexpected Error";
-                NXDrawing.ShowMessageBox(title, NXOpen.NXMessageBox.DialogType.Error, message);
+                NXDrawing.ShowMessageBox(message, title, NXOpen.NXMessageBox.DialogType.Error);
 
                 throw;
             }
 
+        }
+        private void UpdateAsmDrawingProperties(ProjectInfo projectInfo, string drawingCode, string itemName)
+        {
+            var titleProp = new TitleBlockProperties()
+            {
+                DesignBy = projectInfo.Designer,
+                DrawingCode = drawingCode,
+                HRC = NXDrawing.HYPHEN,
+                ItemName = itemName,
+                Length = NXDrawing.HYPHEN,
+                Thickness = NXDrawing.HYPHEN,
+                Width = NXDrawing.HYPHEN,
+                Material = NXDrawing.HYPHEN,
+                ModelName = projectInfo.Model,
+                PartName = projectInfo.Part,
+                Quantity = NXDrawing.HYPHEN
+            };
+            PartAttributeServices.UpdateTitleBlockProperties(titleProp);
+
+            var toolProp = new ToolProperties()
+            {
+                PartType = PartType.ASM
+            };
+            PartAttributeServices.UpdateToolProperties(toolProp);
+
+            var pltThkProp = new PlateThicknessProperties()
+            {
+                UpperShoeThk = myForm.UpperShoeThk,
+                UpperPadThk = myForm.UpperPadThk,
+                PunchHolderThk = myForm.PunHolderThk,
+                BottomPlateThk = myForm.BottomPltThk,
+                StripperPlateThk = myForm.StripperPltThk,
+                MatThk = myForm.MatThk,
+                DiePlateThk = myForm.DiePltThk,
+                LowerPadThk = myForm.LowerPadThk,
+                LowerShoeThk = myForm.LowerShoeThk,
+                ParallelBarThk = myForm.ParallelBarThk,
+                CommonPlateThk = myForm.CommonPltThk
+            };
+            PartAttributeServices.UpdatePlateThicknessProperties(pltThkProp);
         }
 
         public void CreateStationAssembly(ToolingInfo toolingInfo, string fileName, string folderPath, ProjectInfo projectInfo, string drawingCode, string itemName)
@@ -548,17 +576,8 @@ namespace ToolingStructureCreation.Model
                         MatGuideFullBase.Insert(workPart, fileNameMatGuide, position, folderPath);
                     }
                 }
-
-                NXDrawing.UpdatePartProperties(
-                    projectInfo,
-                    drawingCode,
-                    itemName,
-                    NXDrawing.HYPHEN,
-                    NXDrawing.HYPHEN,
-                    NXDrawing.HYPHEN,
-                    NXDrawing.HYPHEN,
-                    NXDrawing.HYPHEN,
-                    PartProperties.ASM);
+                
+                UpdateAsmDrawingProperties(projectInfo, drawingCode, itemName);
 
                 BasePart.SaveComponents saveComponentParts = BasePart.SaveComponents.True;
                 BasePart.CloseAfterSave save = BasePart.CloseAfterSave.True;
@@ -582,7 +601,7 @@ namespace ToolingStructureCreation.Model
                                 "• Modify the project code prefix";
 
                 string title = "File Conflict";
-                NXDrawing.ShowMessageBox(title, NXOpen.NXMessageBox.DialogType.Warning, message);
+                NXDrawing.ShowMessageBox(message, title, NXOpen.NXMessageBox.DialogType.Warning);
 
                 // Re-throw to stop the creation process
                 throw new InvalidOperationException($"Cannot create plate '{fileName}' - file already exists", nxEx);
@@ -592,7 +611,7 @@ namespace ToolingStructureCreation.Model
                 // Handle other NX-specific errors
                 string message = $"NX Error creating plate '{fileName}':\n{nxEx.Message}";
                 string title = "NX Operation Error";
-                NXDrawing.ShowMessageBox(title, NXOpen.NXMessageBox.DialogType.Error, message);
+                NXDrawing.ShowMessageBox(message, title, NXOpen.NXMessageBox.DialogType.Error);
 
                 throw new InvalidOperationException($"Failed to create plate '{fileName}'", nxEx);
             }
@@ -601,7 +620,7 @@ namespace ToolingStructureCreation.Model
                 // Handle unexpected errors
                 string message = $"Unexpected error creating plate '{fileName}':\n{ex.Message}";
                 string title = "Unexpected Error";
-                NXDrawing.ShowMessageBox(title, NXOpen.NXMessageBox.DialogType.Error, message);
+                NXDrawing.ShowMessageBox(message, title, NXOpen.NXMessageBox.DialogType.Error);
 
                 throw;
             }

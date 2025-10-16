@@ -102,6 +102,7 @@
             this.lblComPltSketchStatus = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.btnSelectComPltSketch = new System.Windows.Forms.Button();
+            this.btnPathRetrieve = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox12.SuspendLayout();
@@ -144,10 +145,11 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupBox1.Controls.Add(this.btnPathRetrieve);
             this.groupBox1.Controls.Add(this.txtPath);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(656, 71);
+            this.groupBox1.Size = new System.Drawing.Size(836, 71);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Where would you like the Tooling Assembly to be saved to? Copy and paste the addr" +
@@ -155,13 +157,11 @@
             // 
             // txtPath
             // 
-            this.txtPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPath.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.HistoryList;
             this.txtPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtPath.Location = new System.Drawing.Point(6, 21);
             this.txtPath.Name = "txtPath";
-            this.txtPath.Size = new System.Drawing.Size(644, 22);
+            this.txtPath.Size = new System.Drawing.Size(710, 22);
             this.txtPath.TabIndex = 0;
             this.txtPath.TextChanged += new System.EventHandler(this.txtBox_textChanged);
             // 
@@ -930,6 +930,18 @@
             this.btnSelectComPltSketch.UseVisualStyleBackColor = true;
             this.btnSelectComPltSketch.Click += new System.EventHandler(this.btnSelectComPltSketch_Click);
             // 
+            // btnPathRetrieve
+            // 
+            this.btnPathRetrieve.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnPathRetrieve.Location = new System.Drawing.Point(722, 16);
+            this.btnPathRetrieve.Name = "btnPathRetrieve";
+            this.btnPathRetrieve.Size = new System.Drawing.Size(108, 30);
+            this.btnPathRetrieve.TabIndex = 9;
+            this.btnPathRetrieve.Text = "Retrive Path...";
+            this.btnPathRetrieve.UseVisualStyleBackColor = true;
+            this.btnPathRetrieve.Click += new System.EventHandler(this.btnPathRetrieve_Click);
+            // 
             // formToolStructure
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1047,5 +1059,6 @@
         private System.Windows.Forms.TextBox txtCoilWidth;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Button btnCWidthPickDim;
+        private System.Windows.Forms.Button btnPathRetrieve;
     }
 }
