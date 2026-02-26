@@ -31,6 +31,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnApply = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnPathRetrieve = new System.Windows.Forms.Button();
             this.txtPath = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btnCWidthPickDim = new System.Windows.Forms.Button();
@@ -102,7 +103,6 @@
             this.lblComPltSketchStatus = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.btnSelectComPltSketch = new System.Windows.Forms.Button();
-            this.btnPathRetrieve = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox12.SuspendLayout();
@@ -154,6 +154,18 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Where would you like the Tooling Assembly to be saved to? Copy and paste the addr" +
     "ess here:";
+            // 
+            // btnPathRetrieve
+            // 
+            this.btnPathRetrieve.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnPathRetrieve.Location = new System.Drawing.Point(722, 16);
+            this.btnPathRetrieve.Name = "btnPathRetrieve";
+            this.btnPathRetrieve.Size = new System.Drawing.Size(108, 30);
+            this.btnPathRetrieve.TabIndex = 9;
+            this.btnPathRetrieve.Text = "Retrive Path...";
+            this.btnPathRetrieve.UseVisualStyleBackColor = true;
+            this.btnPathRetrieve.Click += new System.EventHandler(this.btnPathRetrieve_Click);
             // 
             // txtPath
             // 
@@ -243,22 +255,22 @@
             // radPartialCoverage
             // 
             this.radPartialCoverage.AutoSize = true;
+            this.radPartialCoverage.Checked = true;
             this.radPartialCoverage.Location = new System.Drawing.Point(124, 27);
             this.radPartialCoverage.Name = "radPartialCoverage";
             this.radPartialCoverage.Size = new System.Drawing.Size(129, 20);
             this.radPartialCoverage.TabIndex = 1;
+            this.radPartialCoverage.TabStop = true;
             this.radPartialCoverage.Text = "Partial Coverage";
             this.radPartialCoverage.UseVisualStyleBackColor = true;
             // 
             // radFullCoverage
             // 
             this.radFullCoverage.AutoSize = true;
-            this.radFullCoverage.Checked = true;
             this.radFullCoverage.Location = new System.Drawing.Point(6, 27);
             this.radFullCoverage.Name = "radFullCoverage";
             this.radFullCoverage.Size = new System.Drawing.Size(112, 20);
             this.radFullCoverage.TabIndex = 0;
-            this.radFullCoverage.TabStop = true;
             this.radFullCoverage.Text = "Full Coverage";
             this.radFullCoverage.UseVisualStyleBackColor = true;
             this.radFullCoverage.CheckedChanged += new System.EventHandler(this.MatGuideCoverType_CheckedChange);
@@ -929,18 +941,6 @@
             this.btnSelectComPltSketch.Text = "Select Sketch...";
             this.btnSelectComPltSketch.UseVisualStyleBackColor = true;
             this.btnSelectComPltSketch.Click += new System.EventHandler(this.btnSelectComPltSketch_Click);
-            // 
-            // btnPathRetrieve
-            // 
-            this.btnPathRetrieve.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnPathRetrieve.Location = new System.Drawing.Point(722, 16);
-            this.btnPathRetrieve.Name = "btnPathRetrieve";
-            this.btnPathRetrieve.Size = new System.Drawing.Size(108, 30);
-            this.btnPathRetrieve.TabIndex = 9;
-            this.btnPathRetrieve.Text = "Retrive Path...";
-            this.btnPathRetrieve.UseVisualStyleBackColor = true;
-            this.btnPathRetrieve.Click += new System.EventHandler(this.btnPathRetrieve_Click);
             // 
             // formToolStructure
             // 
