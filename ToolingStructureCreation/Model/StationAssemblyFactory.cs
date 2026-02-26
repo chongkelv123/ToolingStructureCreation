@@ -2,6 +2,7 @@
 using NXOpen.CAE.Optimization;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
@@ -25,7 +26,6 @@ namespace ToolingStructureCreation.Model
         formToolStructure myForm;
 
         const double PARALLEL_BAR_WIDTH = 60.0; // Width of the parallel bar
-        const double Y_POSITION = 0.0; // Y position is always 0.0 for the station assembly
 
         List<string> uprShoeComponentCollection;
         List<string> lowShoeComponentCollection;
@@ -343,6 +343,8 @@ namespace ToolingStructureCreation.Model
 
                 // Insert Strip Layout
                 StripLayout stripLayout = control.GetStripLayout;
+                double yPosition = CalculateYPosition();
+                Debug.WriteLine($"[StationAssemblyFactory] Y Position — ShoeSketch MidPoint.Y: {ShoeSketchLists[0].MidPoint.Y}, DCS Origin Y: 0, Calculated Y: {yPosition}");
                 ShoeBase.Insert(workAssy, stripLayout.GetFileNameWithoutExtension, stripLayout.GetPosition, folderPath);
 
                 // Orient the work view to Isometric
@@ -359,7 +361,7 @@ namespace ToolingStructureCreation.Model
                     ToolingAssembly.InsertStationAssembly(
                         workAssy,
                         compName,
-                        new Point3d(startLocation.X, Y_POSITION, stnAsmZPosition),
+                        new Point3d(startLocation.X, yPosition, stnAsmZPosition),
                         folderPath);
                 }
 
@@ -374,12 +376,12 @@ namespace ToolingStructureCreation.Model
                     ShoeBase.Insert(
                             workAssy,
                             uprShoeCompName,
-                            new Point3d(shoeSketch.StartLocation.X, Y_POSITION, uprShoeZPosition),
+                            new Point3d(shoeSketch.StartLocation.X, yPosition, uprShoeZPosition),
                             folderPath);
                     ShoeBase.Insert(
                             workAssy,
                             lowShoeCompName,
-                            new Point3d(shoeSketch.StartLocation.X, Y_POSITION, lowShoeZPosition),
+                            new Point3d(shoeSketch.StartLocation.X, yPosition, lowShoeZPosition),
                             folderPath);
 
                     foreach (var compName in pBarComponentCollection)
@@ -389,14 +391,14 @@ namespace ToolingStructureCreation.Model
                         double distBetweenFirstLastPBars = (lastParallelBarXPosition - firstParallelBarXPosition);
                         const double DIST_BETWEEN_PBAR = 330.0;
                         int numberOfParallelBars = (int)Math.Ceiling(distBetweenFirstLastPBars / DIST_BETWEEN_PBAR);
-                        ShoeBase.Insert(workAssy, compName, new Point3d(firstParallelBarXPosition, Y_POSITION, myForm.GetParallelBarZPosition()), folderPath);
-                        ShoeBase.Insert(workAssy, compName, new Point3d(lastParallelBarXPosition, Y_POSITION, myForm.GetParallelBarZPosition()), folderPath);
+                        ShoeBase.Insert(workAssy, compName, new Point3d(firstParallelBarXPosition, yPosition, myForm.GetParallelBarZPosition()), folderPath);
+                        ShoeBase.Insert(workAssy, compName, new Point3d(lastParallelBarXPosition, yPosition, myForm.GetParallelBarZPosition()), folderPath);
 
                         for (int j = 0; j < numberOfParallelBars - 2; j++)
                         {
                             double dist = distBetweenFirstLastPBars / (numberOfParallelBars - 1);
                             double xPosition = firstParallelBarXPosition + (j + 1) * dist;
-                            ShoeBase.Insert(workAssy, compName, new Point3d(xPosition, Y_POSITION, myForm.GetParallelBarZPosition()), folderPath);
+                            ShoeBase.Insert(workAssy, compName, new Point3d(xPosition, yPosition, myForm.GetParallelBarZPosition()), folderPath);
                         }
                     }
 
@@ -409,7 +411,7 @@ namespace ToolingStructureCreation.Model
                             ShoeBase.Insert(
                                 workAssy,
                                 comPltCompName,
-                                new Point3d(shoeSketch.MidPoint.X, Y_POSITION, myForm.GetCommonPlateZPosition()),
+                                new Point3d(shoeSketch.MidPoint.X, yPosition, myForm.GetCommonPlateZPosition()),
                                 folderPath);
                         }
                     }
@@ -427,7 +429,7 @@ namespace ToolingStructureCreation.Model
                         ShoeBase.Insert(
                             workAssy,
                             comPltCompName,
-                            new Point3d(comPltSketch.MidPoint.X, Y_POSITION, comPltZPosition),
+                            new Point3d(comPltSketch.MidPoint.X, yPosition, comPltZPosition),
                             folderPath);
                     }
                 }                
@@ -483,6 +485,13 @@ namespace ToolingStructureCreation.Model
             }
 
         }
+        private double CalculateYPosition()
+        {
+            const double dcsOriginY = 0.0; // Datum Coordinate System origin Y (WCS)
+            double shoeSketchMidPointY = ShoeSketchLists[0].MidPoint.Y;
+            return shoeSketchMidPointY - dcsOriginY;
+        }
+
         private void UpdateAsmDrawingProperties(ProjectInfo projectInfo, string drawingCode, string itemName)
         {
             var titleProp = new TitleBlockProperties()
